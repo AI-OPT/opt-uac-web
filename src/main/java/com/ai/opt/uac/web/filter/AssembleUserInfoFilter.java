@@ -78,7 +78,7 @@ public class AssembleUserInfoFilter implements Filter {
                     String value = (String) attributes.get(field.getName());
                     if (value != null) {
                         field.setAccessible(true);
-                        if ("long".equals(field.getType().toString())) {
+                        if ("long".equalsIgnoreCase(field.getType().toString())) {
                             field.set(user, Long.parseLong(value));
                         } else {
                             field.set(user, value);

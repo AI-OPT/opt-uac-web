@@ -12,7 +12,7 @@ public class BssCredentials extends RememberMeUsernamePasswordCredential {
     private static final long serialVersionUID = -8147635836938729264L;
 
     //账号ID
-    private Long accountId;
+    private long accountId;
     //租户id
     private String tenantId;
     //账号名称
@@ -35,12 +35,6 @@ public class BssCredentials extends RememberMeUsernamePasswordCredential {
     private String qq;
     
     
-	public Long getAccountId() {
-		return accountId;
-	}
-	public void setAccountId(Long accountId) {
-		this.accountId = accountId;
-	}
 	public String getTenantId() {
 		return tenantId;
 	}
@@ -100,6 +94,12 @@ public class BssCredentials extends RememberMeUsernamePasswordCredential {
 	}
 	public void setQq(String qq) {
 		this.qq = qq;
+	}
+	public long getAccountId() {
+		return accountId;
+	}
+	public void setAccountId(long accountId) {
+		this.accountId = accountId;
 	}
 	
     
