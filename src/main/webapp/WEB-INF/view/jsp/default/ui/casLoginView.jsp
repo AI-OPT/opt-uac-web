@@ -53,7 +53,7 @@ request.setAttribute("_baasBase", _baasBase);
 
   <div class="login-header"><!--登录头部-->
      <div class="login-header-cnt">
-       <div class="login-header-cnt-logo"><img src="images/logo.png"></div>
+       <div class="login-header-cnt-logo"><img src="${_baasBase }/images/logo.png"></div>
        <div class="login-header-cnt-mail">帐户登录</div>
        </div>
      

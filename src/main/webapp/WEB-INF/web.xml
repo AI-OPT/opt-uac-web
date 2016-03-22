@@ -36,6 +36,19 @@
   </filter-mapping>
   
   <filter>
+		<filter-name>assembleUserInfoFilter</filter-name>
+		<filter-class>com.ai.opt.uac.web.filter.AssembleUserInfoFilter</filter-class>
+		<init-param>
+			<param-name>ignore_suffix</param-name>
+			<param-value>.png,.jpg,.jpeg,.gif,.css,.js,.html,.htm</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>assembleUserInfoFilter</filter-name>
+		<url-pattern>/ac/*</url-pattern>
+	</filter-mapping>
+  
+  <filter>
     <filter-name>encodingFilter</filter-name>
     <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
     <init-param>
