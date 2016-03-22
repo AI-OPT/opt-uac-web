@@ -1,0 +1,51 @@
+.header{ width:100%; float:left; padding:0 40px 0 240px; height:70px; min-width:1360px;}
+.wrapper{ width:100%; float:left; padding:0 40px 0 240px; padding-bottom:100px; min-width:1360px;}
+.wrappera{ width:100%; float:left; padding:0 40px 0 40px;}
+.wrnr{ width:100%; float:left; text-align:center;}
+.navbg{ width:100%; float:left; background:url(../images/navbg.jpg) no-repeat center top #242256; height:110px; min-width:1360px;}
+.logo-no{ width:200px; float:left; height:70px; background:#054aaa; position:fixed; left:40px; top:0; text-align:center;cursor:pointer; z-index:4;}
+.logo-no a{ font-size:24px; line-height:70px; height:70px; width:100%; color:#fff;}
+.logo{ width:200px; float:left; height:70px; background:#054aaa; position:fixed; left:40px; top:0; text-align:center;cursor:pointer; z-index:4;}
+.breadcrumb{ width:400px; float:left; height:70px; background:none; padding-top:20px; padding-left:40px;}
+.logo i{ border:1px solid #fff; border-radius:50%; color:#fff; font-size:18px; width:22px; height:22px; float:left; text-align:center; line-height:20px; position:absolute; right:14px; top:23px;}
+.logo a{ font-size:24px; line-height:70px; height:70px; width:100%; color:#fff;}
+.nav{ background:#044196; width:100%; float:left; height:100%;}
+.subnav{ width:200px; height:100%; float:left; position:fixed; padding:70px 0 68px 0;z-index:3; left:40px;}
+.nav ul{ width:100%; float:left; padding-top:40px;}
+.nav ul li{ height:70px; width:100%; float:left; line-height:70px; position:relative;}
+.nav ul li a{ font-size:18px; color:#fff; float:left; height:70px; border-left:5px solid #044196; padding-left:20px; width:100%; }
+.nav ul li a:hover{ border-left:5px solid #0697ef;}
+.nav ul li.current a{ background:#043a86; border-left:5px solid #043a86;}
+.nav ul li.current a:hover{ border-left:5px solid #043a86;}
+.nav ul li .current-cnt{ width:230px; float:left; position:absolute; left:200px; z-index:5; top:0; background:url(../images/cntbg.png);}
+.nav ul li .current-cnt a{ width:100%; z-index:7; float:left;background:none; border-left:none; padding-left:25px; z-index:6;}
+.nav ul li .current-cnt a:hover{ border:none; background:#0249a7;}
+.footer{ width:100%; float:left; border-top:2px solid #c8c9c9; height:70px; background:#fff; line-height:70px; color:#999; position:fixed; bottom:0; left:0; text-align:center; z-index:2; min-width:1360px;}
+.breadcrumb ul{ width:100%; float:left; height:27px; line-height:27px; border-left:4px solid #0697ef; padding-left:10px;}
+.breadcrumb ul li{ float:left; color:#043a86; font-size:18px;}
+.breadcrumb ul li i{ font-size:18px; color:#0697ef; margin:0 10px;}
+.user{ width:280px; float:right;}
+.msg{ width:60px; float:left; text-align:center; position:relative; padding-top:24px;}
+.msg i{ font-size:24px; color:#666;}
+.msg span{ color:#fff; background:#fcb322; position:absolute; left:27px; top:15px; font-size:12px;} 
+.user-cnt{ width:220px; float:left; position:relative;}
+.user-cnt p{ width:100%; float:left; height:70px; padding:8px 0 0 15px; cursor:pointer;}
+.user-cnt p.pbg{ background:#f1f1f1;}
+.user-cnt p img{ width:45px; height:45px; border-radius:50%;}
+.user-cnt p span{ color:#043a86; font-size:18px; margin:0 10px; line-height:45px;}
+.user-cnt p i{ font-size:24px; color:#0697ef; line-height:45px;}
+.user-cnt ul{ width:220px; float:left; background:#f1f1f1; position:absolute; z-index:11; top:70px; left:0;}
+.user-cnt ul li{ width:100%; float:left; font-size:16px;}
+.user-cnt ul li a{height:40px; line-height:40px; padding-left:70px; float:left; width:100%; color:#043a86;}
+.user-cnt ul li a:hover{ background:#fff;}
+.msg-cnt{width: 260px;border-left: 1px solid #e3e5e7;border-top: 1px solid #e3e5e7; padding-bottom:80px; padding-top:15px;top: 70px;float: left;position: fixed;right: -280px;background: #fff;z-index: 10;overflow: auto; -webkit-box-shadow:inset 0 0 14px #ddd;  
+  -moz-box-shadow:inset 0 0 14px #ddd;  
+  box-shadow:inset 0px 0 14px #ddd;}
+.m-r-xs{margin-right: 5px; font-size:12px;}
+.text-success{ color:#4bb622;}
+.text-warning{ color:#f88311;}
+.text-muted-lt{ color:#d6d9db;}
+.p{padding: 15px; line-height:22px; font-size:16px;}
+.list-group a{ border:0; background:none; cursor:pointer;}
+.p a{ cursor:pointer;}
+.p a:hover{ text-decoration:none; color:#666;}

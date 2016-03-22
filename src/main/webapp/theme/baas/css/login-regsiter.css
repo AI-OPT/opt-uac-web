@@ -1,0 +1,129 @@
+
+
+
+/**登录**/
+.login-header{ width:100%; height:72px; background:#0697ef;}
+
+.login-header-cnt{ width:1190px; margin:0 auto;}
+.login-header-cnt-logo{ width:100px; height:46px; margin-top:12px; float:left;}
+.login-header-cnt-right{ float:right; line-height:72px; font-size:16px; color:#fff;}
+.login-header-cnt-right a{ color:#fff}
+.login-header-cnt-mail{ border-left:1px solid #58b8f2; float:left; font-size:24px; color:#fff; padding-left:15px; margin-top:20px;}
+
+.login-wrapper{ width:100%; background:url(../images/logo-bj.png) no-repeat center; height:653px; margin:0 auto; }
+.login-wrapper-cnt{ width:1190px; margin:0  auto;}
+.login-wrapper-cnt-section{ width:394px; float:right; background:#fff; border:2px solid #a4d6f5; height:403px; margin:122px 86px 0 0; }
+.login-wrapper-cnt-section ul{ width:340px; margin:0 auto; position:relative;}
+.login-wrapper-cnt-section ul .login-note{ position:absolute; top:50px; left:0px; background:#def3f7; color:#098cdc; padding:3px 10px; max-width:400px;}
+.login-wrapper-cnt-section ul li{ float:left; margin-top:25px;}
+.login-wrapper-cnt-section ul .user,.login-wrapper-cnt-section ul .password{ width:340px; float:left; border:1px solid #e4e4e4; height:48px;}
+.login-wrapper-cnt-section ul .user:hover,.login-wrapper-cnt-section ul .password:hover{ border:1px solid #0697ef;}
+.login-wrapper-cnt-section ul .user i,.login-wrapper-cnt-section ul .password i{ width:43px; border-right:1px solid #666; float:left; text-align:center; color:#666; font-size:20px; margin-top:14px;}
+
+.login-wrapper-cnt-section ul .login-title{ color:#333; font-size:20px; margin-top:18px; margin-bottom:8px;}
+.login-wrapper-cnt-section ul label{ font-size:12px; color:#666; height:20px; float:left;}
+
+
+.login-wrapper-cnt-section ul .Remb-password{ font-size:12px;margin-top:20px;}
+.login-wrapper-cnt-section ul .Remb-password span{ margin-right:4px;}
+
+/**登录表单**/
+.int-xlarge{ width:295px; float:left; height:46px; border: none; line-height:48px; font-size:14px; background:#fff; padding-left:6px; color:#666;}
+.int-xlarge-password{ width:295px; float:left; height:46px; border: none; line-height:48px; font-size:14px; background:#fff; padding-left:6px; color:#666;}
+/**登录按钮**/
+.login-wrapper-cnt-section ul .login-btn{ width:340px; float:left; height:56px; background:#0697ef; font-size:20px; color:#fff; margin-top:6px;}
+.login-wrapper-cnt-section ul .login-btn:hover{ background:#10a2fb}
+.login-wrapper-cnt-section ul .Forget-password { width:100%;}
+.login-wrapper-cnt-section ul .Forget-password a{ float:left; color:#10a2fb}
+.login-wrapper-cnt-section ul .Forget-password .right{ float:right; display:block;}
+
+
+
+/**注册**/
+.regsiter-wrapper{ width:100%; background:url(../images/regsiter-bj.png) no-repeat center; height:755px; margin:0 auto; }
+.regsiter-wrapper-cnt{ width:436px; height:524px; margin:0 auto; background:#fff; margin-top:42px;
+-webkit-box-shadow:0 0 14px rgba(218, 218, 218, .7);  
+-moz-box-shadow:0 0 14px rgba(218, 218, 218, .7);  
+box-shadow:0 0 14px rgba(218,218, 218, .7);  }
+
+.regsiter-wrapper-cnt ul li .regsiter-note{position:absolute; top:8px; left:100%; background:#def3f7; color:#098cdc; margin-left:15px; padding:4px 10px; min-width:400px;}
+.regsiter-wrapper-cnt ul li .regsiter-note i{ color:#def3f7; width:auto; margin-top:0; position:absolute; left:-8px; top:2px; font-size:24px; border:none;}
+.regsiter-wrapper-cnt ul li .regsiter-note img{ float:left; margin-right:6px; margin-top:1px;}
+.regsiter-wrapper-cnt ul{ width:380px; margin:0 auto;}
+.regsiter-wrapper-cnt ul li{ float:left; margin-top:24px; position:relative;}
+.regsiter-wrapper-cnt ul .regsiter-title{ text-align: center; width:100%; font-size:20px; color:#333;}
+
+.regsiter-wrapper-cnt ul .user,.regsiter-wrapper-cnt ul .password{ width:378px; float:left; border:1px solid #e4e4e4; height:48px;}
+.regsiter-wrapper-cnt ul .user:hover,.regsiter-wrapper-cnt ul .password:hover{ border:1px solid #0697ef; }
+.regsiter-wrapper-cnt ul label{ font-size:12px; color:#666; height:20px; float:left;}
+
+.regsiter-wrapper-cnt ul .password i{ width:43px; float:left; text-align:center; color:#666; font-size:20px; margin-top:14px;}
+
+.regsiter-wrapper-cnt ul .SMSidentifying{ width:380px; float:left; border:1px solid #e4e4e4; height:48px;}
+.regsiter-wrapper-cnt ul .SMSidentifying:hover{ border:1px solid #0697ef;}
+.regsiter-wrapper-cnt ul .SMSidentifying i{ width:43px; border-right:1px solid #666; float:left; text-align:center; color:#666; font-size:20px; margin-top:14px;}
+.regsiter-wrapper-cnt ul .SMSidentifying .yzm{ float:right; width:100px; margin-top:5px; margin-right:8px;}
+.regsiter-wrapper-cnt ul .SMSidentifying .yzm a{  background:#1c9aec; width:100px; height:35px; float:left; text-align:center; line-height:35px; color:#fff;}
+.regsiter-wrapper-cnt ul .SMSidentifying .yzm a:hover{ background:#10a2fb;}
+.int-xlarge-SMSidentifying{ width:230px; float:left; height:46px; border: none; line-height:48px; font-size:14px; background:#fff; padding-left:6px; color:#666;}
+
+
+.regsiter-wrapper-cnt ul .identifying span{ margin-right:2px;}
+.regsiter-wrapper-cnt ul .identifying a{ color:##1c9aec; line-height:40px;}
+.regsiter-wrapper-cnt ul .identifying a:hover{ color:#043a86;}
+.int-xlarge-identifying{width:226px; float:left; height:46px; border: none; line-height:48px; font-size:14px; background:#fff; padding-left:6px; color:#666;border:1px solid #e4e4e4;}
+.int-xlarge-identifying:hover{ border:1px solid #0697ef;}
+
+/**注册表单**/
+.int-xxlarge{ width:330px; float:left; height:46px; border: none; line-height:48px; font-size:14px; background:#fff; padding-left:6px; color:#666;}
+.int-xxlarge-user{ width:360px; float:left; height:46px; border: none; line-height:48px; font-size:14px; background:#fff; padding-left:6px; color:#666;}
+/**注册按钮**/
+.regsiter-wrapper-cnt ul .regsiter-btn{ width:380px; float:left; height:56px; background:#0697ef; font-size:20px; color:#fff; margin-top:10px;}
+.regsiter-wrapper-cnt ul .regsiter-btn:hover{ background:#10a2fb;} 
+.regsiter-wrapper-cnt ul .zuns a{ color:#10a2fb}
+
+
+
+/**注册邮箱绑定**/
+.regsiter-email-cnt{ width:550px; height:357px; margin:0 auto; background:#fff; margin-top:42px;
+-webkit-box-shadow:0 0 14px rgba(218, 218, 218, .7);  
+-moz-box-shadow:0 0 14px rgba(218, 218, 218, .7);  
+box-shadow:0 0 14px rgba(218,218, 218, .7);  }
+.regsiter-email-cnt ul{ width:470px; margin:0 auto;}
+.regsiter-email-cnt ul li{ float:left; margin-top:24px; position:relative;}
+.regsiter-email-cnt ul .user{ width:100%; float:left; height:40px;}
+.regsiter-email-cnt ul .user{ width:100%; float:left; }
+.regsiter-email-cnt ul .user  p{ float:left; font-size:14px; color:#666;}
+.int-medium{ width:210px; float:left; border:1px solid #e4e4e4; height:40px;}
+.int-medium:hover{ border:1px solid #0697ef}
+
+.regsiter-email-cnt ul .user .word{ width:120px; text-align:right; float:left;line-height:40px; margin-right:20px;}
+.regsiter-email-cnt ul .user a{ width:110px; float:left; height:40px; background:#1c9aec; margin-left:10px; color:#fff; text-align:center; line-height:40px;}
+.regsiter-email-cnt ul .user a:hover{ background:#10a2fb;}
+.regsiter-email-cnt ul .reminder{ padding-left:99px; margin-top:35px;}
+.regsiter-email-cnt ul .reminder li{ float:left;}
+.regsiter-email-cnt ul .reminder .reminder-word{ width:230px; float:left; font-size:12px; color:#666; margin-left:20px;}
+.regsiter-email-cnt ul .reminder .reminder-word span{ width:100%; float:left; line-height:20px;}
+.regsiter-email-cnt ul .reminder i{ float:left; margin-right:10px; color:#1c9aec; font-size:20px;}
+.regsiter-email-cnt ul .reminder  p { font-size:16px; color:#666;}
+.regsiter-email-cnt ul .regsiter-email-btn{ width:450px; float:left; margin-left:20px;}
+.regsiter-email-cnt ul .regsiter-email-btn .next-btn{ width:210px; float:left; height:40px; border:1px solid #1c9aec; background:#fff; font-size:18px; color:#1c9aec;}
+.regsiter-email-cnt ul .regsiter-email-btn .next-btn:hover{  border:2px solid #1c9aec;}
+.regsiter-email-cnt ul .regsiter-email-btn .next-btn-hover{ background:#1c9aec; color:#fff; margin-left:10px;}
+.regsiter-email-cnt ul .regsiter-email-btn .next-btn-hover:hover{ background:#10a2fb}
+
+.regsiter-email-cnt ul .user label{ font-size:12px;  color:#666; position:absolute; left:140px; top:40px; }
+
+/**注册成功**/
+.regsiter-success-cnt{ width:100%; margin-top:134px; display: inline-block;}
+.regsiter-success-cnt p{ text-align:center; color:#666; font-size:24px;}
+.regsiter-success-cnt .clts{ color:#0697ef}
+
+
+
+
+
+
+
+
+.login-foot{ width:100%; border-top:2px solid #c8c9c9;text-align: center; padding-top:20px; min-width:1190px; color:#bbb; font-size:14px;}
