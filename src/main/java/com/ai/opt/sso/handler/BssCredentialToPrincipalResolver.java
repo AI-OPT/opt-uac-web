@@ -21,6 +21,7 @@ public class BssCredentialToPrincipalResolver implements PrincipalResolver {
 		String principalId = bssCredentials.getUsername();
 		
 		Map<String, Object> attributes = new HashMap<String, Object>();
+		attributes.put("username", bssCredentials.getUsername());
 		attributes.put("accountId", bssCredentials.getAccountId());
 		attributes.put("tenantId", bssCredentials.getTenantId());
 		attributes.put("accountName", bssCredentials.getAccountName());
