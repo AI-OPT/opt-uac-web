@@ -1,4 +1,4 @@
-package com.ai.opt.uac.web.controller;
+package com.ai.opt.uac.web.controller.common;
 
 import java.io.IOException;
 

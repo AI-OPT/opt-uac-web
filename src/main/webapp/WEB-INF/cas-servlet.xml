@@ -251,7 +251,7 @@
   
   <bean id="ajaxLoginServiceTicketAction" class="com.ai.opt.sso.action.AjaxLoginServiceTicketAction"/>             
   <bean id="loadAccountService" class="com.ai.opt.sso.service.LoadAccountService"/>
-  <bean id="registerLoginController" class="com.ai.opt.uac.web.controller.RegisterAfterLoginController"
+  <bean id="registerLoginController" class="com.ai.opt.uac.web.controller.common.RegisterAfterLoginController"
 		  p:centralAuthenticationService-ref="centralAuthenticationService"
 		  p:ticketGrantingTicketCookieGenerator-ref="ticketGrantingTicketCookieGenerator"/>
   <context:component-scan base-package="com.ai.opt.sso.service"/>

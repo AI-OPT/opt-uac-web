@@ -1,4 +1,4 @@
-package com.ai.opt.uac.web.controller;
+package com.ai.opt.uac.web.controller.common;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -12,12 +12,12 @@ import org.springframework.web.servlet.mvc.AbstractController;
 
 import com.ai.opt.sso.principal.BssCredentials;
 
-/** 
- * @ClassName: RegisterController 
- * @Description: TODO
- * @author weijunfan
- * @date 2012-10-18 上午08:54:52 
- *  
+/**
+ * 注册后自动登录
+ *
+ * Date: 2016年3月23日 <br>
+ * Copyright (c) 2016 asiainfo.com <br>
+ * @author gucl
  */
 public class RegisterAfterLoginController extends AbstractController
 {
@@ -29,6 +29,7 @@ public class RegisterAfterLoginController extends AbstractController
             HttpServletResponse response) throws Exception
     {
         ModelAndView signinView=new ModelAndView();
+        //TODO 
         String username=request.getParameter("username");
         String password=request.getParameter("password");
         //username="13811095237";

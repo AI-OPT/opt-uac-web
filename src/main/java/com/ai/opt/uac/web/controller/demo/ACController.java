@@ -1,4 +1,4 @@
-package com.ai.opt.uac.web.controller;
+package com.ai.opt.uac.web.controller.demo;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -13,11 +13,11 @@ import net.sf.json.JSONObject;
 
 
 
-@RequestMapping("/demo")
+@RequestMapping("/ac")
 @Controller
-public class DemoController {
+public class ACController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(DemoController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ACController.class);
 
     @RequestMapping("/commlabel")
     public ModelAndView index(HttpServletRequest request) {
