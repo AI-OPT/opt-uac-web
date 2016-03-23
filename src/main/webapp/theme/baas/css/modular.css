@@ -1,3 +1,24 @@
+.int-mini{ width:80px; float:left; border:1px solid #e4e4e4; height:40px; padding-left:4px; font-size:14px;}
+.int-mini:hover{ border:1px solid #0697ef}
+
+.int-small{ width:140px; float:left; border:1px solid #e4e4e4; height:40px; padding-left:4px; font-size:14px;}
+.int-small:hover{ border:1px solid #0697ef}
+
+.int-medium{ width:210px; float:left; border:1px solid #e4e4e4; height:40px; padding-left:4px; font-size:14px;}
+.int-medium:hover{ border:1px solid #0697ef}
+
+.int-large{ width:260px; float:left; border:1px solid #e4e4e4; height:40px; padding-left:4px; font-size:14px;}
+.int-large:hover{ border:1px solid #0697ef}
+
+.int-xlarge { width:350px; float:left; border:1px solid #e4e4e4; height:40px; padding-left:4px; font-size:14px;}
+.int-xlarge :hover{ border:1px solid #0697ef}
+
+.int-xxlarge { width:500px; float:left; border:1px solid #e4e4e4; height:40px; padding-left:4px; font-size:14px;}
+.int-xxlarge :hover{ border:1px solid #0697ef}
+
+.bass-btn{  background:#1c9aec; color:#fff; font-size:16px;}
+.bass-btn:hover{  background:#10a2fb}
+
 /**邮箱绑定**/
 .Mailbox-binding{ margin:0 auto; width:100%;}
 .Mailbox-email-cnt ul li .regsiter-note{position:absolute; top:8px; left:100%; background:#def3f7; line-height:18px; color:#098cdc; margin-left:15px; padding:4px 10px; min-width:400px;}
@@ -34,14 +55,14 @@
 /**找回密码-身份验证**/
 .Retrieve-password{ margin:0 auto; width:100%;}
 
-.Retrieve-steps{ width:825px; margin:0  auto; margin-top:70px;}
+.Retrieve-steps{ width:865px; margin:0  auto; margin-top:70px;}
 
 .Retrieve-steps-round {
 	font-size: 0px;
 	overflow: hidden;
 	line-height: 0px;
 	margin: 18px 0;
-	padding: 0 6px
+	padding: 0 50px
 }
 .Retrieve-steps-round>div {
 	display: inline-block;
@@ -76,7 +97,7 @@
 .Retrieve-steps-round>div:first-child>label {
 	width: auto;
 	max-width: 50%;
-	margin-left:-5px;
+	margin-left:-20px;
 	left: 0
 }
 .Retrieve-steps-round>div:last-child, .Retrieve-steps-round>div.last {
@@ -191,9 +212,9 @@
 
 
 /**基本信息**/
-.Basic-information{ width:900px; margin: 0  auto; }
+.Basic-information{ width:910px; margin: 0  auto; }
 .information-wrap{ width:100%; margin:0 auto; display: inline-block;}
-.information-left{ width:330px; float:left; margin-top:60px;} 
+.information-left{ width:335px; float:left; margin-top:60px;} 
 .information-left-account{ width:100px; float:left; text-align:center; margin-left:120px;}
 .information-left-account ul li{ float:left; width:100%; }
 .information-left-account ul li .account-img{width:100px; height:100px; float:left; border:1px solid #d6eefd; border-radius:50%; padding:5px;}
@@ -201,11 +222,12 @@
 
 
 
-.information-cnt ul{ width:330px; float:left;margin-top:30px;}
+.information-cnt ul{ width:335px; float:left;margin-top:30px;}
 .information-cnt ul li{ float:left; position:relative; margin-top:14px; }
 .information-cnt ul .user{ width:100%; float:left; }
 .information-cnt ul .user{ width:100%; float:left; }
-.information-cnt ul .user  p{ float:left; font-size:14px; color:#666; line-height:40px;}
+.information-cnt ul .user p{ float:left; font-size:14px; color:#666; line-height:40px; margin-right:5px;}
+.ctn-b{}
 .int-medium{ width:210px; float:left; border:1px solid #e4e4e4; height:40px; padding-left:4px; font-size:14px;}
 .int-medium:hover{ border:1px solid #0697ef}
 .select-medium{ width:210px; float:left; border:1px solid #e4e4e4; height:40px;}
@@ -215,6 +237,7 @@
 .information-cnt ul .user .word{ width:100px; text-align:right; float:left;line-height:40px; margin-right:20px;}
 .information-cnt ul .user .huoqu a{ width:110px; float:left; height:40px; background:#1c9aec; margin-left:10px; color:#fff; text-align:center; line-height:40px;}
 .information-cnt ul .user p a{ color:#1c9aec}
+.information-cnt ul .user p a:hover{ color:#043a86;}
 
 .information-cnt ul .user i{margin:0 8px; font-size:16px;}
 
@@ -223,3 +246,20 @@
 .btn_wrap{ width:210px; margin:0 auto; }
 .information-btn{width:210px; margin:0 auto; background:#1c9aec; height:40px; text-align:center; line-height:40px; color:#fff; font-size:18px; }
 .information-btn:hover{ background:#10a2fb}
+
+.table-pop{ width:600px; float:left; height:330px; border:1px solid #d7d7d7;-webkit-box-shadow:0 0 14px #ddd;  -moz-box-shadow:0 0 14px #ddd;  box-shadow:0px 0 14px #ddd; position:absolute; right:20px; top:10px; background:#fff; padding:10px 20px;}
+.pop-close{ float:right;}
+.pop-title{ font-size:16px; color:#002c63;}
+.pop-cnt{ width:450px; margin:0 auto;}
+.pop-cnt ul{ width:100%; float:left; margin-top:20px;}
+.pop-cnt ul li{ width:100%; float:left; margin-top:22px;}
+.pop-cnt ul li .name{ float:left; width:120px; text-align:right; padding-right:20px;}
+.pop-cnt ul li p{ float:left; color:#555;}
+.pop-cnt ul li span{ margin-right:20px;}
+.pop-cnt ul li .pop-text-blue{ color:#0697ef;}
+.pop-cnt ul li .pop-radio{ margin-right:6px;}
+.pop-cnt ul li .pop-int-small{ height:30px;}
+.pop-cnt ul li a{ background:#9a9b9c; padding:0 10px; height:30px; float:left; margin-left:10px; line-height:30px; color:#555;}
+.pop-cnt ul li .pop-status{ background:#1c9aec;color:#fff;}
+.pop-cnt ul li .pop-status:hover{background:#10a2fb;}
+.pop-cnt ul li .pop-btn{ width:120px; height:40px;}
