@@ -8,7 +8,6 @@ import com.ai.opt.base.exception.RPCSystemException;
 import com.ai.opt.sdk.util.DubboConsumerFactory;
 import com.ai.opt.sso.principal.BssCredentials;
 import com.ai.opt.uac.api.sso.interfaces.ILoginSV;
-import com.ai.opt.uac.api.sso.param.UserLoginRequest;
 import com.ai.opt.uac.api.sso.param.UserLoginResponse;
 
 /**
@@ -33,11 +32,7 @@ public class LoadAccountService {
 			throws RPCSystemException {
 		UserLoginResponse user = null;
 		if (bssCredentials != null) {
-			UserLoginRequest param=new UserLoginRequest();
-			param.setUsername(bssCredentials.getUsername());
-			param.setAccountPassword("testssss");
-			user= DubboConsumerFactory.getService(ILoginSV.class).queryAccountByUserName(param);
-
+			user= DubboConsumerFactory.getService(ILoginSV.class).queryAccountByUserName(bssCredentials.getUsername());
 		} // end if
 		
 		return user;
