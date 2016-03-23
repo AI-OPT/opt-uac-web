@@ -7,9 +7,12 @@
     response.setHeader("Cache-Control", "no-cache");
     response.setDateHeader("Expires", 0);
     response.setHeader("Pragma", "No-cache");
+    
+    String _baasBase=_base+"/theme/baas";
+    request.setAttribute("_baasBase", _baasBase);
 %>
 <script>
-    var STESTER_ROOT = "${_base}";
+    var _base = "${_base}";
 </script>
 <script src="${_base}/resources/spm_modules/jquery/1.9.1/jquery.js"></script>
 <script src="${_base}/resources/spm_modules/bootstrap/dist/js/bootstrap.js"></script>
