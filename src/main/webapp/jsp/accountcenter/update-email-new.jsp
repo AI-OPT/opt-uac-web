@@ -1,26 +1,27 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <html lang="zh-cn">
 <head>
+<%@ include file="/inc/inc.jsp"%>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width; initial-scale=0.8;  user-scalable=0;" />
     <title>无标题文档</title>
-     <link href="css/bootstrap.css" rel="stylesheet" type="text/css">
-     <link href="css/font-awesome.css" rel="stylesheet" type="text/css">
-     <link href="css/frame.css" rel="stylesheet" type="text/css">
-     <link href="css/global.css" rel="stylesheet" type="text/css">
-     <link href="css/modular.css" rel="stylesheet" type="text/css">
-     <script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
-     <script type="text/javascript" src="js/bootstrap.js" ></script>
-     <script type="text/javascript" src="js/frame.js" ></script>
-     <script type="text/javascript" src="js/comp.js" ></script>
+     <link href="${_base}/theme/baas/css/bootstrap.css" rel="stylesheet" type="text/css">
+     <link href="${_base}/theme/baas/css/font-awesome.css" rel="stylesheet" type="text/css">
+     <link href="${_base}/theme/baas/css/frame.css" rel="stylesheet" type="text/css">
+     <link href="${_base}/theme/baas/css/global.css" rel="stylesheet" type="text/css">
+     <link href="${_base}/theme/baas/css/modular.css" rel="stylesheet" type="text/css">
+     <script type="text/javascript" src="${_base}/theme/baas/js/jquery-1.11.1.min.js" ></script>
+     <script type="text/javascript" src="${_base}/theme/baas/js/bootstrap.js" ></script>
+     <script type="text/javascript" src="${_base}/theme/baas/js/frame.js" ></script>
+     <script type="text/javascript" src="${_base}/theme/baas/js/comp.js" ></script>
 </head>
 
 <body>
 <!--右侧弹出框-->
 <div class="msg-cnt">
  <div class="p">
-      <a ng-click="$hide()" class="pull-right text-muted"><img src="images/close.png"></a>
+      <a ng-click="$hide()" class="pull-right text-muted"><img src="${_base}/theme/baas/images/close.png"></a>
       审批待办事项
     </div>
  <div class="box-row">
@@ -101,7 +102,7 @@
    <div class="user">
     <div class="msg"><a href="#"><i class="icon-bell-alt"></i><span class="badge">4</span></a></div>
     <div class="user-cnt">
-     <p><img src="images/login_user.png"><span>你好，古珍珍</span><i class="icon-angle-down"></i></p>
+     <p><img src="${_base}/theme/baas/images/login_user.png"><span>你好，古珍珍</span><i class="icon-angle-down"></i></p>
      <ul style="display:none;">
       <li><a href="#">个人中心</a></li>
       <li><a href="#">修改密码</a></li>
