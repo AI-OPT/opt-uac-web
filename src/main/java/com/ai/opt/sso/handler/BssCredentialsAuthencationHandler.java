@@ -2,7 +2,6 @@ package com.ai.opt.sso.handler;
 
 import java.lang.reflect.InvocationTargetException;
 import java.security.GeneralSecurityException;
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -28,12 +27,17 @@ import org.springframework.util.StringUtils;
 import com.ai.opt.base.exception.RPCSystemException;
 import com.ai.opt.sdk.util.Md5Encoder;
 import com.ai.opt.sso.constants.SSOConstants;
+import com.ai.opt.sso.exception.AccountNameNotExistException;
+import com.ai.opt.sso.exception.EmailNotExistException;
+import com.ai.opt.sso.exception.PasswordErrorException;
 import com.ai.opt.sso.exception.PasswordIsNullException;
+import com.ai.opt.sso.exception.PhoneNotExistException;
+import com.ai.opt.sso.exception.SystemErrorException;
 import com.ai.opt.sso.exception.SystemException;
-import com.ai.opt.sso.exception.TenantIdIsNullException;
 import com.ai.opt.sso.exception.UsernameIsNullException;
 import com.ai.opt.sso.principal.BssCredentials;
 import com.ai.opt.sso.service.LoadAccountService;
+import com.ai.opt.sso.util.RegexUtils;
 import com.ai.opt.uac.api.sso.param.UserLoginResponse;
 
 public final class BssCredentialsAuthencationHandler extends AbstractPreAndPostProcessingAuthenticationHandler{
@@ -68,62 +72,69 @@ public final class BssCredentialsAuthencationHandler extends AbstractPreAndPostP
 		final String username = bssCredentials.getUsername();
 		final String pwdFromPage = bssCredentials.getPassword();
 		
-		if(StringUtils.hasText(username)&&StringUtils.hasText(pwdFromPage)){
-			UserLoginResponse user = null;
-			try {
-				user = loadAccountService.loadAccount(bssCredentials);
-				if(user == null){
-					throw new CredentialException("用户不存在");
-				}
-				String dbPwd=user.getAccountPassword();
-				String encryDbPwd=Md5Encoder.encodePassword(SSOConstants.AIOPT_SALT_KEY+dbPwd);
-				if(!pwdFromPage.equals(encryDbPwd)){
-					//密码不对
-					throw new CredentialException("密码错误");
-				}
-				/*if(!SSOConstants.ACCOUNT_ACITVE_STATE.equals(user.getState())){
-					//密码不对
-					throw new CredentialException("账号状态异常");
-				}*/
-				Date currentDate=new Date();
-				Date acitveDate=user.getActiveTime();
-				Date inactiveDate=user.getInactiveTime();
-				if(acitveDate!=null&&currentDate.before(acitveDate)){
-					throw new CredentialException("账号未生效");
-				}
-				if(inactiveDate!=null&&inactiveDate.before(currentDate)){
-					throw new CredentialException("账号已失效");
-				}
-				
-				BeanUtils.copyProperties(bssCredentials, user);
-			}
-			catch (IllegalAccessException | InvocationTargetException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			catch (RPCSystemException e) {
-				//TODO
-				logger.error("验证员工登录失败",e);
-				throw new CredentialException("系统错误");
-			}
-			catch (SystemException e) {
-				//TODO
-				logger.error("验证员工登录失败",e);
-				throw new CredentialException("系统异常");
-			}
-			logger.info("用户 [" + username + "] 认证成功。");
-            return creatHandlerResult(bssCredentials, new SimplePrincipal(username),
-    				null);
-		}else{
-			logger.error("用户 [" + username + "] 认证失败。");
-			if(!StringUtils.hasText(username)){
-				throw new UsernameIsNullException();
-			}else if(!StringUtils.hasText(pwdFromPage)){
-				throw new PasswordIsNullException();
-			}else{
-				throw new TenantIdIsNullException();
-			}
+		//用户名非空校验
+		if(!StringUtils.hasText(username)){
+			logger.error("请输入手机号码或邮箱地址");
+			throw new UsernameIsNullException();
 		}
+		//密码非空校验
+		if(!StringUtils.hasText(pwdFromPage)){
+			logger.error("密码为空！");
+			throw new PasswordIsNullException();
+		}
+		
+		
+		UserLoginResponse user = null;
+		try {
+			
+			user = loadAccountService.loadAccount(bssCredentials);
+			if(user == null){
+				if(RegexUtils.checkIsPhone(bssCredentials.getUsername())){
+					logger.error("手机号码未注册");
+					throw new PhoneNotExistException();
+				}
+				else if(RegexUtils.checkIsEmail(bssCredentials.getUsername())){
+					logger.error("邮箱未绑定");
+					throw new EmailNotExistException();
+				}
+				else{
+					logger.error("账号未注册");
+					throw new AccountNameNotExistException();
+				}
+			}
+			String dbPwd=user.getAccountPassword();
+			String encryDbPwd=Md5Encoder.encodePassword(SSOConstants.AIOPT_SALT_KEY+dbPwd);
+			if(!pwdFromPage.equals(encryDbPwd)){
+				//密码不对
+				throw new PasswordErrorException();
+			}
+			/*if(!SSOConstants.ACCOUNT_ACITVE_STATE.equals(user.getState())){
+				//密码不对
+				throw new CredentialException("账号状态异常");
+			}
+			Date currentDate=new Date();
+			Date acitveDate=user.getActiveTime();
+			Date inactiveDate=user.getInactiveTime();
+			if(acitveDate!=null&&currentDate.before(acitveDate)){
+				throw new CredentialException("账号未生效");
+			}
+			if(inactiveDate!=null&&inactiveDate.before(currentDate)){
+				throw new CredentialException("账号已失效");
+			}*/
+			
+			BeanUtils.copyProperties(bssCredentials, user);
+		}
+		catch (IllegalAccessException | InvocationTargetException e) {
+			logger.error("从user拷贝属性到bssCredentials出错",e);
+			throw new SystemErrorException();
+		}
+		catch (RPCSystemException e) {
+			//TODO
+			logger.error("调用查询账户服务（Dubbo）失败",e);
+			throw new CredentialException("系统错误");
+		}
+		logger.info("用户 [" + username + "] 认证成功。");
+        return creatHandlerResult(bssCredentials, new SimplePrincipal(username),null);
 	}
 
 	private HandlerResult creatHandlerResult(BssCredentials bssCredentials,

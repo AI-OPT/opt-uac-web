@@ -35,11 +35,18 @@ public class CustomAuthenticationExceptionHandler{
         DEFAULT_ERROR_LIST.add(org.jasig.cas.authentication.InvalidLoginLocationException.class);
         DEFAULT_ERROR_LIST.add(org.jasig.cas.authentication.AccountPasswordMustChangeException.class);
         DEFAULT_ERROR_LIST.add(org.jasig.cas.authentication.InvalidLoginTimeException.class);
+        DEFAULT_ERROR_LIST.add(javax.security.auth.login.CredentialException.class);
         DEFAULT_ERROR_LIST.add(com.ai.opt.sso.exception.UsernameIsNullException.class);
         DEFAULT_ERROR_LIST.add(com.ai.opt.sso.exception.SystemBusyException.class);
         DEFAULT_ERROR_LIST.add(com.ai.opt.sso.exception.PasswordIsNullException.class);
         DEFAULT_ERROR_LIST.add(com.ai.opt.sso.exception.TenantIdIsNullException.class);
-        DEFAULT_ERROR_LIST.add(javax.security.auth.login.CredentialException.class);
+        
+        DEFAULT_ERROR_LIST.add(com.ai.opt.sso.exception.AccountNameNotExistException.class);
+        DEFAULT_ERROR_LIST.add(com.ai.opt.sso.exception.EmailNotExistException.class);
+        DEFAULT_ERROR_LIST.add(com.ai.opt.sso.exception.PasswordErrorException.class);
+        DEFAULT_ERROR_LIST.add(com.ai.opt.sso.exception.PhoneNotExistException.class);
+        DEFAULT_ERROR_LIST.add(com.ai.opt.sso.exception.SystemErrorException.class);
+        DEFAULT_ERROR_LIST.add(com.ai.opt.sso.exception.UsernameNotExistException.class);
     }
 
     public void setErrors(final List<Class<? extends Exception>> errors) {
