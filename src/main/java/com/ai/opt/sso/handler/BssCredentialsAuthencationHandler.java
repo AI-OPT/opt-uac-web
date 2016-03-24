@@ -88,7 +88,7 @@ public final class BssCredentialsAuthencationHandler extends AbstractPreAndPostP
 		try {
 			
 			user = loadAccountService.loadAccount(bssCredentials);
-			if(user == null){
+			if(user == null||user.getAccountId()==0){
 				if(RegexUtils.checkIsPhone(bssCredentials.getUsername())){
 					logger.error("手机号码未注册");
 					throw new PhoneNotExistException();

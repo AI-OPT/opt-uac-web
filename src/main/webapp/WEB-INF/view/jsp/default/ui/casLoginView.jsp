@@ -25,10 +25,10 @@ request.setAttribute("_baasBase", _baasBase);
 	<script type="text/javascript" src="${_baasBase }/js/bootstrap.js" ></script>
 	<script type="text/javascript" src="${_baasBase }/js/comp.js" ></script>
 	<script type="text/javascript" src="${_baasBase }/js/md5.js" ></script>
+	<script type="text/javascript" src="${_baasBase }/js/datacheck.js" ></script>
 	
 	
 	<script language="javascript" type="text/javascript"> 
-            
             function encryptPwd(){
             	if (event.keyCode == 13){
             		dologin(); 
@@ -36,6 +36,7 @@ request.setAttribute("_baasBase", _baasBase);
             }//end of encryPwd
             
             function dologin() {
+            	if(validate()){ 
     				var inputPassword = document.getElementById("password").value;
     				var onceCode = "AIOPT_SALT_KEY";
     				var passwordMd5 = hex_md5(onceCode
@@ -43,9 +44,38 @@ request.setAttribute("_baasBase", _baasBase);
     				document.getElementById("password").value = passwordMd5;
     				document.getElementById("username").value = trim(document
     						.getElementById("username").value);
+    				return true;
+            	 }
+            	else{
+            		return false;
+            	} 
     			
     		}//end of dologin
-
+           
+    		function validate() {
+    			var username=document.getElementById("username").value;
+    			var password=document.getElementById("password").value;
+    			try {
+    				if (isNull(username)) {
+    					$("div.login-note").html("请输入手机号码或邮箱地址");
+    					return false;
+    				}else{
+    					$("div.login-note").html("");
+    				}
+    				if (isNull(password)) {
+    					$("div.login-note").html("请输入密码");
+    					return false;
+    				}else{
+    					$("div.login-note").html("");
+    				}
+    				
+    				return true;
+    			} catch (ex) {
+    				return false;
+    			}
+    			
+    			
+    		}
     </script>
 </head>
 
@@ -60,7 +90,7 @@ request.setAttribute("_baasBase", _baasBase);
      </div>
   
    <div class="login-wrapper">
-   	   <form:form method="post" id="fm2" commandName="${commandName}" htmlEscape="true">
+   	   <form:form method="post" id="fm1" name="fm1" commandName="${commandName}" htmlEscape="true">
        <div class="login-wrapper-cnt">
          <div class="login-wrapper-cnt-section">
 	         <ul>
@@ -71,7 +101,7 @@ request.setAttribute("_baasBase", _baasBase);
 		         <li class="password"><i class="icon-lock"></i><form:password cssClass="required int-xlarge-password" cssErrorClass="error" id="password" size="25" tabindex="2" path="password"  accesskey="${passwordAccessKey}" htmlEscape="true" autocomplete="off" onkeydown="encryptPwd()"/></li>
 		         <span><spring:message code="screen.welcome.label.password.accesskey" var="passwordAccessKey" /></span>
 		         <li class="Remb-password"><span><input id="rememberMe" name="rememberMe" type="checkbox" tabindex="3"></span><span>记住账号</span></li>
-		         <li><input class="login-btn" value="登 录"  accesskey="l" type="submit" tabindex="4" onclick="javascript:dologin();" ></li>
+		         <li><input class="login-btn" value="登 录"  accesskey="l" type="submit" tabindex="4" onclick="return dologin();" ></li>
 		         <li class="Forget-password"><a href="身份验证-手机号.html">忘记密码？</a><a href="regsiter.html" class="right">立即注册</a></li>
 	         </ul>
 	         <input type="hidden" name="lt" value="${loginTicket}" />
