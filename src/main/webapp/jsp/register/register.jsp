@@ -8,8 +8,7 @@
 <link href="${_base}/theme/baas/css/font-awesome.css" rel="stylesheet" type="text/css">
 <link href="${_base}/theme/baas/css/global.css" rel="stylesheet" type="text/css">
 <link href="${_base}/theme/baas/css/login-regsiter.css" rel="stylesheet" type="text/css">
-<%-- <script type="text/javascript" src="${_base}/theme/baas/js/jquery-1.11.1.min.js" ></script>
-<script type="text/javascript" src="${_base}/theme/baas/js/bootstrap.js" ></script> --%>
+<script type="text/javascript" src="${_base}/theme/baas/js/jquery.toggle-password.js" ></script> 
 <script type="text/javascript" src="${_base}/theme/baas/js/comp.js" ></script>
 
 <script type="text/javascript">
@@ -19,6 +18,11 @@
 		pager.render();
 	});
 })();
+ $(function(){
+	$('#password').togglePassword({
+		el: '#togglePassword'
+	});
+}); 
 
 </script>
 </head>
@@ -51,7 +55,7 @@
 		         <label for="password" class="int-xxlarge">
 		         	<input type="password" name="password" id="password"class="int-xxlarge" placeholder="密码" >
 		         </label>
-		         	<i class="icon-eye-open"></i>
+		         	<i class="icon-eye-open" id="togglePassword"></i>
 		         	<span class="regsiter-note">
 		         		<i class="icon-caret-left"></i>
 		         		<img src="${_base}/theme/baas/images/warning.png">密码必须由字母和数字/符号组成，不能低于6个字符
