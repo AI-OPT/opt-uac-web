@@ -1,11 +1,11 @@
 (function () {
 	seajs.config({
-		base: STESTER_ROOT+"/resources/spm_modules",
+		base: _base+"/resources/spm_modules",
 		alias:{
 			'jquery' :"jquery/1.9.1/jquery"
 		},
 		paths: {
-			"centaurus":STESTER_ROOT+"/resources/centaurus"
+			"centaurus":_base+"/resources/centaurus"
 		}
 	});
 	
