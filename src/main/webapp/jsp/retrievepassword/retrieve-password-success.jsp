@@ -1,95 +1,22 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <html lang="zh-cn">
 <head>
+    <%@ include file="/inc/inc.jsp"%>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width; initial-scale=0.8;  user-scalable=0;" />
     <title>无标题文档</title>
-     <link href="css/bootstrap.css" rel="stylesheet" type="text/css">
-     <link href="css/font-awesome.css" rel="stylesheet" type="text/css">
-     <link href="css/frame.css" rel="stylesheet" type="text/css">
-     <link href="css/global.css" rel="stylesheet" type="text/css">
-     <link href="css/modular.css" rel="stylesheet" type="text/css">
-     <script type="text/javascript" src="js/jquery-1.11.1.min.js" ></script>
-     <script type="text/javascript" src="js/bootstrap.js" ></script>
-     <script type="text/javascript" src="js/frame.js" ></script>
-     <script type="text/javascript" src="js/comp.js" ></script>
+    <link href="${_base}/theme/baas/css/bootstrap.css" rel="stylesheet" type="text/css">
+     <link href="${_base}/theme/baas/css/font-awesome.css" rel="stylesheet" type="text/css">
+     <link href="${_base}/theme/baas/css/frame.css" rel="stylesheet" type="text/css">
+     <link href="${_base}/theme/baas/css/global.css" rel="stylesheet" type="text/css">
+     <link href="${_base}/theme/baas/css/modular.css" rel="stylesheet" type="text/css">
+     <script type="text/javascript" src="${_base}/theme/baas/js/jquery-1.11.1.min.js" ></script>
+     <script type="text/javascript" src="${_base}/theme/baas/js/bootstrap.js" ></script>
+     <script type="text/javascript" src="${_base}/theme/baas/js/frame.js" ></script>
+     <script type="text/javascript" src="${_base}/theme/baas/js/comp.js" ></script>
 </head>
 
 <body>
-<!--右侧弹出框-->
-<div class="msg-cnt">
- <div class="p">
-      <a ng-click="$hide()" class="pull-right text-muted"><img src="images/close.png"></a>
-      审批待办事项
-    </div>
- <div class="box-row">
-      <div class="box-cell">
-        <div class="box-inner">
-          <div class="list-group no-radius no-borders">
-            <a class="list-group-item p-h-md p-v-xs">
-                <i class="icon-circle text-success text-xs m-r-xs"></i>
-                <span>审批待办事项1</span>
-            </a>
-            <a class="list-group-item p-h-md p-v-xs">
-                <i class="icon-circle text-success text-xs m-r-xs"></i>
-                <span> 审批待办事项5条</span>
-            </a>
-            <a class="list-group-item p-h-md p-v-xs">
-                <i class="icon-circle text-warning text-xs m-r-xs"></i>
-                <span>审批待办事项2</span>
-            </a>
-            <a class="list-group-item p-h-md p-v-xs">
-                <i class="icon-circle text-muted-lt text-xs m-r-xs"></i>
-                <span>审批待办事项5条</span>
-            </a>
-            <a class="list-group-item p-h-md p-v-xs">
-                <i class="icon-circle text-muted-lt text-xs m-r-xs"></i>
-                <span>审批待办事项3个审批</span>
-            </a>
-            <a class="list-group-item p-h-md p-v-xs">
-                <i class="icon-circle text-muted-lt text-xs m-r-xs"></i>
-                <span>审批待办事项</span>
-            </a>
-            <a class="list-group-item p-h-md p-v-xs">
-                <i class="icon-circle text-muted-lt text-xs m-r-xs"></i>
-                <span>审批待办事项</span>
-            </a>
-            <a class="list-group-item p-h-md p-v-xs">
-                <i class="icon-circle text-muted-lt text-xs m-r-xs"></i>
-                <span>审批待办事项5条</span>
-            </a>
-            <a class="list-group-item p-h-md p-v-xs">
-                <i class="icon-circle text-muted-lt text-xs m-r-xs"></i>
-                <span>审批待办事项</span>
-            </a>
-            <a class="list-group-item p-h-md p-v-xs">
-                <i class="icon-circle text-muted-lt text-xs m-r-xs"></i>
-                <span>审批待办事项</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-</div>
-<!--右侧弹出框结束-->
-
-
-  <div class="header">
-   <div class="logo-no">
-    <a href="#">LOGO</a>
-   
-   </div>
-   
-   <div class="breadcrumb">
-    <ul>
-     <li>找回密码</li>
-
-    </ul>
-   </div>
-
-  </div>
-  <div class="navbg"></div>
+  <%@ include file="/inc/head-pwd.jsp"%>
   <div class="wrappera">
    <div class="Retrieve-password">
     
@@ -125,6 +52,6 @@
     
     </div>
   </div>
-  <div class="footer">©2016 版权所有 亚信集团股份有限公司 京ICP备11005544号-15 京公网安备110108007119号</div>
+  <%@ include file="/inc/foot.jsp"%>
 </body>
 </html>

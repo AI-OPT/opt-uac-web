@@ -19,100 +19,9 @@
 </head>
 
 <body>
-<!--右侧弹出框-->
-<div class="msg-cnt">
- <div class="p">
-      <a ng-click="$hide()" class="pull-right text-muted"><img src="${_base}/theme/baas/images/close.png"></a>
-      审批待办事项
-    </div>
- <div class="box-row">
-      <div class="box-cell">
-        <div class="box-inner">
-          <div class="list-group no-radius no-borders">
-            <a class="list-group-item p-h-md p-v-xs">
-                <i class="icon-circle text-success text-xs m-r-xs"></i>
-                <span>审批待办事项1</span>
-            </a>
-            <a class="list-group-item p-h-md p-v-xs">
-                <i class="icon-circle text-success text-xs m-r-xs"></i>
-                <span> 审批待办事项5条</span>
-            </a>
-            <a class="list-group-item p-h-md p-v-xs">
-                <i class="icon-circle text-warning text-xs m-r-xs"></i>
-                <span>审批待办事项2</span>
-            </a>
-            <a class="list-group-item p-h-md p-v-xs">
-                <i class="icon-circle text-muted-lt text-xs m-r-xs"></i>
-                <span>审批待办事项5条</span>
-            </a>
-            <a class="list-group-item p-h-md p-v-xs">
-                <i class="icon-circle text-muted-lt text-xs m-r-xs"></i>
-                <span>审批待办事项3个审批</span>
-            </a>
-            <a class="list-group-item p-h-md p-v-xs">
-                <i class="icon-circle text-muted-lt text-xs m-r-xs"></i>
-                <span>审批待办事项</span>
-            </a>
-            <a class="list-group-item p-h-md p-v-xs">
-                <i class="icon-circle text-muted-lt text-xs m-r-xs"></i>
-                <span>审批待办事项</span>
-            </a>
-            <a class="list-group-item p-h-md p-v-xs">
-                <i class="icon-circle text-muted-lt text-xs m-r-xs"></i>
-                <span>审批待办事项5条</span>
-            </a>
-            <a class="list-group-item p-h-md p-v-xs">
-                <i class="icon-circle text-muted-lt text-xs m-r-xs"></i>
-                <span>审批待办事项</span>
-            </a>
-            <a class="list-group-item p-h-md p-v-xs">
-                <i class="icon-circle text-muted-lt text-xs m-r-xs"></i>
-                <span>审批待办事项</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-</div>
-<!--右侧弹出框结束-->
-
-
-  <div class="header">
-   <div class="logo">
-    <a href="#">LOGO</a>
-    <i class="icon-angle-down"></i> 
-   </div>
-   <div class="subnav">
-   <div class="nav">
-     <ul>
-      <li><a href="#">账户中心</a></li>
-      <li><a href="基本信息-初始状态-可填.html">基本信息</a></li>
-      <li class="current"><a href="账户安全-修改密码.html">修改密码</a></li>
-      <li ><a href="账户安全-修改手机号.html">修改手机号</a></li>
-      <li><a href="账户安全-修改邮箱.html">修改邮箱</a></li>
-      <li><a href="邮箱绑定-身份验证.html">邮箱设置</a></li>
-     </ul>
-     </div>
-    </div>
-   <div class="breadcrumb">
-    <ul>
-     <li>账号中心</li>
-     <li><i class="icon-angle-right"></i>修改密码</li>
-    </ul>
-   </div>
-   <div class="user">
-    <div class="msg"><a href="#"><i class="icon-bell-alt"></i><span class="badge">4</span></a></div>
-    <div class="user-cnt">
-     <p><img src="${_base}/theme/baas/images/login_user.png"><span>你好，古珍珍</span><i class="icon-angle-down"></i></p>
-     <ul style="display:none;">
-      <li><a href="#">个人中心</a></li>
-      <li><a href="#">修改密码</a></li>
-      <li><a href="#">退出</a></li>
-     </ul>
-    </div>
-   </div>
-  </div>
-  <div class="navbg"></div>
+  <%@ include file="/inc/head-user.jsp"%>
+  <%@ include file="/inc/head-logonav.jsp"%>
+  
   <div class="wrapper">
    <div class="Retrieve-password">
     
@@ -184,6 +93,6 @@
     
     </div>
   </div>
-  <div class="footer">©2016 版权所有 亚信集团股份有限公司 京ICP备11005544号-15 京公网安备110108007119号</div>
+  <%@ include file="/inc/foot.jsp"%>
 </body>
 </html>
