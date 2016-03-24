@@ -48,7 +48,7 @@
 		         	</span>
 		         </li>
 		         <li class="password">
-		         <label for="phone" class="int-xxlarge">
+		         <label for="password" class="int-xxlarge">
 		         	<input type="password" name="password" id="password"class="int-xxlarge" placeholder="密码" >
 		         </label>
 		         	<i class="icon-eye-open"></i>
