@@ -29,53 +29,62 @@ request.setAttribute("_baasBase", _baasBase);
 	
 	
 	<script language="javascript" type="text/javascript"> 
-            function encryptPwd(){
-            	if (event.keyCode == 13){
-            		dologin(); 
-            	}
-            }//end of encryPwd
-            
-            function dologin() {
-            	if(validate()){ 
-    				var inputPassword = document.getElementById("password").value;
-    				var onceCode = "AIOPT_SALT_KEY";
-    				var passwordMd5 = hex_md5(onceCode
-    						+ hex_md5(inputPassword));
-    				document.getElementById("password").value = passwordMd5;
-    				document.getElementById("username").value = trim(document
-    						.getElementById("username").value);
-    				return true;
-            	 }
-            	else{
-            		return false;
-            	} 
-    			
-    		}//end of dologin
-           
-    		function validate() {
-    			var username=document.getElementById("username").value;
-    			var password=document.getElementById("password").value;
-    			try {
-    				if (isNull(username)) {
-    					$("div.login-note").html("请输入手机号码或邮箱地址");
-    					return false;
-    				}else{
-    					$("div.login-note").html("");
-    				}
-    				if (isNull(password)) {
-    					$("div.login-note").html("请输入密码");
-    					return false;
-    				}else{
-    					$("div.login-note").html("");
-    				}
-    				
-    				return true;
-    			} catch (ex) {
-    				return false;
-    			}
-    			
-    			
-    		}
+		$(function(){
+			var errors=$("div.login-note").html();
+			if(isNull(errors)){
+				$("div.login-note").css("padding","0px");
+			}
+			else{
+				$("div.login-note").css("padding","padding","3px 10px");
+			}
+		});
+          function encryptPwd(){
+          	if (event.keyCode == 13){
+          		dologin(); 
+          	}
+          }//end of encryPwd
+          
+          function dologin() {
+          	if(validate()){ 
+  				var inputPassword = document.getElementById("password").value;
+  				var onceCode = "AIOPT_SALT_KEY";
+  				var passwordMd5 = hex_md5(onceCode
+  						+ hex_md5(inputPassword));
+  				document.getElementById("password").value = passwordMd5;
+  				document.getElementById("username").value = trim(document
+  						.getElementById("username").value);
+  				return true;
+          	 }
+          	else{
+          		return false;
+          	} 
+  			
+  		}//end of dologin
+         
+  		function validate() {
+  			var username=document.getElementById("username").value;
+  			var password=document.getElementById("password").value;
+  			try {
+  				if (isNull(username)) {
+  					$("div.login-note").html("请输入手机号码或邮箱地址");
+  					$("div.login-note").css("padding","3px 10px");
+  					return false;
+  				}else{
+  					$("div.login-note").html("");
+  				}
+  				if (isNull(password)) {
+  					$("div.login-note").html("请输入密码");
+  					$("div.login-note").css("padding","3px 10px");
+  					return false;
+  				}else{
+  					$("div.login-note").html("");
+  				}
+  				
+  				return true;
+  			} catch (ex) {
+  				return false;
+  			} 			
+  		}//end of validate
     </script>
 </head>
 
@@ -96,11 +105,11 @@ request.setAttribute("_baasBase", _baasBase);
 	         <ul>
 		         <div class="login-note"><form:errors path="*" id="msg" cssClass="errors" element="div" htmlEscape="false" /></div>
 		         <li class="login-title">账户登录</li>
-		         <li class="user"><i class="icon-user"></i><form:input cssClass="required int-xlarge" cssErrorClass="error" id="username" tabindex="1" accesskey="${userNameAccessKey}" path="username" autocomplete="off" htmlEscape="true" placeholder="请输入手机号/邮箱"/></li>
+		         <li class="user"><i class="icon-user"></i><form:input cssClass="required int-xlarge" cssErrorClass="error" id="username" tabindex="1" accesskey="${userNameAccessKey}" path="username" autocomplete="off" htmlEscape="true" placeholder="手机号/邮箱"/></li>
 		         <span><spring:message code="screen.welcome.label.netid.accesskey" var="userNameAccessKey" /></span>
-		         <li class="password"><i class="icon-lock"></i><form:password cssClass="required int-xlarge-password" cssErrorClass="error" id="password" size="25" tabindex="2" path="password"  accesskey="${passwordAccessKey}" htmlEscape="true" autocomplete="off" onkeydown="encryptPwd()"/></li>
+		         <li class="password"><i class="icon-lock"></i><form:password cssClass="required int-xlarge-password" cssErrorClass="error" id="password" size="25" tabindex="2" path="password"  accesskey="${passwordAccessKey}" htmlEscape="true" autocomplete="off"  placeholder="密码" onkeydown="encryptPwd()"/></li>
 		         <span><spring:message code="screen.welcome.label.password.accesskey" var="passwordAccessKey" /></span>
-		         <li class="Remb-password"><span><input id="rememberMe" name="rememberMe" type="checkbox" tabindex="3"></span><span>记住账号</span></li>
+		         <li class="Remb-password" style="display: none;"><span><input id="rememberMe" name="rememberMe" type="checkbox" tabindex="3"></span><span>记住账号</span></li>
 		         <li><input class="login-btn" value="登 录"  accesskey="l" type="submit" tabindex="4" onclick="return dologin();" ></li>
 		         <li class="Forget-password"><a href="身份验证-手机号.html">忘记密码？</a><a href="regsiter.html" class="right">立即注册</a></li>
 	         </ul>
