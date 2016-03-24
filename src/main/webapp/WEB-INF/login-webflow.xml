@@ -128,6 +128,13 @@
     <transition on="SystemBusyException" to="generateLoginTicket"/>
     <transition on="CredentialException" to="generateLoginTicket"/>
     <transition on="TenantIdIsNullException" to="generateLoginTicket"/>
+    
+    <transition on="AccountNameNotExistException" to="generateLoginTicket"/>
+    <transition on="EmailNotExistException" to="generateLoginTicket"/>
+    <transition on="PasswordErrorException" to="generateLoginTicket"/>
+    <transition on="PhoneNotExistException" to="generateLoginTicket"/>
+    <transition on="SystemErrorException" to="generateLoginTicket"/>
+    <transition on="UsernameNotExistException" to="generateLoginTicket"/>
   </action-state>
 
 	<action-state id="sendTicketGrantingTicket">
