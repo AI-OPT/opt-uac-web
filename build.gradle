@@ -59,7 +59,7 @@ dependencies {
 		exclude group: 'org.springframework', module: 'spring'
 	}
 	
-	compile ('com.ai.opt.sdk:opt-sdk:1.0-SNAPSHOT'){
+	compile ('com.ai.opt.sdk:opt-sdk:1.0.1-SNAPSHOT'){
 		exclude group: 'org.springframework', module: 'spring'
 		exclude group: 'org.quartz-scheduler'
 	}
