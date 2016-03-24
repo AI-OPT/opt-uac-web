@@ -65,7 +65,7 @@
          <li class="user">
           <p class="word">图形验证码</p>
           <p><input type="text" class="int-medium"></p>
-          <p><img src="images/ret-yzm.png"></p>
+          <p><img src="${_base}/theme/baas/images/ret-yzm.png"></p>
           <p><A href="#">看不清?换一换</A></p>
          </li>
          <li class="user">
