@@ -13,7 +13,6 @@
 %>
 <script>
     var _base = "${_base}";
-    var STESTER_ROOT = "${_base}";
 </script>
 <script src="${_base}/resources/spm_modules/jquery/1.9.1/jquery.js"></script>
 <script src="${_base}/resources/spm_modules/bootstrap/dist/js/bootstrap.js"></script>

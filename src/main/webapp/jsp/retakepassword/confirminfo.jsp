@@ -48,31 +48,32 @@
  </div><!--步骤结束-->
          
      <!--表单验证-->
-    <div class="Retrieve-cnt">
+    <div class="Retrieve-cnt" id="confirmInfo">
           <ul>
           <li class="user">
-          <p class="word">选择身份验证方式</p>
-          <p><select class="select-medium">
-            <option>手机号码</option>
-            <option>邮箱地址</option>
-          </select></p> 
-          
-         </li>
+	          <p class="word">选择身份验证方式</p>
+	          <p>
+	          	<select class="select-medium" id="confirmType">
+		            <option value="1">手机号码</option>
+		            <option value="2">邮箱地址</option>
+		          </select>
+	          </p> 
+          </li>
           <li class="user">
-          <p class="word">手机号码</p>
-          <p>150****1111</p>
-         </li>
-         <li class="user">
-          <p class="word">图形验证码</p>
-          <p><input type="text" class="int-medium"></p>
-          <p><img src="${_base}/theme/baas/images/ret-yzm.png"></p>
-          <p><A href="#">看不清?换一换</A></p>
-         </li>
-         <li class="user">
-          <p class="word">短信验证码</p>
-          <p><input type="text" class="int-medium"></p>
-          <p class="huoqu"><A href="#">获取验证码</A></p>
-         </li>
+	          <p class="word" id="checkTypeName"></p>
+	          <p id="checkTypeValue"></p>
+          </li>
+          <li class="user">
+	          <p class="word">图形验证码</p>
+	          <p><input type="text" class="int-medium"></p>
+	          <p><img src="${_base}/theme/baas/images/ret-yzm.png"></p>
+	          <p><A href="#">看不清?换一换</A></p>
+          </li>
+          <li class="user">
+	          <p class="word" id="verifyName"></p>
+	          <p><input type="text" class="int-medium" id="verifyCode"></p>
+	          <p class="huoqu"><A href="#">获取验证码</A></p>
+          </li>
          
          
          <li><input type="button" class="Submit-btn" value="提  交"  onclick="location.href='找回密码-身份验证-设置新密码.html';"></li>
@@ -80,11 +81,19 @@
           </ul>
         
         </div>
-    
-    
-    
     </div>
   </div>
   <%@ include file="/inc/foot.jsp"%>
+  
+  <script type="text/javascript">
+		(function() {
+			seajs.use([ 'app/retakepassword/confirmInfo' ], function(ConfirmInfoPager) {
+				var pager = new ConfirmInfoPager({
+					element : document.body
+				});
+				pager.render();
+			});
+		})(); 
+	</script>
 </body>
 </html>
