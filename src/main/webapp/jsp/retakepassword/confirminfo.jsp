@@ -65,7 +65,7 @@
           </li>
           <li class="user">
 	          <p class="word">图形验证码</p>
-	          <p><input type="text" class="int-medium"></p>
+	          <p><input type="text" class="int-medium" id="pictureVerifyCode"></p>
 	          <p><img src="${_base}/theme/baas/images/ret-yzm.png"></p>
 	          <p><A href="#">看不清?换一换</A></p>
           </li>
@@ -75,9 +75,7 @@
 	          <p class="huoqu"><A href="#">获取验证码</A></p>
           </li>
          
-         
-         <li><input type="button" class="Submit-btn" value="提  交"  onclick="location.href='找回密码-身份验证-设置新密码.html';"></li>
-       
+       	  <li><input id="submitBtn" type="button" class="Submit-btn" value="提  交"></li>
           </ul>
         
         </div>
@@ -94,6 +92,6 @@
 				pager.render();
 			});
 		})(); 
-	</script>
+  </script>
 </body>
 </html>

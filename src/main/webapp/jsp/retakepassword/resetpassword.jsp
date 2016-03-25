@@ -1,8 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
-<!DOCTYPE html>
-<html lang="zh-cn">
+<html>
 <head>
-	<%@ include file="/inc/inc.jsp"%>
+    <%@ include file="/inc/inc.jsp"%>
     <meta charset="utf-8">
     <title>无标题文档</title>
     <link href="${_base}/theme/baas/css/bootstrap.css" rel="stylesheet" type="text/css">
@@ -30,7 +29,7 @@
     </div>
     <label>1.身份验证</label>
   </div>
-  <div class="todo"><!--圆圈蓝色 current-->
+  <div class="current"><!--圆圈蓝色 current-->
     <div class="wrap">
       <div class="round"><i class="icon-pencil"></i></div>
       <div class="bar"></div>
@@ -51,32 +50,34 @@
      <!--表单验证-->
     <div class="Retrieve-cnt">
           <ul>
-          <li class="user">
-          <p class="word">选择身份验证方式</p>
-          <p><select class="select-medium">
-            <option>邮箱地址</option>
-            <option>手机号码</option>
-          </select></p> 
+         <li class="user">
+          <p class="word">新密码</p>
+          <p><input type="password"class="int-medium" id="newPassword"><span class="regsiter-note"><i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/correct.png">密码必须由字母和数字、符号组成，不能低于6个字符</span><!--把提示信息放在input后面即可--></p>
+          <div class="Set-password">
+          <p class="low">
+          <span class="f00"></span>
+          <span>低</span>
+          </p>
+           <p class="in">
+          <span class="eb6100"></span>
+          <span>中</span>
+          </p>
+          <p class="gao">
+          <span class="green"></span>
+          <span>高</span>
+          </p>
           
-         </li>
+          </div>
+         
+          </li>
+          
           <li class="user">
-          <p class="word">邮箱地址</p>
-          <p>q****r@123.com</p>
-         </li>
-         <li class="user">
-          <p class="word">图形验证码</p>
-          <p><input type="text" class="int-medium" placeholder=""></p>
-          <p><img src="${_base}/theme/baas/images/ret-yzm.png"></p>
-          <p><A href="#">看不清?换一换</A></p>
-         </li>
-         <li class="user">
-          <p class="word">邮箱验证码</p>
-          <p><input type="text" class="int-medium" placeholder=""></p>
-          <p class="huoqu"><A href="#">获取验证码</A></p>
-         </li>
+          <p class="word">确认密码</p>
+          <p><input type="password" class="int-medium" id="confirmPassword"></p>
+          </li>
+       
          
-         
-         <li><input type="button" class="Submit-btn" value="提  交"  onclick="location.href='找回密码-身份验证-设置新密码.html';"></li>
+          <li><input type="button" class="Submit-btn" value="提  交" id="submitBtn"></li>
        
           </ul>
         
@@ -87,5 +88,15 @@
     </div>
   </div>
   <%@ include file="/inc/foot.jsp"%>
+  <script type="text/javascript">
+		(function() {
+			seajs.use([ 'app/retakepassword/resetpassword' ], function(ResetPasswordPage) {
+				var pager = new ResetPasswordPage({
+					element : document.body
+				});
+				pager.render();
+			});
+		})(); 
+  </script>
 </body>
 </html>

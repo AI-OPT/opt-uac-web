@@ -5,17 +5,17 @@ import java.io.Serializable;
 import com.ai.opt.sdk.util.StringUtil;
 
 /**
- * 确认身份相关信息
+ * 账户信息
  * @author jiaxs
  *
  */
-public class ConfirmData implements Serializable{
+public class AccountData implements Serializable{
 	
 	private static final long serialVersionUID = 1L;
 	private String phone;
 	private String email;
 	
-	public ConfirmData(String phone,String email){
+	public AccountData(String phone,String email){
 		this.setPhone(phone);
 		this.setEmail(email);
 	}
