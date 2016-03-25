@@ -29,8 +29,31 @@ define('app/register/register-email', function (require, exports, module) {
     	_bindHandle: function(){
     		$("#BTN_PASS").on("click",this._passEmail);
     		$("#BTN_SUBMIT").on("click",this._bindEmail);
+    		$("#getIdentify").on("click",this._getIdentify);
     	},
-    	
+    	_getIdentify: function(){
+    		var	param={
+					email:	$("#email").val(),
+					accountId:$("#accountId").val()
+				   };
+    		ajaxController.ajax({
+		        type: "post",
+		        processing: false,
+		        url: "../reg/toSendEmail",
+		        dataType: "json",
+		        data: param,
+		        message: "正在加载数据..",
+		        success: function (data) {
+		        	//校验验证码是否正确
+		        	alert("ok");
+		        },
+		        error: function(XMLHttpRequest, textStatus, errorThrown) {
+					 alert(XMLHttpRequest.status);
+					 alert(XMLHttpRequest.readyState);
+					 alert(textStatus);
+					   }
+		    }); 
+    	},
     	_passEmail: function(){
     		window.location.href="../reg/toRegisterSuccess";
     	},
