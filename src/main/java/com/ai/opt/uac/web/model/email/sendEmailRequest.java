@@ -5,7 +5,7 @@ public class sendEmailRequest {
 	private String[] tomails;
 	/** 抄送邮箱*/
 	private String[] ccmails;
-	/** 主题(必填)*/
+	/** 主题*/
 	private String subject;
 	/** 邮件内容参数(必填)*/
 	private String[] data;
