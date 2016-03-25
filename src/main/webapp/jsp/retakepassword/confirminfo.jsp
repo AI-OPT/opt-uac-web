@@ -50,17 +50,17 @@
      <!--表单验证-->
     <div class="Retrieve-cnt" id="confirmInfo">
           <ul>
-          <li class="user">
+          <li class="user" id="confirmTypeDiv">
 	          <p class="word">选择身份验证方式</p>
 	          <p>
-	          	<select class="select-medium" id="confirmType">
-		            <option value="1">手机号码</option>
+	          	<select class="select-medium" id="confirmType" name='confirmType'>
+		            <option value="1" selected>手机号码</option>
 		            <option value="2">邮箱地址</option>
-		          </select>
+		        </select>
 	          </p> 
           </li>
           <li class="user">
-	          <p class="word" id="checkTypeName"></p>
+	          <p class="word" id="checkTypeName">手机号码</p>
 	          <p id="checkTypeValue"></p>
           </li>
           <li class="user">
@@ -70,7 +70,7 @@
 	          <p><A href="#">看不清?换一换</A></p>
           </li>
           <li class="user">
-	          <p class="word" id="verifyName"></p>
+	          <p class="word" id="verifyName">手机验证码</p>
 	          <p><input type="text" class="int-medium" id="verifyCode"></p>
 	          <p class="huoqu"><A href="#">获取验证码</A></p>
           </li>

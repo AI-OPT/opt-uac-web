@@ -8,9 +8,20 @@
                                 http://www.springframework.org/schema/context
                                 http://www.springframework.org/schema/context/spring-context-3.0.xsd
                                 http://www.springframework.org/schema/mvc
-                                http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd">
+                                http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
     <!-- 默认的注解映射的支持 -->
-    <mvc:annotation-driven/>
+	<mvc:annotation-driven>
+        <mvc:message-converters register-defaults="true">
+            <!-- 避免IE执行AJAX时,返回JSON出现下载文件 -->
+            <bean id="fastJsonHttpMessageConverter" class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>application/json;charset=UTF-8</value>
+                    </list>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
     <!-- 设置使用注解的类所在的jar包 ,当使用 <context:component-scan/> 后，就可以将 <context:annotation-config/>
             移除了 -->
     <context:component-scan base-package="com.ai.opt"/>

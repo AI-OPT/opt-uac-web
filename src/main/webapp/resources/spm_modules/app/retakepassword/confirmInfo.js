@@ -23,23 +23,23 @@ define('app/retakepassword/confirmInfo', function (require, exports, module) {
     	//事件代理
     	events: {
     		//key的格式: 事件+空格+对象选择器;value:事件方法
-//    		 "click [name='TR_IN_EXPANDER_NAME']":"_testAction" , 
+    		"change [name='confirmType']":"_changeShowViewByType"
         },
     	//重写父类
     	setup: function () {
     		ConfirmInfoPager.superclass.setup.call(this);
     		//加载数据
+    		this.accountData = {};
     		this._renderAccountInfo();
     	},
     
     	//加载账户数据
     	_renderAccountInfo: function(){
 			var _this = this;
-			
-			var accountData = _this._getAccountData();
-			$("#checkTypeName").html("手机号码");
-			//$("#checkTypeValue").html(accountData.phone);
-			$("#verifyName").html("短信验证码");
+			//var accountData = _this._getAccountData();
+			_this.accountData = {"phone":"132****1586","email":"1****2@test.com"};
+			_this._controlShowView();
+			_this._changeShowViewByType();
 		},
 		
 		//获取账户信息
@@ -60,7 +60,41 @@ define('app/retakepassword/confirmInfo', function (require, exports, module) {
 					   }
 			});
 			return accountData;
+		},
+		//控制显示界面
+		_controlShowView:function(){
+			var _this = this;
+			var email = _this.accountData.email;
+			if(email == null){
+				$("#confirmTypeDiv").attr("disabled","disabled");
+			}else{
+				$("#confirmTypeDiv").removeAttr("disabled");
+			}
+		},
+		//身份认证方式改变触发事件
+		_changeShowViewByType:function(){
+			var _this = this;
+			var email = _this.accountData.email;
+			var phone = _this.accountData.phone;
+			if(email != null){
+				var confirmType=$('#confirmType option:selected').val();
+				if(confirmType == "1"){
+					$("#checkTypeName").html("手机号码");
+					$("#checkTypeValue").html(phone);
+					$("#verifyName").html("短信验证码");
+				}else if(confirmType == "2"){
+					$("#checkTypeName").html("邮箱地址");
+					$("#checkTypeValue").html(email);
+					$("#verifyName").html("邮箱验证码");
+				}
+			}else{
+				$("#checkTypeName").html("手机号码");
+				$("#checkTypeValue").html(phone);
+				$("#verifyName").html("短信验证码");
+			}
 		}
     });
+    
+    
     module.exports = ConfirmInfoPager
 });
