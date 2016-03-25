@@ -21,8 +21,12 @@ import com.ai.opt.uac.api.account.param.AccountQueryResponse;
 import com.ai.opt.uac.api.security.interfaces.IAccountSecurityManageSV;
 import com.ai.opt.uac.api.security.param.AccountPasswordRequest;
 import com.ai.opt.uac.web.constants.Constants.ResultCode;
+import com.ai.opt.uac.web.constants.Constants.RetakePassword;
+import com.ai.opt.uac.web.model.email.SendEmailRequest;
 import com.ai.opt.uac.web.model.retakepassword.AccountData;
 import com.ai.opt.uac.web.model.retakepassword.SafetyConfirmData;
+import com.ai.opt.uac.web.model.retakepassword.SendVerifyRequest;
+import com.ai.opt.uac.web.util.EmailUtil;
 
 @RequestMapping("/retakePassword")
 @Controller
@@ -68,6 +72,26 @@ public class RetakePasswordController {
 		}
 		return responseData;
     } 
+    
+    /**
+     * 发送邮件
+     * @return
+     */
+    @RequestMapping("/confirmInfo")
+    @ResponseBody
+    public ResponseData<String> sendEmail(SendVerifyRequest sendVerifyRequest){
+    	String checkType = sendVerifyRequest.getCheckType();
+    	String checkAddress = sendVerifyRequest.getCheckAddress();
+    	if(RetakePassword.CHECK_TYPE_PHONE.equals(checkType)){
+    		//手机验证
+    	}else if(RetakePassword.CHECK_TYPE_EMAIL.equals(checkType)){
+    		//邮箱验证
+    		SendEmailRequest emailRequest = new SendEmailRequest();
+    		emailRequest.setTomails(tomails);
+    		EmailUtil.sendEmail(emailRequest);
+    	}
+    	return null;
+    }
     
     /**
      * 身份认证
