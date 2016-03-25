@@ -2,7 +2,6 @@
 <html>
 <head>
 <%@ include file="/inc/inc.jsp"%>
-<meta charset="UTF-8">
 <title>注册成功</title>
 <link href="${_base}/theme/baas/css/bootstrap.css" rel="stylesheet" type="text/css">
 <link href="${_base}/theme/baas/css/font-awesome.css" rel="stylesheet" type="text/css">
@@ -11,6 +10,18 @@
 <script type="text/javascript" src="${_base}/theme/baas/js/jquery-1.11.1.min.js" ></script>
 <script type="text/javascript" src="${_base}/theme/baas/js/bootstrap.js" ></script>
 <script type="text/javascript" src="${_base}/theme/baas/js/comp.js" ></script>
+<script type="text/javascript">     
+function countDown(secs,surl){     
+ var jumpTo = document.getElementById('jumpTo');
+ jumpTo.innerHTML=secs;  
+ if(--secs>0){     
+     setTimeout("countDown("+secs+",'"+surl+"')",1000);     
+     }     
+ else{       
+     location.href=surl;     
+     }     
+ }     
+</script>
 </head>
 
 <body>
@@ -26,8 +37,10 @@
    <div class="regsiter-wrapper">
         <div class="regsiter-success-cnt">
          <p class="clts">恭喜您，注册成功！</p>
-         <p>5s后会自动跳转到首页。</p>
-        
+          <p>
+          	<span id="jumpTo">5</span>s后会自动跳转到首页。
+          </p>
+        <script type="text/javascript">countDown(5,'${_base}/index.jsp');</script>  
         </div>
        
     

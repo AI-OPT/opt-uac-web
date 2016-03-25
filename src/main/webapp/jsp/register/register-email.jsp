@@ -2,15 +2,21 @@
 <html>
 <head>
 <%@ include file="/inc/inc.jsp"%>
-<meta charset="UTF-8">
 <title>注册－邮箱绑定</title>
 <link href="${_base}/theme/baas/css/bootstrap.css" rel="stylesheet" type="text/css">
 <link href="${_base}/theme/baas/css/font-awesome.css" rel="stylesheet" type="text/css">
 <link href="${_base}/theme/baas/css/global.css" rel="stylesheet" type="text/css">
 <link href="${_base}/theme/baas/css/login-regsiter.css" rel="stylesheet" type="text/css">
-<script type="text/javascript" src="${_base}/theme/baas/js/jquery-1.11.1.min.js" ></script>
-<script type="text/javascript" src="${_base}/theme/baas/js/bootstrap.js" ></script>
 <script type="text/javascript" src="${_base}/theme/baas/js/comp.js" ></script>
+<script type="text/javascript">
+(function () {
+	seajs.use('app/register/register-email', function (RegisterEmaillPager) {
+		var pager = new RegisterEmaillPager();
+		pager.render();
+	});
+})();
+
+</script>
 </head>
 
 <body>
@@ -28,7 +34,10 @@
           <ul>
           <li class="user">
           <p class="word">邮箱地址</p>
-          <p><input type="text" class="int-medium" placeholder=""></p>
+          <p>
+          	<input type="text" class="int-medium" placeholder="" id="email" name="email">
+          	<input type="hidden" name="accountId" id="accountId" value="${requestScope.accountId}"/>
+          </p>
           <p><A href="#">获取校验码</A></p>
          </li>
           <li class="user">
@@ -45,7 +54,10 @@
          </p>
          </li>
          
-         <li class="regsiter-email-btn"><input type="button" value="下次再说" class="next-btn"><input type="button" value="提交" class="next-btn next-btn-hover"></li>
+         <li class="regsiter-email-btn">
+         	<input type="button" value="下次再说" class="next-btn" id="BTN_PASS" name="BTN_PASS">
+         	<input type="button" value="提交" class="next-btn next-btn-hover" id="BTN_SUBMIT" name="BTN_SUBMIT">
+         </li>
           </ul>
         
         </div>

@@ -69,14 +69,19 @@ define('app/register/register', function (require, exports, module) {
     		ajaxController.ajax({
 			        type: "post",
 			        processing: false,
-			        url: "../register",
+			        url: "../reg/register",
 			        dataType: "json",
 			        data: param,
 			        message: "正在加载数据..",
 			        success: function (data) {
-			        	alert("ok");
-			        	//window.location.href=_base+"/toRegisterEmail";
+			        	var accountId = data.data;
+			        	window.location.href="../reg/toRegisterEmail?accountId="+accountId;
 			        },
+			        error: function(XMLHttpRequest, textStatus, errorThrown) {
+						 alert(XMLHttpRequest.status);
+						 alert(XMLHttpRequest.readyState);
+						 alert(textStatus);
+						   }
 			        
 			    }); 
     	}
