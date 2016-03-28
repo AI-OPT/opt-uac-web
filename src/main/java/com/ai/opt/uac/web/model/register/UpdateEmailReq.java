@@ -10,6 +10,7 @@ public class UpdateEmailReq {
     private String identifyCode;
 
     private String key;
+    
 
     public String getAccountId() {
         return accountId;

@@ -19,7 +19,6 @@ define('app/register/register', function (require, exports, module) {
     var RegisterPager = Widget.extend({
     	//属性，使用时由类的构造函数传入
     	attrs: {
-    		name: "hello"
     	},
     	//重写父类
     	setup: function () {
@@ -32,8 +31,36 @@ define('app/register/register', function (require, exports, module) {
     	_bindHandle: function(){
     		//console.log(this.get('name'));
     		$("#BTN_REGISTER").on("click",this._sumbit);
+    		$("#refresh").on("click",this._refrashVitentify);
+    		$("#PHONE_IDENTIFY").on("click",this._getPhoneVitentify);
     	},
-    	
+    	//获取短信验证码
+    	_getPhoneVitentify: function(){
+    		var	param={
+					phone:	$("#phone").val()
+				   };
+    		ajaxController.ajax({
+			        type: "post",
+			        processing: false,
+			        url: "../reg/toSendPhone",
+			        dataType: "json",
+			        data: param,
+			        message: "正在加载数据..",
+			        success: function (data) {
+			        	alert("ok");
+			        },
+			        error: function(XMLHttpRequest, textStatus, errorThrown) {
+						 alert(XMLHttpRequest.status);
+						 alert(XMLHttpRequest.readyState);
+						 alert(textStatus);
+						   }
+			        
+			    }); 
+    	},
+    	//刷新验证码
+    	_refrashVitentify: function(){
+    		$("#randomImg").src = "../reg/getImageVerifyCode";
+    	},
     	
     	_bindValidRules: function(){
             validator.addItem({
@@ -63,8 +90,8 @@ define('app/register/register', function (require, exports, module) {
     		var	param={
 					phone:	$("#phone").val(),  
 					accountPassword:$("#password").val(),		   
-					phoneVerifyCode:"11",	   
-					pictureVerifyCode:"111"
+					phoneVerifyCode:$("#phoneVerifyCode").val(),   
+					pictureVerifyCode:$("#pictureVitenfy").val(),	
 				   };
     		ajaxController.ajax({
 			        type: "post",

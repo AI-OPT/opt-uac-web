@@ -47,13 +47,15 @@ public final class Constants {
         public static final int VERIFY_OVERTIME_EMAIL = 1800;
 
         /** 手机验证码有效时间 */
-        public static final int VERIFY_OVERTIME_PHONE = 300;
+        public static final int VERIFY_OVERTIME_PHONE = 30;
 
         /** 图片验证码超时时间 */
         public static final int VERIFY_OVERTIME_PICTURE = 60;
 
         /** 短信验证内容验证码参数名 */
-        public static final String VERIFY_CODE_PHONE = "phone_vertify";
+        public static final String VERIFY_CODE_PHONE = "${VERIFY}:";
+        /** 短信验证内容有效时间参数名 */
+        public static final String VERIFY_TIME_PHONE = "^${VERIFY}:";
 
         /** 邮箱主题 */
         public static final String VERIFY_EMAIL_SUBJECT = "亚信云计费";
@@ -66,7 +68,8 @@ public final class Constants {
 
         /** 邮箱验证码缓存key */
         public static final String REGISTER_EMAIL_KEY = "register-bind-email";
-
+        /** 短信验证码缓存key */
+        public static final String REGISTER_PHONE_KEY = "register-verify-phone";
         /** 缓存命名空间 */
         public static final String CACHE_NAMESPACE = "com.ai.opt.uac.register.cache";
 
@@ -75,5 +78,7 @@ public final class Constants {
 
         /** 邮件称呼前缀 */
         public static final String REGISTER_EMAIL_NICK = "云计费";
+        /** 图片验证码缓存key*/
+        public static final String CACHE_KEY_VERIFY_PICTURE = "register-verify-picture";
     }
 }

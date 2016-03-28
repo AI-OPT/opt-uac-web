@@ -63,13 +63,13 @@
 		         
 		         <li class="identifying">
 		         	<input type="text" class="int-xlarge-identifying" placeholder="验证码" id="pictureVitenfy">
-		         	<span>
-		         		<A href="#"><img src="${_base}/verifyCode/getImageVerifyCode"></A></span><span><A href="#">看不清？换一个</A>
+		         	<span><A href="#"><img src="${_base}/reg/getImageVerifyCode" id="randomImg"></A></span>
+		         	<span id="refresh"><A href="#">看不清？换一个</A>
 		         	</span>
 		         </li>
 		         <li class="SMSidentifying">
-		         	<input type="text" class="int-xlarge-SMSidentifying" placeholder="短信验证码" >
-		         	<span class="yzm"><A href="#">获取验证码</A></span>
+		         	<input type="text" class="int-xlarge-SMSidentifying" placeholder="短信验证码" id="phoneVerifyCode">
+		         	<span class="yzm" id="PHONE_IDENTIFY"><A href="#">获取验证码</A></span>
 		         	<span class="regsiter-note"><i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/correct.png">密码必须由字母和数字/符号组成，不能低于6个字符
 		         	</span>
 		         </li>

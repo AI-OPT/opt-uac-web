@@ -1,6 +1,13 @@
 package com.ai.opt.uac.web.controller.register;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.ObjectUtils;
@@ -27,13 +34,20 @@ import com.ai.opt.uac.api.register.param.PhoneRegisterResponse;
 import com.ai.opt.uac.api.security.interfaces.IAccountSecurityManageSV;
 import com.ai.opt.uac.api.security.param.AccountEmailRequest;
 import com.ai.opt.uac.web.constants.Constants;
+import com.ai.opt.uac.web.constants.Constants.Register;
 import com.ai.opt.uac.web.constants.Constants.ResultCode;
 import com.ai.opt.uac.web.constants.Constants.VerifyCode;
 import com.ai.opt.uac.web.model.email.SendEmailRequest;
+import com.ai.opt.uac.web.model.register.GetSMDataReq;
 import com.ai.opt.uac.web.model.register.UpdateEmailReq;
 import com.ai.opt.uac.web.util.EmailUtil;
 import com.ai.opt.uac.web.util.Md5Util;
+import com.ai.opt.uac.web.util.VerifyCodeUtil;
 import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
+import com.ai.runner.base.exception.CallerException;
+import com.ai.runner.center.mmp.api.manager.interfaces.SMSServices;
+import com.ai.runner.center.mmp.api.manager.param.SMData;
+import com.ai.runner.center.mmp.api.manager.param.SMDataInfoNotify;
 
 
 @RequestMapping("/reg")
@@ -73,6 +87,18 @@ public class RegisterController {
         request.setAccountPassword(Md5Util.stringMD5(request.getAccountPassword()));
 
         try {
+            //校验验证码
+            ICacheClient  iCacheClient=  CacheClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
+            String pictureCode  = iCacheClient.get(Register.CACHE_KEY_VERIFY_PICTURE);
+           if(!pictureCode.equals(request.getPictureVerifyCode())){
+               return responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "验证码错误", null);
+           }
+           //校验短信验证码
+            String phoneCode  = iCacheClient.get(Register.REGISTER_PHONE_KEY);
+            if(phoneCode.equals(request.getPhoneVerifyCode())){
+                return responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "短信验证码错误", null);
+            }
+            
             IRegisterSV iRegisterSV = DubboConsumerFactory.getService("iRegisterSV");
             PhoneRegisterResponse response = iRegisterSV.registerByPhone(request);
             String code = response.getResponseHeader().getResultCode();
@@ -135,6 +161,12 @@ public class RegisterController {
         }
         return responseData;
     }
+    /**
+     * 发送email
+     * 
+     * @param request
+     * @return
+     */
     @RequestMapping("/toSendEmail")
     @ResponseBody
     public ResponseData<String> sendEmail(UpdateEmailReq emailReq,HttpServletRequest request) {
@@ -154,13 +186,13 @@ public class RegisterController {
             String[] data = new String[] { nickName, identifyCode ,overTime};
             SendEmailRequest emailRequest = new SendEmailRequest();
             emailRequest.setSubject(Constants.VerifyCode.VERIFY_EMAIL_SUBJECT);
-            emailRequest.setTemplateRUL(Constants.Register.TEMPLATE_EMAIL_URL);
+            emailRequest.setTemplateRUL(Register.TEMPLATE_EMAIL_URL);
             emailRequest.setTomails(tomails);
             emailRequest.setData(data);
             EmailUtil.sendEmail(emailRequest);
             //存验证码到缓存
-            String key = Constants.Register.REGISTER_EMAIL_KEY+request.getSession().getId();
-            ICacheClient  iCacheClient=  CacheClientFactory.getCacheClient(Constants.Register.CACHE_NAMESPACE);
+            String key = Register.REGISTER_EMAIL_KEY+request.getSession().getId();
+            ICacheClient  iCacheClient=  CacheClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
             iCacheClient.setex(key, VerifyCode.VERIFY_OVERTIME_EMAIL, identifyCode);
             responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "验证码获取成功",
                     key);
@@ -171,5 +203,64 @@ public class RegisterController {
         }
         return responseData;
     }
-
+    /**
+     * 获取验证码
+     * 
+     * @param request
+     * @return
+     */
+    @RequestMapping("/getImageVerifyCode")
+    public void getImageVerifyCode(HttpServletRequest request, HttpServletResponse response) {
+        BufferedImage image = VerifyCodeUtil.getImageVerifyCode(request, Register.CACHE_NAMESPACE, Register.CACHE_KEY_VERIFY_PICTURE);
+        try {
+            ImageIO.write(image, "PNG", response.getOutputStream());
+        } catch (IOException e) {
+            LOG.error("生成图片验证码错误：" + e);
+            e.printStackTrace();
+        } 
+    }
+    /**
+     * 发送短信
+     * 
+     * @param request
+     * @return
+     * @throws Exception 
+     * @throws CallerException 
+     */
+    @RequestMapping("/toSendPhone")
+    @ResponseBody
+    public ResponseData<String> sendPhone(GetSMDataReq sMDataReq,HttpServletRequest request) throws CallerException, Exception {
+        ResponseData<String> responseData = null;
+        try {
+            SMDataInfoNotify smData= new SMDataInfoNotify();
+            smData.setTenantId(request.getSession().getId());
+            smData.setSystemId("12343435");
+            smData.setMsgSeq("1");
+            List<SMData> dataList = new ArrayList<SMData>();
+            SMData data = new SMData();
+            data.setPhone(sMDataReq.getPhone());
+            data.setServiceType("1");
+            data.setTemplateId("1");
+            String identifyCode = RandomUtil.randomNum(VerifyCode.VERIFY_SIZE_PHONE);
+            String codeContent = VerifyCode.VERIFY_CODE_PHONE+identifyCode;
+            String timeContent = VerifyCode.VERIFY_TIME_PHONE+VerifyCode.VERIFY_SIZE_PHONE;
+            data.setGsmContent(codeContent+timeContent);
+            dataList.add(data);
+            smData.setDataList(dataList);
+            SMSServices  sMSServices=  DubboConsumerFactory
+                    .getService("sMSServices");
+            sMSServices.dataInput(smData);
+            //存验证码到缓存
+            String key = Register.REGISTER_PHONE_KEY+request.getSession().getId();
+            ICacheClient  iCacheClient=  CacheClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
+            iCacheClient.setex(key, VerifyCode.VERIFY_OVERTIME_EMAIL, identifyCode);
+            responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "验证码获取成功",
+                    key);
+        } catch (Exception e) {
+            LOG.error("验证码获取失败！", e);
+            responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "验证码获取失败",
+                    null);
+        }
+        return responseData;
+    }
 }
