@@ -1,4 +1,4 @@
-package com.ai.opt.uac.web.controller.retakepassword;
+/*package com.ai.opt.uac.web.controller.retakepassword;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -34,23 +34,23 @@ public class RetakePasswordController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RetakePasswordController.class);
 
-	/**
+	*//**
 	 * 身份认证界面
 	 * 
 	 * @param request
 	 * @return
-	 */
+	 *//*
 	@RequestMapping("/confirminfo")
 	public ModelAndView retakePassPhone(HttpServletRequest request) {
 		return new ModelAndView("jsp/retakepassword/confirminfo");
 	}
 
-	/**
+	*//**
 	 * 获得账户信息
 	 * 
 	 * @param request
 	 * @return
-	 */
+	 *//*
 	@RequestMapping("/getAccountInfo")
 	@ResponseBody
 	public ResponseData<AccountData> getAccountInfo(HttpServletRequest request) {
@@ -71,11 +71,11 @@ public class RetakePasswordController {
 		return responseData;
 	}
 
-	/**
+	*//**
 	 * 发送邮件
 	 * 
 	 * @return
-	 */
+	 *//*
 	@RequestMapping("/confirmInfo")
 	@ResponseBody
 	public ResponseData<String> sendEmail(SendVerifyRequest sendVerifyRequest) {
@@ -98,11 +98,11 @@ public class RetakePasswordController {
 		return null;
 	}
 
-	/**
+	*//**
 	 * 获得账户信息
 	 * 
 	 * @param accountId
-	 */
+	 *//*
 	private AccountQueryResponse getAccountInfoById(Long accountId) {
 		AccountQueryResponse accountQueryResponse = null;
 		try {
@@ -117,12 +117,12 @@ public class RetakePasswordController {
 		return accountQueryResponse;
 	}
 
-	/**
+	*//**
 	 * 身份认证
 	 * 
 	 * @param request
 	 * @return
-	 */
+	 *//*
 	@RequestMapping("/confirmInfo")
 	@ResponseBody
 	public ResponseData<String> confirmInfo(HttpServletRequest request, SafetyConfirmData safetyConfirmData) {
@@ -132,24 +132,24 @@ public class RetakePasswordController {
 		return responseData;
 	}
 
-	/**
+	*//**
 	 * 重置密码页跳转
 	 * 
 	 * @param request
 	 * @return
-	 */
+	 *//*
 	@RequestMapping("/resetPassword")
 	public ModelAndView resetPassword(HttpServletRequest request) {
 		return new ModelAndView("jsp/retakepassword/resetpassword");
 	}
 
-	/**
+	*//**
 	 * 设置密码
 	 * 
 	 * @param request
 	 * @param newPassword
 	 * @return
-	 */
+	 *//*
 	@RequestMapping("/setNewPassword")
 	@ResponseBody
 	public ResponseData<String> setNewPassword(HttpServletRequest request, String password) {
@@ -183,3 +183,4 @@ public class RetakePasswordController {
 	}
 
 }
+*/

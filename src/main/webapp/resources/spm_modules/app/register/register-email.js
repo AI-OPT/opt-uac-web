@@ -61,7 +61,8 @@ define('app/register/register-email', function (require, exports, module) {
     	_bindEmail: function(){
     		var	param={
 					email:	$("#email").val(),
-					accountId:$("#accountId").val()
+					accountId:$("#accountId").val(),
+					identifyCode:$("#identifyCode").val()
 				   };
     		ajaxController.ajax({
 			        type: "post",

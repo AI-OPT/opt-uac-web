@@ -53,7 +53,8 @@ dependencies {
 	compile 'commons-codec:commons-codec:1.5'
 	//jstl
 	compile 'jstl:jstl:1.2'
-	
+	//cache
+	compile 'com.ai.runner.center.mmp:manager:1.0.0-SNAPSHOT'
 	//alibaba
 	compile ('com.alibaba:dubbox:2.8.3'){
 		exclude group: 'org.springframework', module: 'spring'
