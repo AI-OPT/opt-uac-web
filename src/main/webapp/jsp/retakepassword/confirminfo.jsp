@@ -72,7 +72,7 @@
           <li class="user">
 	          <p class="word" id="verifyName">手机验证码</p>
 	          <p><input type="text" class="int-medium" id="verifyCode"></p>
-	          <p class="huoqu"><A href="#">获取验证码</A></p>
+	          <p class="huoqu"><A href="#" id="sendVerify">获取验证码</A></p>
           </li>
          
        	  <li><input id="submitBtn" type="button" class="Submit-btn" value="提  交"></li>

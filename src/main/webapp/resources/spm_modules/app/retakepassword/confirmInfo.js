@@ -24,7 +24,8 @@ define('app/retakepassword/confirmInfo', function (require, exports, module) {
     	events: {
     		//key的格式: 事件+空格+对象选择器;value:事件方法
     		"change [id='confirmType']":"_changeShowViewByType",
-    		"click [id='submitBtn']":"_confirmInfo"
+    		"click [id='submitBtn']":"_confirmInfo",
+    		"click [id='sendVerify']":"_sendVerify"
         },
     	//重写父类
     	setup: function () {
@@ -95,6 +96,33 @@ define('app/retakepassword/confirmInfo', function (require, exports, module) {
 				$("#checkTypeValue").html(email);
 				$("#verifyName").html("邮箱验证码");
 			}
+		},
+		_sendVerify:function(){
+			var _this = this;
+			ajaxController.ajax({
+				type : "POST",
+				data : {
+					"accountId":1,
+					"checkType": function(){
+						return $("#confirmType").val()
+					}
+				},
+				url :_base+"/retakePassword/sendVerify",
+				processing: true,
+				message : "正在处理中，请稍候...",
+				success : function(data) {
+					var statusCode = data.statusCode;
+					var url = data.data;
+					if(statusCode == "1"){
+						window.location.href = _base+url;
+					}else{
+						alert(data.statusInfo);
+					}
+				},
+				error : function(){
+					alert("网络连接超时，请重新修改登录密码");
+				}
+			});
 		},
 		//检查身份信息
 		_confirmInfo:function(){

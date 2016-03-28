@@ -1,7 +1,8 @@
-/*package com.ai.opt.uac.web.controller.retakepassword;
+package com.ai.opt.uac.web.controller.retakepassword;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -12,8 +13,10 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ai.opt.base.exception.RPCSystemException;
 import com.ai.opt.base.vo.BaseResponse;
 import com.ai.opt.base.vo.ResponseHeader;
+import com.ai.opt.sdk.cache.factory.CacheClientFactory;
 import com.ai.opt.sdk.util.DubboConsumerFactory;
 import com.ai.opt.sdk.util.Md5Encoder;
+import com.ai.opt.sdk.util.RandomUtil;
 import com.ai.opt.sdk.web.model.ResponseData;
 import com.ai.opt.uac.api.account.interfaces.IAccountManageSV;
 import com.ai.opt.uac.api.account.param.AccountQueryRequest;
@@ -22,11 +25,13 @@ import com.ai.opt.uac.api.security.interfaces.IAccountSecurityManageSV;
 import com.ai.opt.uac.api.security.param.AccountPasswordRequest;
 import com.ai.opt.uac.web.constants.Constants.ResultCode;
 import com.ai.opt.uac.web.constants.Constants.RetakePassword;
+import com.ai.opt.uac.web.constants.Constants.VerifyCode;
 import com.ai.opt.uac.web.model.email.SendEmailRequest;
 import com.ai.opt.uac.web.model.retakepassword.AccountData;
 import com.ai.opt.uac.web.model.retakepassword.SafetyConfirmData;
 import com.ai.opt.uac.web.model.retakepassword.SendVerifyRequest;
 import com.ai.opt.uac.web.util.EmailUtil;
+import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
 
 @RequestMapping("/retakePassword")
 @Controller
@@ -34,23 +39,23 @@ public class RetakePasswordController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RetakePasswordController.class);
 
-	*//**
+	/**
 	 * 身份认证界面
 	 * 
 	 * @param request
 	 * @return
-	 *//*
+	 */
 	@RequestMapping("/confirminfo")
 	public ModelAndView retakePassPhone(HttpServletRequest request) {
 		return new ModelAndView("jsp/retakepassword/confirminfo");
 	}
 
-	*//**
+	/**
 	 * 获得账户信息
 	 * 
 	 * @param request
 	 * @return
-	 *//*
+	 */
 	@RequestMapping("/getAccountInfo")
 	@ResponseBody
 	public ResponseData<AccountData> getAccountInfo(HttpServletRequest request) {
@@ -71,14 +76,14 @@ public class RetakePasswordController {
 		return responseData;
 	}
 
-	*//**
+	/**
 	 * 发送邮件
 	 * 
 	 * @return
-	 *//*
-	@RequestMapping("/confirmInfo")
+	 */
+	@RequestMapping("/sendVerify")
 	@ResponseBody
-	public ResponseData<String> sendEmail(SendVerifyRequest sendVerifyRequest) {
+	public ResponseData<String> sendVerify(HttpServletRequest request,SendVerifyRequest sendVerifyRequest) {
 		String checkType = sendVerifyRequest.getCheckType();
 		AccountQueryResponse accountInfo = getAccountInfoById(sendVerifyRequest.getAccountId());
 		if(RetakePassword.CHECK_TYPE_PHONE.equals(checkType)){
@@ -91,18 +96,27 @@ public class RetakePasswordController {
 			SendEmailRequest emailRequest=new SendEmailRequest();
 			emailRequest.setTomails(new String[]{email});
 			emailRequest.setTemplateRUL(RetakePassword.TEMPLATE_EMAIL_URL);
+			//验证码
+			String verifyCode = RandomUtil.randomNum(VerifyCode.VERIFY_SIZE_EMAIL);
+			ICacheClient cacheClient = CacheClientFactory.getCacheClient(RetakePassword.CACHE_NAMESPACE);
+			String cacheKey = request.getSession().getId()+RetakePassword.CACHE_KEY_VERIFY_EMAIL;
+			cacheClient.setex(cacheKey, VerifyCode.VERIFY_OVERTIME_EMAIL, verifyCode);
 			
-			emailRequest.setData(new String[] { nickName, "587434" ,RetakePassword.VERIFY_EMAIL_OVERTIME+""});
+			String value = cacheClient.get(cacheKey);
+			System.out.println("************************"+value);
+			//超时时间
+			String overTime = ObjectUtils.toString(VerifyCode.VERIFY_OVERTIME_EMAIL/60);
+			emailRequest.setData(new String[] { nickName, verifyCode ,overTime});
 			EmailUtil.sendEmail(emailRequest);
 		}
 		return null;
 	}
 
-	*//**
+	/**
 	 * 获得账户信息
 	 * 
 	 * @param accountId
-	 *//*
+	 */
 	private AccountQueryResponse getAccountInfoById(Long accountId) {
 		AccountQueryResponse accountQueryResponse = null;
 		try {
@@ -117,12 +131,12 @@ public class RetakePasswordController {
 		return accountQueryResponse;
 	}
 
-	*//**
+	/**
 	 * 身份认证
 	 * 
 	 * @param request
 	 * @return
-	 *//*
+	 */
 	@RequestMapping("/confirmInfo")
 	@ResponseBody
 	public ResponseData<String> confirmInfo(HttpServletRequest request, SafetyConfirmData safetyConfirmData) {
@@ -132,24 +146,24 @@ public class RetakePasswordController {
 		return responseData;
 	}
 
-	*//**
+	/**
 	 * 重置密码页跳转
 	 * 
 	 * @param request
 	 * @return
-	 *//*
+	 */
 	@RequestMapping("/resetPassword")
 	public ModelAndView resetPassword(HttpServletRequest request) {
 		return new ModelAndView("jsp/retakepassword/resetpassword");
 	}
 
-	*//**
+	/**
 	 * 设置密码
 	 * 
 	 * @param request
 	 * @param newPassword
 	 * @return
-	 *//*
+	 */
 	@RequestMapping("/setNewPassword")
 	@ResponseBody
 	public ResponseData<String> setNewPassword(HttpServletRequest request, String password) {
@@ -183,4 +197,3 @@ public class RetakePasswordController {
 	}
 
 }
-*/
