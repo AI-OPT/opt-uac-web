@@ -28,25 +28,52 @@ public final class Constants {
 		/** 图片验证码缓存key*/
 		public static final String CACHE_KEY_VERIFY_PICTURE = "retake-password-verify-picture";
 	}
-	public static final String REGISTER_EMAIL_SUBJECT = "亚信云计费";
-    public static final String REGISTER_EMAIL_TIME = "30";
-    public static final String REGISTER_EMAIL_KEY = "REG";
     
-    public class VerifyCode{
-    	private VerifyCode(){}
-    	
-    	/**邮箱验证码长度*/
-		public static final int VERIFY_SIZE_EMAIL = 6;
-		/**手机验证码长度*/
-		public static final int VERIFY_SIZE_PHONE = 6;
-		/**图片验证码长度*/
-		public static final int VERIFY_SIZE_PICTURE = 4;
-    	
-    	/**邮件验证码超时时间*/
-		public static final int VERIFY_OVERTIME_EMAIL = 1800;
-		/**手机验证码超时时间*/
-		public static final int VERIFY_OVERTIME_PHONE = 300;
-		/**图片验证码超时时间*/
-		public static final int VERIFY_OVERTIME_PICTURE = 60;
+
+    public class VerifyCode {
+        private VerifyCode() {
+        }
+
+        /** 邮箱验证码长度 */
+        public static final int VERIFY_SIZE_EMAIL = 6;
+
+        /** 手机验证码长度 */
+        public static final int VERIFY_SIZE_PHONE = 6;
+
+        /** 图片验证码长度 */
+        public static final int VERIFY_SIZE_PICTURE = 4;
+
+        /** 邮件验证码超时时间 */
+        public static final int VERIFY_OVERTIME_EMAIL = 1800;
+
+        /** 手机验证码有效时间 */
+        public static final int VERIFY_OVERTIME_PHONE = 300;
+
+        /** 图片验证码超时时间 */
+        public static final int VERIFY_OVERTIME_PICTURE = 60;
+
+        /** 短信验证内容验证码参数名 */
+        public static final String VERIFY_CODE_PHONE = "phone_vertify";
+
+        /** 邮箱主题 */
+        public static final String VERIFY_EMAIL_SUBJECT = "亚信云计费";
+
+    }
+
+    public static final class Register {
+        private Register() {
+        }
+
+        /** 邮箱验证码缓存key */
+        public static final String REGISTER_EMAIL_KEY = "register-bind-email";
+
+        /** 缓存命名空间 */
+        public static final String CACHE_NAMESPACE = "com.ai.opt.uac.register.cache";
+
+        /** 邮箱模板路径 */
+        public static final String TEMPLATE_EMAIL_URL = "email/template/uac-register-binemail.xml";
+
+        /** 邮件称呼前缀 */
+        public static final String REGISTER_EMAIL_NICK = "云计费";
     }
 }

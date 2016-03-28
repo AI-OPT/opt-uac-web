@@ -3,6 +3,7 @@ package com.ai.opt.uac.web.controller.register;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -27,6 +28,7 @@ import com.ai.opt.uac.api.security.interfaces.IAccountSecurityManageSV;
 import com.ai.opt.uac.api.security.param.AccountEmailRequest;
 import com.ai.opt.uac.web.constants.Constants;
 import com.ai.opt.uac.web.constants.Constants.ResultCode;
+import com.ai.opt.uac.web.constants.Constants.VerifyCode;
 import com.ai.opt.uac.web.model.email.SendEmailRequest;
 import com.ai.opt.uac.web.model.register.UpdateEmailReq;
 import com.ai.opt.uac.web.util.EmailUtil;
@@ -104,7 +106,7 @@ public class RegisterController {
             String inputIdentify = request.getIdentifyCode();
             //获取缓存中的验证码
             ICacheClient  iCacheClient=  CacheClientFactory.getCacheClient("com.ai.opt.uac.register.cache");
-            String identifyCode =  iCacheClient.get(Constants.REGISTER_EMAIL_KEY+session.getId());
+            String identifyCode =  iCacheClient.get(Constants.Register.REGISTER_EMAIL_KEY+session.getId());
             if(!inputIdentify.equals(identifyCode)){
               return  responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "验证码不正确", null); 
             }
@@ -144,22 +146,22 @@ public class RegisterController {
             String email = emailReq.getEmail();
             req.setAccountId(Long.valueOf(emailReq.getAccountId()));
             AccountQueryResponse response =  iAccountManageSV.queryBaseInfo(req);
-            String nickName = "云计费"+response.getNickName();
-            String identifyCode = RandomUtil.randomNum(6);
+            String nickName = Constants.Register.REGISTER_EMAIL_NICK+response.getNickName();
+            String identifyCode = RandomUtil.randomNum(Constants.VerifyCode.VERIFY_SIZE_PHONE);
             String[] tomails = new String[] { email };
-            String[] ccmails = new String[] { "1011713883@qq.com" };
-            String[] data = new String[] { nickName, identifyCode ,Constants.REGISTER_EMAIL_TIME};
+          //超时时间
+            String overTime = ObjectUtils.toString(VerifyCode.VERIFY_OVERTIME_EMAIL/60);
+            String[] data = new String[] { nickName, identifyCode ,overTime};
             SendEmailRequest emailRequest = new SendEmailRequest();
-            emailRequest.setCcmails(ccmails);
-            emailRequest.setSubject(Constants.REGISTER_EMAIL_SUBJECT);
-            emailRequest.setTemplateRUL(EmailUtil.BIND_EMAIL);
+            emailRequest.setSubject(Constants.VerifyCode.VERIFY_EMAIL_SUBJECT);
+            emailRequest.setTemplateRUL(Constants.Register.TEMPLATE_EMAIL_URL);
             emailRequest.setTomails(tomails);
             emailRequest.setData(data);
             EmailUtil.sendEmail(emailRequest);
             //存验证码到缓存
-            String key = Constants.REGISTER_EMAIL_KEY+request.getSession().getId();
-            ICacheClient  iCacheClient=  CacheClientFactory.getCacheClient("com.ai.opt.uac.register.cache");
-            iCacheClient.set(key, identifyCode);
+            String key = Constants.Register.REGISTER_EMAIL_KEY+request.getSession().getId();
+            ICacheClient  iCacheClient=  CacheClientFactory.getCacheClient(Constants.Register.CACHE_NAMESPACE);
+            iCacheClient.setex(key, VerifyCode.VERIFY_OVERTIME_EMAIL, identifyCode);
             responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "验证码获取成功",
                     key);
         } catch (RPCSystemException e) {

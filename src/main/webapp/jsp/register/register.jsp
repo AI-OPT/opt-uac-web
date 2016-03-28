@@ -1,7 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <html>
 <head>
-<meta charset="UTF-8">
 <%@ include file="/inc/inc.jsp"%>
 <title>注册</title>
 <link href="${_base}/theme/baas/css/bootstrap.css" rel="stylesheet" type="text/css">
@@ -63,9 +62,9 @@
 		         </li>
 		         
 		         <li class="identifying">
-		         	<input type="text" class="int-xlarge-identifying" placeholder="验证码" >
+		         	<input type="text" class="int-xlarge-identifying" placeholder="验证码" id="pictureVitenfy">
 		         	<span>
-		         		<A href="#"><img src="${_base}/theme/baas/images/yzm.png"></A></span><span><A href="#">看不清？换一个</A>
+		         		<A href="#"><img src="${_base}/verifyCode/getImageVerifyCode"></A></span><span><A href="#">看不清？换一个</A>
 		         	</span>
 		         </li>
 		         <li class="SMSidentifying">
