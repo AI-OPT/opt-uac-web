@@ -31,7 +31,6 @@ import com.ai.opt.uac.web.model.email.SendEmailRequest;
 import com.ai.opt.uac.web.model.register.UpdateEmailReq;
 import com.ai.opt.uac.web.util.EmailUtil;
 import com.ai.opt.uac.web.util.Md5Util;
-import com.ai.opt.uac.web.util.cacheUtil;
 import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
 
 
