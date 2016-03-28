@@ -25,7 +25,7 @@ import com.ai.opt.uac.api.register.param.PhoneRegisterResponse;
 import com.ai.opt.uac.api.security.interfaces.IAccountSecurityManageSV;
 import com.ai.opt.uac.api.security.param.AccountEmailRequest;
 import com.ai.opt.uac.web.constants.Constants;
-import com.ai.opt.uac.web.model.email.sendEmailRequest;
+import com.ai.opt.uac.web.model.email.SendEmailRequest;
 import com.ai.opt.uac.web.model.register.UpdateEmailReq;
 import com.ai.opt.uac.web.util.EmailUtil;
 import com.ai.opt.uac.web.util.Md5Util;
@@ -147,7 +147,7 @@ public class RegisterController {
             String[] data = new String[] { nickName, identifyCode ,Constants.REGISTER_EMAIL_TIME};
             //String htmlcontext = EmailTemplateUtil.buildHtmlTextFromTemplate(Constants.BIND_EMAIL, data);
             //EmailFactory.SendEmail(tomails, ccmails, Constants.REGISTER_EMAIL_SUBJECT, htmlcontext);
-            sendEmailRequest emailRequest = new sendEmailRequest();
+            SendEmailRequest emailRequest = new SendEmailRequest();
             emailRequest.setCcmails(ccmails);
             emailRequest.setSubject(Constants.REGISTER_EMAIL_SUBJECT);
             emailRequest.setTemplateRUL(EmailUtil.BIND_EMAIL);
