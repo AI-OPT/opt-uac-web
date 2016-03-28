@@ -13,7 +13,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.ai.opt.sdk.web.model.ResponseData;
 import com.ai.opt.uac.web.constants.Constants.RetakePassword;
 import com.ai.opt.uac.web.util.VerifyCodeUtil;
 
@@ -29,6 +28,7 @@ public class VerifyCodeController {
 		try {
 			ImageIO.write(image, "PNG", response.getOutputStream());
 		} catch (IOException e) {
+			LOGGER.error("生成图片验证码错误：" + e);
 			e.printStackTrace();
 		} 
 	}
