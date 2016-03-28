@@ -21,5 +21,14 @@ public final class Constants {
 		public static final int VERIFY_EMAIL_OVERTIME = 1800;
 		/**手机验证码超时时间*/
 		public static final int VERIFY_PHONE_OVERTIME = 300;
+		
+		/**邮箱模板路径*/
+		public static final String TEMPLATE_EMAIL_URL = "email/template/uac-register-binemail.xml";
+		
+		/**验证码长度*/
+		public static final int VERIFY_SIZE = 6;
 	}
+	public static final String REGISTER_EMAIL_SUBJECT = "亚信云计费";
+    public static final String REGISTER_EMAIL_TIME = "30";
+    public static final String REGISTER_EMAIL_KEY = "REG";
 }
