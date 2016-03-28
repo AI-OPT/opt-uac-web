@@ -111,16 +111,9 @@ define('app/retakepassword/confirmInfo', function (require, exports, module) {
 				processing: true,
 				message : "正在处理中，请稍候...",
 				success : function(data) {
-					var statusCode = data.statusCode;
-					var url = data.data;
-					if(statusCode == "1"){
-						window.location.href = _base+url;
-					}else{
-						alert(data.statusInfo);
-					}
 				},
 				error : function(){
-					alert("网络连接超时，请重新修改登录密码");
+					alert("网络连接超时!");
 				}
 			});
 		},

@@ -18,13 +18,15 @@ public final class Constants {
 		public static final String CHECK_TYPE_EMAIL = "2";
 		
 		/**邮箱模板路径*/
-		public static final String TEMPLATE_EMAIL_URL = "email/template/uac-register-binemail.xml";
+		public static final String TEMPLATE_EMAIL_URL = "email/template/uac-retakepassword-mail.xml";
 		
 		/** 缓存命名空间*/
-		public static final String CACHE_NAMESPACE = "com.ai.opt.uac.cache.retakepassword";
+		public static final String CACHE_NAMESPACE = "com.ai.opt.uac.retakepassword.cache";
 		
 		/** 邮箱验证码缓存key*/
 		public static final String CACHE_KEY_VERIFY_EMAIL = "retake-password-verify-email";
+		/** 图片验证码缓存key*/
+		public static final String CACHE_KEY_VERIFY_PICTURE = "retake-password-verify-picture";
 	}
 	public static final String REGISTER_EMAIL_SUBJECT = "亚信云计费";
     public static final String REGISTER_EMAIL_TIME = "30";

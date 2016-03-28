@@ -21,7 +21,7 @@ public class VerifyCodeUtil {
 	private static final Logger LOGGER = LoggerFactory.getLogger(VerifyCodeController.class);
 
 	public static BufferedImage getImageVerifyCode(HttpServletRequest request, String namespace, String cacheKey) {
-		int width = 60, height = 20;
+		int width = 100, height = 40;
 		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
 		// 获取图形上下文
@@ -44,17 +44,17 @@ public class VerifyCodeUtil {
 		// 将认证码显示到图象中
 		g.setColor(Color.black);
 
-		g.setFont(new Font("Atlantic Inline", Font.PLAIN, 18));
+		g.setFont(new Font("Atlantic Inline", Font.PLAIN, 30));
 		String Str = verifyCode.substring(0, 1);
-		g.drawString(Str, 8, 17);
+		g.drawString(Str, 8, 25);
 
 		Str = verifyCode.substring(1, 2);
-		g.drawString(Str, 20, 15);
+		g.drawString(Str, 28, 30);
 		Str = verifyCode.substring(2, 3);
-		g.drawString(Str, 35, 18);
+		g.drawString(Str, 48, 27);
 
 		Str = verifyCode.substring(3, 4);
-		g.drawString(Str, 45, 15);
+		g.drawString(Str, 68, 32);
 		// 随机产生88个干扰点，使图象中的认证码不易被其它程序探测到
 		Random random = new Random();
 		for (int i = 0; i < 30; i++) {

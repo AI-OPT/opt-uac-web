@@ -35,6 +35,7 @@ public class IConfigCenterClientTest {
         // 缓存空间
         String cachesnsConfig = "{\"com.ai.opt.uac.sso.unicache\":\"" + uacRedisHost
                 + "\",\"com.ai.opt.uac.register.cache\":\"" + uacRedisHost
+                + "\",\"com.ai.opt.uac.retakepassword.cache\":\"" + uacRedisHost
                 + "\",\"com.ai.opt.uni.session.sessionclient.uacweb\":\"" + uacRedisHost + "\"}";
         
         StringBuilder bu=new StringBuilder();

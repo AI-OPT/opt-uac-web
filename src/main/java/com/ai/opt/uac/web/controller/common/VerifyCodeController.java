@@ -11,7 +11,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.ai.opt.sdk.web.model.ResponseData;
+import com.ai.opt.uac.web.constants.Constants.RetakePassword;
 import com.ai.opt.uac.web.util.VerifyCodeUtil;
 
 @Controller
@@ -20,14 +23,13 @@ public class VerifyCodeController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(VerifyCodeController.class);
 
 	@RequestMapping("/getImageVerifyCode")
-	public String getImageVerifyCode(HttpServletRequest request, HttpServletResponse response) {
+	@ResponseBody
+	public void getImageVerifyCode(HttpServletRequest request, HttpServletResponse response) {
+		BufferedImage image = VerifyCodeUtil.getImageVerifyCode(request, RetakePassword.CACHE_NAMESPACE, RetakePassword.CACHE_KEY_VERIFY_PICTURE);
 		try {
-			BufferedImage image = VerifyCodeUtil.getImageVerifyCode(request, "", "");
 			ImageIO.write(image, "PNG", response.getOutputStream());
 		} catch (IOException e) {
-			LOGGER.error("生成图片错误：" + e);
 			e.printStackTrace();
-		}
-		return null;
+		} 
 	}
 }

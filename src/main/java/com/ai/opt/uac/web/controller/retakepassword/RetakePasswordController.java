@@ -17,6 +17,7 @@ import com.ai.opt.sdk.cache.factory.CacheClientFactory;
 import com.ai.opt.sdk.util.DubboConsumerFactory;
 import com.ai.opt.sdk.util.Md5Encoder;
 import com.ai.opt.sdk.util.RandomUtil;
+import com.ai.opt.sdk.util.StringUtil;
 import com.ai.opt.sdk.web.model.ResponseData;
 import com.ai.opt.uac.api.account.interfaces.IAccountManageSV;
 import com.ai.opt.uac.api.account.param.AccountQueryRequest;
@@ -65,15 +66,13 @@ public class RetakePasswordController {
 		LOGGER.info("查询账户信息开始，查询参数为： accountId=" + accountId);
 		AccountQueryRequest accountQueryRequest = new AccountQueryRequest();
 		accountQueryRequest.setAccountId(accountId);
-		ResponseData<AccountData> responseData = null;
-		//获取账户信息
+		// 获取账户信息
 		AccountQueryResponse accountQueryResponse = getAccountInfoById(accountId);
-		//加密
+		// 加密
 		String phone = accountQueryResponse.getPhone();
 		String email = accountQueryResponse.getEmail();
 		AccountData confirmInfo = new AccountData(phone, email);
-		responseData = new ResponseData<AccountData>(ResponseData.AJAX_STATUS_SUCCESS, "信息查询成功", confirmInfo);
-		return responseData;
+		return new ResponseData<AccountData>(ResponseData.AJAX_STATUS_SUCCESS, "信息查询成功", confirmInfo);
 	}
 
 	/**
@@ -83,33 +82,43 @@ public class RetakePasswordController {
 	 */
 	@RequestMapping("/sendVerify")
 	@ResponseBody
-	public ResponseData<String> sendVerify(HttpServletRequest request,SendVerifyRequest sendVerifyRequest) {
+	public ResponseData<String> sendVerify(HttpServletRequest request, SendVerifyRequest sendVerifyRequest) {
 		String checkType = sendVerifyRequest.getCheckType();
+		ResponseData<String> responseData = null;
 		AccountQueryResponse accountInfo = getAccountInfoById(sendVerifyRequest.getAccountId());
-		if(RetakePassword.CHECK_TYPE_PHONE.equals(checkType)){
-			//手机验证
-			String phone = accountInfo.getPhone();
-		}else if(RetakePassword.CHECK_TYPE_EMAIL.equals(checkType)){
-			//邮箱验证
-			String email = accountInfo.getEmail();
-			String nickName = accountInfo.getNickName();
-			SendEmailRequest emailRequest=new SendEmailRequest();
-			emailRequest.setTomails(new String[]{email});
-			emailRequest.setTemplateRUL(RetakePassword.TEMPLATE_EMAIL_URL);
-			//验证码
-			String verifyCode = RandomUtil.randomNum(VerifyCode.VERIFY_SIZE_EMAIL);
-			ICacheClient cacheClient = CacheClientFactory.getCacheClient(RetakePassword.CACHE_NAMESPACE);
-			String cacheKey = request.getSession().getId()+RetakePassword.CACHE_KEY_VERIFY_EMAIL;
-			cacheClient.setex(cacheKey, VerifyCode.VERIFY_OVERTIME_EMAIL, verifyCode);
-			
-			String value = cacheClient.get(cacheKey);
-			System.out.println("************************"+value);
-			//超时时间
-			String overTime = ObjectUtils.toString(VerifyCode.VERIFY_OVERTIME_EMAIL/60);
-			emailRequest.setData(new String[] { nickName, verifyCode ,overTime});
-			EmailUtil.sendEmail(emailRequest);
+		if (accountInfo != null) {
+			if (RetakePassword.CHECK_TYPE_PHONE.equals(checkType)) {
+				// 手机验证
+				String phone = accountInfo.getPhone();
+				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "发送成功", "发送成功");
+			} else if (RetakePassword.CHECK_TYPE_EMAIL.equals(checkType)) {
+				// 邮箱验证
+				String email = accountInfo.getEmail();
+				String nickName = accountInfo.getNickName();
+				SendEmailRequest emailRequest = new SendEmailRequest();
+				emailRequest.setTomails(new String[] { email });
+				emailRequest.setTemplateRUL(RetakePassword.TEMPLATE_EMAIL_URL);
+				// 验证码
+				String verifyCode = RandomUtil.randomNum(VerifyCode.VERIFY_SIZE_EMAIL);
+				// 将验证码放入缓存
+				ICacheClient cacheClient = CacheClientFactory.getCacheClient(RetakePassword.CACHE_NAMESPACE);
+				String cacheKey = RetakePassword.CACHE_KEY_VERIFY_EMAIL+request.getSession().getId();
+				cacheClient.setex(cacheKey, VerifyCode.VERIFY_OVERTIME_EMAIL, verifyCode);
+
+				String value = cacheClient.get(cacheKey);
+				System.out.println("************************" + value);
+				// 超时时间
+				String overTime = ObjectUtils.toString(VerifyCode.VERIFY_OVERTIME_EMAIL / 60);
+				emailRequest.setData(new String[] { nickName, verifyCode, overTime });
+				EmailUtil.sendEmail(emailRequest);
+				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "发送成功", "发送成功");
+			} else {
+				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "发送失败", "验证方式不正确");
+			}
+		} else {
+			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "发送失败", "该账号不存在");
 		}
-		return null;
+		return responseData;
 	}
 
 	/**
@@ -140,9 +149,26 @@ public class RetakePasswordController {
 	@RequestMapping("/confirmInfo")
 	@ResponseBody
 	public ResponseData<String> confirmInfo(HttpServletRequest request, SafetyConfirmData safetyConfirmData) {
-
 		// TODO 待处理 验证信息
-		ResponseData<String> responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "验证成功", "/retakePassword/resetPassword");
+		String confirmType = safetyConfirmData.getConfirmType();
+		ResponseData<String> responseData = null;
+		if(RetakePassword.CHECK_TYPE_PHONE.equals(confirmType)){
+			
+		}else if(RetakePassword.CHECK_TYPE_EMAIL.equals(confirmType)){
+			String cacheKey = RetakePassword.CACHE_KEY_VERIFY_EMAIL+request.getSession().getId();
+			ICacheClient cacheClient = CacheClientFactory.getCacheClient(RetakePassword.CACHE_NAMESPACE);
+			String verifyCodeCache = cacheClient.get(cacheKey);
+			String verifyCode = safetyConfirmData.getVerifyCode();
+			
+			if(verifyCodeCache !=null){
+				if(!verifyCodeCache.equals(verifyCode)){
+					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "邮箱校验码已失效", "邮箱校验码已失效");
+				}
+			}else{
+				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "邮箱校验码已失效", "邮箱校验码已失效");
+			}
+		}
+		
 		return responseData;
 	}
 
