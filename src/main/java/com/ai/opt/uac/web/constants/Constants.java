@@ -35,7 +35,7 @@ public final class Constants {
     	
     	/**邮箱验证码长度*/
 		public static final int VERIFY_SIZE_EMAIL = 6;
-		/**邮箱验证码长度*/
+		/**手机验证码长度*/
 		public static final int VERIFY_SIZE_PHONE = 6;
 		/**图片验证码长度*/
 		public static final int VERIFY_SIZE_PICTURE = 4;
