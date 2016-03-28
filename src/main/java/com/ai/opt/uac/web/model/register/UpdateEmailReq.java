@@ -7,6 +7,10 @@ public class UpdateEmailReq {
 
     private Long updateAccountId;
 
+    private String identifyCode;
+
+    private String key;
+
     public String getAccountId() {
         return accountId;
     }
@@ -29,6 +33,22 @@ public class UpdateEmailReq {
 
     public void setUpdateAccountId(Long updateAccountId) {
         this.updateAccountId = updateAccountId;
+    }
+
+    public String getIdentifyCode() {
+        return identifyCode;
+    }
+
+    public void setIdentifyCode(String identifyCode) {
+        this.identifyCode = identifyCode;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
 }

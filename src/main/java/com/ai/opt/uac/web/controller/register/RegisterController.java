@@ -14,14 +14,22 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ai.opt.base.exception.RPCSystemException;
 import com.ai.opt.base.vo.BaseResponse;
 import com.ai.opt.sdk.util.DubboConsumerFactory;
+import com.ai.opt.sdk.util.RandomUtil;
 import com.ai.opt.sdk.web.model.ResponseData;
+import com.ai.opt.uac.api.account.interfaces.IAccountManageSV;
+import com.ai.opt.uac.api.account.param.AccountQueryRequest;
+import com.ai.opt.uac.api.account.param.AccountQueryResponse;
 import com.ai.opt.uac.api.register.interfaces.IRegisterSV;
 import com.ai.opt.uac.api.register.param.PhoneRegisterRequest;
 import com.ai.opt.uac.api.register.param.PhoneRegisterResponse;
 import com.ai.opt.uac.api.security.interfaces.IAccountSecurityManageSV;
 import com.ai.opt.uac.api.security.param.AccountEmailRequest;
+import com.ai.opt.uac.web.constants.Constants;
+import com.ai.opt.uac.web.model.email.sendEmailRequest;
 import com.ai.opt.uac.web.model.register.UpdateEmailReq;
+import com.ai.opt.uac.web.util.EmailUtil;
 import com.ai.opt.uac.web.util.Md5Util;
+import com.ai.opt.uac.web.util.cacheUtil;
 
 @RequestMapping("/reg")
 @Controller
@@ -89,6 +97,14 @@ public class RegisterController {
     public ResponseData<String> bindEmail(UpdateEmailReq request, HttpSession session) {
         ResponseData<String> responseData = null;
         try {
+           /* //校验验证码是否正确
+            String inputIdentify = request.getIdentifyCode();
+            //获取缓存中的验证码
+            cacheUtil cacheClient = new cacheUtil();
+            String identifyCode =  cacheClient.getCache(request.getKey());
+            if(!inputIdentify.equals(identifyCode)){
+                responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "验证码不正确", null); 
+            }*/
             IAccountSecurityManageSV iAccountSecurityManageSV = DubboConsumerFactory
                     .getService("iAccountSecurityManageSV");
             AccountEmailRequest req = new AccountEmailRequest();
@@ -111,6 +127,43 @@ public class RegisterController {
             responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "信息修改失败",
                     null);
             e.printStackTrace();
+        }
+        return responseData;
+    }
+    @RequestMapping("/toSendEmail")
+    public ResponseData<String> sendEmail(UpdateEmailReq emailReq,HttpServletRequest request) {
+        ResponseData<String> responseData = null;
+        try {
+            IAccountManageSV  iAccountManageSV=  DubboConsumerFactory
+                    .getService("iAccountManageSV");
+            AccountQueryRequest req = new AccountQueryRequest();
+            String email = emailReq.getEmail();
+            req.setAccountId(Long.valueOf(emailReq.getAccountId()));
+            AccountQueryResponse response =  iAccountManageSV.queryBaseInfo(req);
+            String nickName = "云计费"+response.getNickName();
+            String identifyCode = RandomUtil.randomNum(6);
+            String[] tomails = new String[] { email };
+            String[] ccmails = new String[] { "13681260421@163.com" };
+            String[] data = new String[] { nickName, identifyCode ,Constants.REGISTER_EMAIL_TIME};
+            //String htmlcontext = EmailTemplateUtil.buildHtmlTextFromTemplate(Constants.BIND_EMAIL, data);
+            //EmailFactory.SendEmail(tomails, ccmails, Constants.REGISTER_EMAIL_SUBJECT, htmlcontext);
+            sendEmailRequest emailRequest = new sendEmailRequest();
+            emailRequest.setCcmails(ccmails);
+            emailRequest.setSubject(Constants.REGISTER_EMAIL_SUBJECT);
+            emailRequest.setTemplateRUL(EmailUtil.BIND_EMAIL);
+            emailRequest.setTomails(tomails);
+            emailRequest.setData(data);
+            EmailUtil.sendEmail(emailRequest);
+            //存验证码到缓存
+            cacheUtil cacheClient = new cacheUtil();
+            String key = request.getSession().getId()+Constants.REGISTER_EMAIL_KEY;
+            //cacheClient.addCache(key, identifyCode);
+            responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "验证码获取成功",
+                    key);
+        } catch (RPCSystemException e) {
+            LOG.error("验证码获取失败！", e);
+            responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "验证码获取失败",
+                    null);
         }
         return responseData;
     }

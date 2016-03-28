@@ -38,11 +38,11 @@
           	<input type="text" class="int-medium" placeholder="" id="email" name="email">
           	<input type="hidden" name="accountId" id="accountId" value="${requestScope.accountId}"/>
           </p>
-          <p><A href="#">获取校验码</A></p>
+          <p><A href="#" id="getIdentify">获取校验码</A></p>
          </li>
           <li class="user">
           <p class="word">邮箱校验码</p>
-          <p><input type="text" class="int-medium" placeholder=""></p>
+          <p><input type="text" class="int-medium" placeholder="" id="identifyCode"></p>
          
          </li>
          <li class="reminder">
