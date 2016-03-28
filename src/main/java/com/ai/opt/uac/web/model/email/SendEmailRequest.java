@@ -1,11 +1,15 @@
 package com.ai.opt.uac.web.model.email;
-
-public class sendEmailRequest {
+/**
+ * 发送邮件入参对象
+ * tomails,data,templateRUL 必填
+ * @author jiaxs
+ */
+public class SendEmailRequest {
 	/** 收件箱(必填)*/
 	private String[] tomails;
 	/** 抄送邮箱*/
 	private String[] ccmails;
-	/** 主题(必填)*/
+	/** 主题*/
 	private String subject;
 	/** 邮件内容参数(必填)*/
 	private String[] data;
