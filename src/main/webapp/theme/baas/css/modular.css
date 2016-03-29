@@ -55,7 +55,7 @@
 /**找回密码-身份验证**/
 .Retrieve-password{ margin:0 auto; width:100%;}
 
-.Retrieve-steps{ width:865px; margin:0  auto; margin-top:70px;}
+.Retrieve-steps{ width:985px; margin:0  auto; margin-top:70px;}
 
 .Retrieve-steps-round {
 	font-size: 0px;
@@ -126,7 +126,7 @@
 }
 .Retrieve-steps-round>div .bar {
 	margin: 30px 4px 0px 40px;
-	width: 300px;
+	width: 240px;
 	border-bottom:1px dashed #ccc;
 	vertical-align: middle;
 	-webkit-border-radius: 4px;
