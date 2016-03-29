@@ -59,7 +59,17 @@ public final class Constants {
 
         /** 邮箱主题 */
         public static final String VERIFY_EMAIL_SUBJECT = "亚信云计费";
-
+        
+        /** 短信注册模板ID */
+        public static final String REGISTER_TEMPLATE_ID = "1";
+        /** 短信修改密码模板ID */
+        public static final String UPDATE_PASSWORD_TEMPLATE_ID = "2";
+        /** 短信修改手机模板ID */
+        public static final String UPDATE_PHONE_TEMPLATE_ID = "3";
+        /** 短信修改邮箱模板ID */
+        public static final String UPDATE_EMAIL_TEMPLATE_ID = "4";
+        /** 短信修改邮箱模板ID */
+        public static final String SET_PASSWORD_TEMPLATE_ID = "5";
     }
 
     public static final class Register {
