@@ -13,12 +13,11 @@ import org.slf4j.LoggerFactory;
 
 import com.ai.opt.sdk.cache.factory.CacheClientFactory;
 import com.ai.opt.sdk.util.RandomUtil;
-import com.ai.opt.uac.web.constants.Constants.VerifyCode;
-import com.ai.opt.uac.web.controller.common.VerifyCodeController;
+import com.ai.opt.uac.web.constants.VerifyConstants.PictureVerifyConstants;
 import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
 
 public class VerifyCodeUtil {
-	private static final Logger LOGGER = LoggerFactory.getLogger(VerifyCodeController.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(VerifyCodeUtil.class);
 
 	public static BufferedImage getImageVerifyCode(HttpServletRequest request, String namespace, String cacheKey) {
 		int width = 100, height = 40;
@@ -36,10 +35,10 @@ public class VerifyCodeUtil {
 		g.drawRect(0, 0, width - 1, height - 1);
 
 		// 取随机产生的认证码
-		String verifyCode = RandomUtil.randomString(VerifyCode.VERIFY_SIZE_PICTURE);
+		String verifyCode = RandomUtil.randomString(PictureVerifyConstants.VERIFY_SIZE);
 		// 将认证码存入缓存
 		ICacheClient cacheClient = CacheClientFactory.getCacheClient(namespace);
-		cacheClient.setex(cacheKey, VerifyCode.VERIFY_OVERTIME_PICTURE, verifyCode);
+		cacheClient.setex(cacheKey, PictureVerifyConstants.VERIFY_OVERTIME, verifyCode);
 		LOGGER.debug("cacheKey=" + cacheKey + ",verifyCode=" + verifyCode);
 		// 将认证码显示到图象中
 		g.setColor(Color.black);

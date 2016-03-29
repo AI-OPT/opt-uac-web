@@ -3,6 +3,8 @@ package com.ai.opt.uac.web.constants;
 public final class Constants {
 	private Constants(){}
 	
+	public static final String SYSTEM_ID = "opt-uac";
+	
 	public static final class ResultCode{
 		private ResultCode(){}
     	
@@ -11,6 +13,8 @@ public final class Constants {
 	
 	public static final class RetakePassword{
 		private RetakePassword(){}
+		
+		public static final String USER_SESSION_KEY = "retake_user_session_id";
 		
 		/**手机验证方式*/
 		public static final String CHECK_TYPE_PHONE = "1";
@@ -29,49 +33,6 @@ public final class Constants {
 		public static final String CACHE_KEY_VERIFY_PICTURE = "retake-password-verify-picture";
 	}
     
-
-    public class VerifyCode {
-        private VerifyCode() {
-        }
-
-        /** 邮箱验证码长度 */
-        public static final int VERIFY_SIZE_EMAIL = 6;
-
-        /** 手机验证码长度 */
-        public static final int VERIFY_SIZE_PHONE = 6;
-
-        /** 图片验证码长度 */
-        public static final int VERIFY_SIZE_PICTURE = 4;
-
-        /** 邮件验证码超时时间 */
-        public static final int VERIFY_OVERTIME_EMAIL = 1800;
-
-        /** 手机验证码有效时间 */
-        public static final int VERIFY_OVERTIME_PHONE = 30;
-
-        /** 图片验证码超时时间 */
-        public static final int VERIFY_OVERTIME_PICTURE = 60;
-
-        /** 短信验证内容验证码参数名 */
-        public static final String VERIFY_CODE_PHONE = "${VERIFY}:";
-        /** 短信验证内容有效时间参数名 */
-        public static final String VERIFY_TIME_PHONE = "^${VERIFY}:";
-
-        /** 邮箱主题 */
-        public static final String VERIFY_EMAIL_SUBJECT = "亚信云计费";
-        
-        /** 短信注册模板ID */
-        public static final String REGISTER_TEMPLATE_ID = "1";
-        /** 短信修改密码模板ID */
-        public static final String UPDATE_PASSWORD_TEMPLATE_ID = "2";
-        /** 短信修改手机模板ID */
-        public static final String UPDATE_PHONE_TEMPLATE_ID = "3";
-        /** 短信修改邮箱模板ID */
-        public static final String UPDATE_EMAIL_TEMPLATE_ID = "4";
-        /** 短信修改邮箱模板ID */
-        public static final String SET_PASSWORD_TEMPLATE_ID = "5";
-    }
-
     public static final class Register {
         private Register() {
         }
