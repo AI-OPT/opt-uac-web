@@ -65,7 +65,7 @@
          <li class="user">
           <p class="word">图形验证码</p>
           <p><input type="text" class="int-medium" id="pictureVerifyCode"></p>
-          <p><img src="${_base}/retakePassword/getUserImageVerifyCode"></p>
+          <p><img id="random_img" src="${_base}/retakePassword/getUserImageVerifyCode"></p>
           <p><A href="#">看不清?换一换</A></p>
          </li>
          <li><input id="submitBtn" type="button" class="Submit-btn" value="提  交"></li>
