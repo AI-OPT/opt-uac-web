@@ -78,6 +78,7 @@ dependencies {
 	compile 'com.ai.opt.uac:account:1.0.0-SNAPSHOT'
 	compile 'com.ai.opt.uac:register:1.0.0-SNAPSHOT'
 	compile 'com.ai.opt.uac:security:1.0.0-SNAPSHOT'
+	compile 'com.ai.opt.uac:seq:1.0.0-SNAPSHOT'
 	
 	testCompile(
 		"org.springframework:spring-test:3.2.6.RELEASE",

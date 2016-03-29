@@ -29,6 +29,8 @@ public final class Constants {
 		
 		/** 邮箱验证码缓存key*/
 		public static final String CACHE_KEY_VERIFY_EMAIL = "retake-password-verify-email";
+		/** 手机验证码缓存key*/
+		public static final String CACHE_KEY_VERIFY_PHONE = "retake-password-verify-phone";
 		/** 图片验证码缓存key*/
 		public static final String CACHE_KEY_VERIFY_PICTURE = "retake-password-verify-picture";
 	}

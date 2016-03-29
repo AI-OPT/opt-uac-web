@@ -41,9 +41,8 @@ import com.ai.opt.uac.web.constants.VerifyConstants.PhoneVerifyConstants;
 import com.ai.opt.uac.web.model.email.SendEmailRequest;
 import com.ai.opt.uac.web.model.register.GetSMDataReq;
 import com.ai.opt.uac.web.model.register.UpdateEmailReq;
-import com.ai.opt.uac.web.util.EmailUtil;
 import com.ai.opt.uac.web.util.Md5Util;
-import com.ai.opt.uac.web.util.VerifyCodeUtil;
+import com.ai.opt.uac.web.util.VerifyUtil;
 import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
 import com.ai.runner.base.exception.CallerException;
 import com.ai.runner.center.mmp.api.manager.interfaces.SMSServices;
@@ -113,7 +112,7 @@ public class RegisterController {
                 responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, message,
                         null);
             }
-        } catch (RPCSystemException e) {
+        } catch (Exception e) {
             LOG.error("注册失败！", e);
             responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "注册失败",
                     null);
@@ -162,7 +161,7 @@ public class RegisterController {
                 responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, resultMessage,
                         null);
             }
-        } catch (RPCSystemException e) {
+        } catch (Exception e) {
             LOG.error("绑定邮箱失败！", e);
             responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "绑定邮箱失败",
                     null);
@@ -181,34 +180,31 @@ public class RegisterController {
     @ResponseBody
     public ResponseData<String> sendEmail(UpdateEmailReq emailReq, HttpServletRequest request) {
         ResponseData<String> responseData = null;
-        try {
-            IAccountManageSV iAccountManageSV = DubboConsumerFactory.getService("iAccountManageSV");
-            AccountQueryRequest req = new AccountQueryRequest();
-            String email = emailReq.getEmail();
-            req.setAccountId(Long.valueOf(emailReq.getAccountId()));
-            AccountQueryResponse  response = iAccountManageSV.queryBaseInfo(req);
-            String nickName = Constants.Register.REGISTER_EMAIL_NICK + response.getNickName();
-            String identifyCode = RandomUtil.randomNum(EmailVerifyConstants.VERIFY_SIZE);
-            String[] tomails = new String[] { email };
-            // 超时时间
-            String overTime = ObjectUtils.toString(EmailVerifyConstants.VERIFY_OVERTIME / 60);
-            String[] data = new String[] { nickName, identifyCode, overTime };
-            SendEmailRequest emailRequest = new SendEmailRequest();
-            emailRequest.setSubject(EmailVerifyConstants.EMAIL_SUBJECT);
-            emailRequest.setTemplateRUL(Register.TEMPLATE_EMAIL_URL);
-            emailRequest.setTomails(tomails);
-            emailRequest.setData(data);
-            EmailUtil.sendEmail(emailRequest);
-            // 存验证码到缓存
-            String key = Register.REGISTER_EMAIL_KEY + request.getSession().getId();
-            ICacheClient iCacheClient = CacheClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
-            iCacheClient.setex(key, EmailVerifyConstants.VERIFY_OVERTIME, identifyCode);
-            responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "验证码获取成功", key);
-        } catch (RPCSystemException e) {
-            LOG.error("发送短信失败！", e);
-            responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "验证码获取失败",
-                    null);
-        }
+
+        IAccountManageSV  iAccountManageSV=  DubboConsumerFactory
+		        .getService("iAccountManageSV");
+		AccountQueryRequest req = new AccountQueryRequest();
+		String email = emailReq.getEmail();
+		req.setAccountId(Long.valueOf(emailReq.getAccountId()));
+		AccountQueryResponse response =  iAccountManageSV.queryBaseInfo(req);
+		String nickName = Constants.Register.REGISTER_EMAIL_NICK+response.getNickName();
+		String identifyCode = RandomUtil.randomNum(EmailVerifyConstants.VERIFY_SIZE);
+		String[] tomails = new String[] { email };
+        //超时时间
+		String overTime = ObjectUtils.toString(EmailVerifyConstants.VERIFY_OVERTIME/60);
+		String[] data = new String[] { nickName, identifyCode ,overTime};
+		SendEmailRequest emailRequest = new SendEmailRequest();
+		emailRequest.setSubject(EmailVerifyConstants.EMAIL_SUBJECT);
+		emailRequest.setTemplateRUL(Register.TEMPLATE_EMAIL_URL);
+		emailRequest.setTomails(tomails);
+		emailRequest.setData(data);
+		VerifyUtil.sendEmail(emailRequest);
+		//存验证码到缓存
+		String key = Register.REGISTER_EMAIL_KEY+request.getSession().getId();
+		ICacheClient  iCacheClient=  CacheClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
+		iCacheClient.setex(key, EmailVerifyConstants.VERIFY_OVERTIME, identifyCode);
+		responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "验证码获取成功",
+		        key);
         return responseData;
     }
 
@@ -220,8 +216,8 @@ public class RegisterController {
      */
     @RequestMapping("/getImageVerifyCode")
     public void getImageVerifyCode(HttpServletRequest request, HttpServletResponse response) {
-        BufferedImage image = VerifyCodeUtil.getImageVerifyCode(request, Register.CACHE_NAMESPACE,
-                Register.CACHE_KEY_VERIFY_PICTURE);
+    	String cacheKey =  Register.CACHE_KEY_VERIFY_PICTURE+request.getSession().getId();
+        BufferedImage image = VerifyUtil.getImageVerifyCode(request, Register.CACHE_NAMESPACE,cacheKey);
         try {
             ImageIO.write(image, "PNG", response.getOutputStream());
         } catch (IOException e) {

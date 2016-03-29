@@ -22,6 +22,10 @@ public final class VerifyConstants {
         public static final String TEMPLATE_UPDATE_EMAIL_ID = "4";
         /** 短信修改邮箱模板ID */
         public static final String TEMPLATE_SET_PASSWORD_ID = "5";
+        /** 短信找回密码模板ID */
+        public static final String TEMPLATE_RETAKE_PASSWORD_ID = "6";
+        
+        public static final String SERVICE_TYPE = "1";
 		
 	}
 	
@@ -47,6 +51,6 @@ public final class VerifyConstants {
 		/**图片验证码长度*/
 		public static final int VERIFY_SIZE = 4;
 		/**图片验证码超时时间*/
-		public static final int VERIFY_OVERTIME = 60;
+		public static final int VERIFY_OVERTIME = 180;
 	}
 }
