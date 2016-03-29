@@ -40,9 +40,8 @@ import com.ai.opt.uac.web.constants.VerifyConstants.PhoneVerifyConstants;
 import com.ai.opt.uac.web.model.email.SendEmailRequest;
 import com.ai.opt.uac.web.model.register.GetSMDataReq;
 import com.ai.opt.uac.web.model.register.UpdateEmailReq;
-import com.ai.opt.uac.web.util.EmailUtil;
 import com.ai.opt.uac.web.util.Md5Util;
-import com.ai.opt.uac.web.util.VerifyCodeUtil;
+import com.ai.opt.uac.web.util.VerifyUtil;
 import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
 import com.ai.runner.base.exception.CallerException;
 import com.ai.runner.center.mmp.api.manager.interfaces.SMSServices;
@@ -175,7 +174,7 @@ public class RegisterController {
 		emailRequest.setTemplateRUL(Register.TEMPLATE_EMAIL_URL);
 		emailRequest.setTomails(tomails);
 		emailRequest.setData(data);
-		EmailUtil.sendEmail(emailRequest);
+		VerifyUtil.sendEmail(emailRequest);
 		//存验证码到缓存
 		String key = Register.REGISTER_EMAIL_KEY+request.getSession().getId();
 		ICacheClient  iCacheClient=  CacheClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
@@ -192,7 +191,7 @@ public class RegisterController {
      */
     @RequestMapping("/getImageVerifyCode")
     public void getImageVerifyCode(HttpServletRequest request, HttpServletResponse response) {
-        BufferedImage image = VerifyCodeUtil.getImageVerifyCode(request, Register.CACHE_NAMESPACE, Register.CACHE_KEY_VERIFY_PICTURE);
+        BufferedImage image = VerifyUtil.getImageVerifyCode(request, Register.CACHE_NAMESPACE, Register.CACHE_KEY_VERIFY_PICTURE);
         try {
             ImageIO.write(image, "PNG", response.getOutputStream());
         } catch (IOException e) {

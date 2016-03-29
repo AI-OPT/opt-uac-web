@@ -39,8 +39,7 @@ import com.ai.opt.uac.web.model.email.SendEmailRequest;
 import com.ai.opt.uac.web.model.retakepassword.AccountData;
 import com.ai.opt.uac.web.model.retakepassword.SafetyConfirmData;
 import com.ai.opt.uac.web.model.retakepassword.SendVerifyRequest;
-import com.ai.opt.uac.web.util.EmailUtil;
-import com.ai.opt.uac.web.util.VerifyCodeUtil;
+import com.ai.opt.uac.web.util.VerifyUtil;
 import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
 import com.ai.runner.center.mmp.api.manager.param.SMData;
 import com.ai.runner.center.mmp.api.manager.param.SMDataInfoNotify;
@@ -89,7 +88,7 @@ public class RetakePasswordController {
 	@RequestMapping("/getImageVerifyCode")
 	@ResponseBody
 	public void getImageVerifyCode(HttpServletRequest request, HttpServletResponse response) {
-		BufferedImage image = VerifyCodeUtil.getImageVerifyCode(request, RetakePassword.CACHE_NAMESPACE, RetakePassword.CACHE_KEY_VERIFY_PICTURE);
+		BufferedImage image = VerifyUtil.getImageVerifyCode(request, RetakePassword.CACHE_NAMESPACE, RetakePassword.CACHE_KEY_VERIFY_PICTURE);
 		try {
 			ImageIO.write(image, "PNG", response.getOutputStream());
 		} catch (IOException e) {
@@ -114,15 +113,14 @@ public class RetakePasswordController {
 		if (userLoginResponse != null) {
 			if (RetakePassword.CHECK_TYPE_PHONE.equals(checkType)) {
 				// 手机验证
-				// String phone = accountInfo.getPhone();
 				SMDataInfoNotify SMDataInfoNotify = new SMDataInfoNotify();
 				List<SMData> dataList = new LinkedList<SMData>();
 				SMData smData = new SMData();
 				String phoneVerifyCode = RandomUtil.randomNum(PhoneVerifyConstants.VERIFY_SIZE);
 				smData.setGsmContent("${VERIFY}:" + phoneVerifyCode + "^${VALIDMINS}:" + PhoneVerifyConstants.VERIFY_OVERTIME / 60);
 				smData.setPhone(userLoginResponse.getPhone());
-//				smData.setTemplateId(templateId);
-//				smData.setServiceType(serviceType);
+				smData.setTemplateId(PhoneVerifyConstants.TEMPLATE_RETAKE_PASSWORD_ID);
+				smData.setServiceType(PhoneVerifyConstants.SERVICE_TYPE);
 				dataList.add(smData);
 				SMDataInfoNotify.setDataList(dataList);
 				SMDataInfoNotify.setMsgSeq("");
@@ -164,7 +162,7 @@ public class RetakePasswordController {
 		// 超时时间
 		String overTime = ObjectUtils.toString(EmailVerifyConstants.VERIFY_OVERTIME / 60);
 		emailRequest.setData(new String[] { nickName, verifyCode, overTime });
-		EmailUtil.sendEmail(emailRequest);
+		VerifyUtil.sendEmail(emailRequest);
 	}
 
 	/**

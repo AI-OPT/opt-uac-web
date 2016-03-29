@@ -12,12 +12,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.ai.opt.sdk.cache.factory.CacheClientFactory;
+import com.ai.opt.sdk.mail.EmailFactory;
+import com.ai.opt.sdk.mail.EmailTemplateUtil;
 import com.ai.opt.sdk.util.RandomUtil;
 import com.ai.opt.uac.web.constants.VerifyConstants.PictureVerifyConstants;
+import com.ai.opt.uac.web.model.email.SendEmailRequest;
 import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
 
-public class VerifyCodeUtil {
-	private static final Logger LOGGER = LoggerFactory.getLogger(VerifyCodeUtil.class);
+public class VerifyUtil {
+	private static final Logger LOGGER = LoggerFactory.getLogger(VerifyUtil.class);
 
 	public static BufferedImage getImageVerifyCode(HttpServletRequest request, String namespace, String cacheKey) {
 		int width = 100, height = 40;
@@ -66,5 +69,19 @@ public class VerifyCodeUtil {
 		g.dispose();
 		return image;
 
+	}
+	
+	public static void sendEmail(SendEmailRequest emailRequest) {
+		String htmlcontext = EmailTemplateUtil.buildHtmlTextFromTemplate(emailRequest.getTemplateRUL(), emailRequest.getData());
+		try {
+			EmailFactory.SendEmail(emailRequest.getTomails(), emailRequest.getCcmails(), emailRequest.getSubject(), htmlcontext);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static String getMsgSeq(){
+		
+		return null;
 	}
 }
