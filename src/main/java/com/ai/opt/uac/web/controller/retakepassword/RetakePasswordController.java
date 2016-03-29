@@ -108,8 +108,6 @@ public class RetakePasswordController {
 		UserLoginResponse userLoginResponse = (UserLoginResponse) request.getSession().getAttribute(RetakePassword.USER_SESSION_KEY);
 		String checkType = sendVerifyRequest.getCheckType();
 		ResponseData<String> responseData = null;
-		// AccountQueryResponse accountInfo =
-		// getAccountInfoById(sendVerifyRequest.getAccountId());
 		if (userLoginResponse != null) {
 			if (RetakePassword.CHECK_TYPE_PHONE.equals(checkType)) {
 				// 手机验证
@@ -123,7 +121,7 @@ public class RetakePasswordController {
 				smData.setServiceType(PhoneVerifyConstants.SERVICE_TYPE);
 				dataList.add(smData);
 				SMDataInfoNotify.setDataList(dataList);
-				SMDataInfoNotify.setMsgSeq("");
+				SMDataInfoNotify.setMsgSeq(VerifyUtil.createPhoneMsgSeq());
 				SMDataInfoNotify.setTenantId(userLoginResponse.getTenantId());
 				SMDataInfoNotify.setSystemId(Constants.SYSTEM_ID);
 				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "短信验证码发送成功", "短信验证码发送成功");

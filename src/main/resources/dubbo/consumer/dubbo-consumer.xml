@@ -43,6 +43,10 @@
 		
 	<dubbo:reference id="iAccountSecurityManageSV"
 		interface="com.ai.opt.uac.api.security.interfaces.IAccountSecurityManageSV"/>
+		
+	<dubbo:reference id="iCreateSeqSV"
+		interface="com.ai.opt.uac.api.seq.interfaces.ICreateSeqSV"/>
+		
 	<dubbo:reference id="sMSServices"
 		interface="com.ai.runner.center.mmp.api.manager.interfaces.SMSServices"/>
 	<context:component-scan base-package="com.ai.opt.sso.service" />

@@ -11,10 +11,15 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ai.opt.base.vo.ResponseHeader;
 import com.ai.opt.sdk.cache.factory.CacheClientFactory;
 import com.ai.opt.sdk.mail.EmailFactory;
 import com.ai.opt.sdk.mail.EmailTemplateUtil;
+import com.ai.opt.sdk.util.DubboConsumerFactory;
 import com.ai.opt.sdk.util.RandomUtil;
+import com.ai.opt.uac.api.seq.interfaces.ICreateSeqSV;
+import com.ai.opt.uac.api.seq.param.PhoneMsgSeqResponse;
+import com.ai.opt.uac.web.constants.Constants;
 import com.ai.opt.uac.web.constants.VerifyConstants.PictureVerifyConstants;
 import com.ai.opt.uac.web.model.email.SendEmailRequest;
 import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
@@ -70,7 +75,7 @@ public class VerifyUtil {
 		return image;
 
 	}
-	
+
 	public static void sendEmail(SendEmailRequest emailRequest) {
 		String htmlcontext = EmailTemplateUtil.buildHtmlTextFromTemplate(emailRequest.getTemplateRUL(), emailRequest.getData());
 		try {
@@ -79,9 +84,21 @@ public class VerifyUtil {
 			e.printStackTrace();
 		}
 	}
-	
-	public static String getMsgSeq(){
-		
+
+	/**
+	 * 创建短信信息seq
+	 * @return
+	 */
+	public static String createPhoneMsgSeq() {
+		ICreateSeqSV service = DubboConsumerFactory.getService("iCreateSeqSV");
+		PhoneMsgSeqResponse msgSeqResponse = service.createPhoneMsgSeq();
+		if (msgSeqResponse != null) {
+			ResponseHeader responseHeader = msgSeqResponse.getResponseHeader();
+			String resultCode = responseHeader.getResultCode();
+			if (Constants.ResultCode.SUCCESS_CODE.equals(resultCode)) {
+				return msgSeqResponse.getMsgSeqId();
+			}
+		}
 		return null;
 	}
 }
