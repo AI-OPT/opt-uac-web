@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ai.opt.base.exception.RPCSystemException;
 import com.ai.opt.base.vo.BaseResponse;
 import com.ai.opt.sdk.cache.factory.CacheClientFactory;
 import com.ai.opt.sdk.util.DubboConsumerFactory;
@@ -48,7 +49,6 @@ import com.ai.runner.center.mmp.api.manager.interfaces.SMSServices;
 import com.ai.runner.center.mmp.api.manager.param.SMData;
 import com.ai.runner.center.mmp.api.manager.param.SMDataInfoNotify;
 
-
 @RequestMapping("/reg")
 @Controller
 public class RegisterController {
@@ -61,7 +61,9 @@ public class RegisterController {
     }
 
     @RequestMapping("/toRegisterEmail")
-    public ModelAndView registerEmail(@RequestParam(value = "accountId", required = false) String accountId,HttpServletRequest request) {
+    public ModelAndView registerEmail(
+            @RequestParam(value = "accountId", required = false) String accountId,
+            HttpServletRequest request) {
         request.setAttribute("accountId", accountId);
         return new ModelAndView("jsp/register/register-email");
     }
@@ -84,30 +86,38 @@ public class RegisterController {
         ResponseData<String> responseData = null;
         // MD5加密
         request.setAccountPassword(Md5Util.stringMD5(request.getAccountPassword()));
+        try {
+         // 校验验证码
+            ICacheClient iCacheClient = CacheClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
+            String pictureCode = iCacheClient.get(Register.CACHE_KEY_VERIFY_PICTURE);
+            if (!request.getPictureVerifyCode().equals(pictureCode)) {
+                return responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE,
+                        "验证码错误", null);
+            }
+            // 校验短信验证码
+            String phoneCode = iCacheClient.get(Register.REGISTER_PHONE_KEY);
+            if (!request.getPhoneVerifyCode().equals(phoneCode)) {
+                return responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE,
+                        "短信验证码错误", null);
+            }
+            IRegisterSV iRegisterSV = DubboConsumerFactory.getService("iRegisterSV");
+             PhoneRegisterResponse response = iRegisterSV.registerByPhone(request);
+            String code = response.getResponseHeader().getResultCode();
+            String accountId = Long.toString(response.getAccountId());
+            String message = response.getResponseHeader().getResultMessage();
+            if (ResultCode.SUCCESS_CODE.equals(code)) {
+                responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "注册成功",
+                        accountId);
+            } else {
+                responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, message,
+                        null);
+            }
+        } catch (Exception e) {
+            LOG.error("注册失败！", e);
+            responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "注册失败",
+                    null);
+        }
 
-        //校验验证码
-		ICacheClient  iCacheClient=  CacheClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
-		String pictureCode  = iCacheClient.get(Register.CACHE_KEY_VERIFY_PICTURE);
-         if(!pictureCode.equals(request.getPictureVerifyCode())){
-		   return responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "验证码错误", null);
-         }
-         //校验短信验证码
-		String phoneCode  = iCacheClient.get(Register.REGISTER_PHONE_KEY);
-		if(phoneCode.equals(request.getPhoneVerifyCode())){
-		    return responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "短信验证码错误", null);
-		}
-		
-		IRegisterSV iRegisterSV = DubboConsumerFactory.getService("iRegisterSV");
-		PhoneRegisterResponse response = iRegisterSV.registerByPhone(request);
-		String code = response.getResponseHeader().getResultCode();
-		String accountId = Long.toString(response.getAccountId());
-		String message = response.getResponseHeader().getResultMessage();
-		if (ResultCode.SUCCESS_CODE.equals(code)) {
-		    responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "注册成功",
-		            accountId);
-		} else {
-		    responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, message, null);
-		}
         return responseData;
     }
 
@@ -121,32 +131,45 @@ public class RegisterController {
     @ResponseBody
     public ResponseData<String> bindEmail(UpdateEmailReq request, HttpSession session) {
         ResponseData<String> responseData = null;
-        //校验验证码是否正确
-		String inputIdentify = request.getIdentifyCode();
-		//获取缓存中的验证码
-		ICacheClient  iCacheClient=  CacheClientFactory.getCacheClient("com.ai.opt.uac.register.cache");
-		String identifyCode =  iCacheClient.get(Constants.Register.REGISTER_EMAIL_KEY+session.getId());
-		if(!inputIdentify.equals(identifyCode)){
-		  return  responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "验证码不正确", null); 
-		}
-		IAccountSecurityManageSV iAccountSecurityManageSV = DubboConsumerFactory
-		        .getService("iAccountSecurityManageSV");
-		AccountEmailRequest req = new AccountEmailRequest();
-		long accountId = Long.parseLong(request.getAccountId());
-		req.setAccountId(accountId);
-		req.setEmail(request.getEmail());
-		req.setUpdateAccountId(accountId);
-		BaseResponse baseInfo =  iAccountSecurityManageSV.setEmailData(req);
-		String resultCode = baseInfo.getResponseHeader().getResultCode();
-		String resultMessage = baseInfo.getResponseHeader().getResultMessage();
-		if (ResultCode.SUCCESS_CODE.equals(resultCode)) {
-		    responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "信息修改成功",
-		            null);
-		}else{
-		    responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, resultMessage, null); 
-		}
+       
+        try {
+            // 校验验证码是否正确
+            String inputIdentify = request.getIdentifyCode();
+            // 获取缓存中的验证码
+            ICacheClient iCacheClient = CacheClientFactory
+                    .getCacheClient(Register.CACHE_NAMESPACE);
+            String identifyCode = iCacheClient
+                    .get(Constants.Register.REGISTER_EMAIL_KEY + session.getId());
+            if (!inputIdentify.equals(identifyCode)) {
+                return responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE,
+                        "验证码不正确", null);
+            }
+            IAccountSecurityManageSV iAccountSecurityManageSV = DubboConsumerFactory
+                    .getService("iAccountSecurityManageSV");
+            AccountEmailRequest req = new AccountEmailRequest();
+            long accountId = Long.parseLong(request.getAccountId());
+            req.setAccountId(accountId);
+            req.setEmail(request.getEmail());
+            req.setUpdateAccountId(accountId);
+            BaseResponse  baseInfo = iAccountSecurityManageSV.setEmailData(req);
+            String resultCode = baseInfo.getResponseHeader().getResultCode();
+            String resultMessage = baseInfo.getResponseHeader().getResultMessage();
+            if (ResultCode.SUCCESS_CODE.equals(resultCode)) {
+                responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "绑定邮箱成功",
+                        null);
+            } else {
+                responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, resultMessage,
+                        null);
+            }
+        } catch (Exception e) {
+            LOG.error("绑定邮箱失败！", e);
+            responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "绑定邮箱失败",
+                    null);
+        }
+       
         return responseData;
     }
+
     /**
      * 发送email
      * 
@@ -155,8 +178,9 @@ public class RegisterController {
      */
     @RequestMapping("/toSendEmail")
     @ResponseBody
-    public ResponseData<String> sendEmail(UpdateEmailReq emailReq,HttpServletRequest request) {
+    public ResponseData<String> sendEmail(UpdateEmailReq emailReq, HttpServletRequest request) {
         ResponseData<String> responseData = null;
+
         IAccountManageSV  iAccountManageSV=  DubboConsumerFactory
 		        .getService("iAccountManageSV");
 		AccountQueryRequest req = new AccountQueryRequest();
@@ -183,6 +207,7 @@ public class RegisterController {
 		        key);
         return responseData;
     }
+
     /**
      * 获取验证码
      * 
@@ -191,48 +216,50 @@ public class RegisterController {
      */
     @RequestMapping("/getImageVerifyCode")
     public void getImageVerifyCode(HttpServletRequest request, HttpServletResponse response) {
-        BufferedImage image = VerifyUtil.getImageVerifyCode(request, Register.CACHE_NAMESPACE, Register.CACHE_KEY_VERIFY_PICTURE);
+    	String cacheKey =  Register.CACHE_KEY_VERIFY_PICTURE+request.getSession().getId();
+        BufferedImage image = VerifyUtil.getImageVerifyCode(request, Register.CACHE_NAMESPACE,cacheKey);
         try {
             ImageIO.write(image, "PNG", response.getOutputStream());
         } catch (IOException e) {
             LOG.error("生成图片验证码错误：" + e);
             e.printStackTrace();
-        } 
+        }
     }
+
     /**
      * 发送短信
      * 
      * @param request
      * @return
-     * @throws Exception 
-     * @throws CallerException 
+     * @throws Exception
+     * @throws CallerException
      */
     @RequestMapping("/toSendPhone")
     @ResponseBody
-    public ResponseData<String> sendPhone(GetSMDataReq sMDataReq,HttpServletRequest request) throws CallerException, Exception {
+    public ResponseData<String> sendPhone(GetSMDataReq sMDataReq, HttpServletRequest request)
+            throws CallerException, Exception {
         ResponseData<String> responseData = null;
         try {
-            SMDataInfoNotify smData= new SMDataInfoNotify();
+            SMDataInfoNotify smData = new SMDataInfoNotify();
             smData.setTenantId(request.getSession().getId());
-            smData.setSystemId("12343435");
+            smData.setSystemId(Constants.SYSTEM_ID);
             smData.setMsgSeq("1");
             List<SMData> dataList = new ArrayList<SMData>();
             SMData data = new SMData();
             data.setPhone(sMDataReq.getPhone());
             data.setServiceType("1");
-            data.setTemplateId("1");
+            data.setTemplateId(PhoneVerifyConstants.TEMPLATE_REGISTER_ID);
             String identifyCode = RandomUtil.randomNum(PhoneVerifyConstants.VERIFY_SIZE);
-            String codeContent = "${VERIFY}:"+identifyCode;
-            String timeContent = "^${VERIFY}:"+PhoneVerifyConstants.VERIFY_SIZE;
-            data.setGsmContent(codeContent+timeContent);
+            String codeContent = "${VERIFY}:" + identifyCode;
+            String timeContent = "^${VALIDMINS}:" + PhoneVerifyConstants.VERIFY_OVERTIME;
+            data.setGsmContent(codeContent + timeContent);
             dataList.add(data);
             smData.setDataList(dataList);
-            SMSServices  sMSServices=  DubboConsumerFactory
-                    .getService("sMSServices");
+            SMSServices sMSServices = DubboConsumerFactory.getService("sMSServices");
             sMSServices.dataInput(smData);
-            //存验证码到缓存
-            String key = Register.REGISTER_PHONE_KEY+request.getSession().getId();
-            ICacheClient  iCacheClient=  CacheClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
+            // 存验证码到缓存
+            String key = Register.REGISTER_PHONE_KEY + request.getSession().getId();
+            ICacheClient iCacheClient = CacheClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
             iCacheClient.setex(key, PhoneVerifyConstants.VERIFY_OVERTIME, identifyCode);
             responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "验证码获取成功",
                     key);
