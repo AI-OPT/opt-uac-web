@@ -54,4 +54,70 @@ public final class Constants {
         /** 图片验证码缓存key*/
         public static final String CACHE_KEY_VERIFY_PICTURE = "register-verify-picture";
     }
+    
+    public static final class UpdatePassword{
+		private UpdatePassword(){}
+		
+		/**手机验证方式*/
+		public static final String CHECK_TYPE_PHONE = "1";
+		/**邮件验证方式*/
+		public static final String CHECK_TYPE_EMAIL = "2";
+		
+		/**邮箱模板路径*/
+		public static final String TEMPLATE_EMAIL_URL = "email/template/uac-updatepassword-mail.xml";
+		
+		/** 缓存命名空间*/
+		public static final String CACHE_NAMESPACE = "com.ai.opt.uac.updatepassword.cache";
+		
+		/** 邮箱验证码缓存key*/
+		public static final String CACHE_KEY_VERIFY_EMAIL = "update-password-verify-email";
+		/** 手机验证码缓存key*/
+		public static final String CACHE_KEY_VERIFY_PHONE = "update-password-verify-phone";
+		/** 图片验证码缓存key*/
+		public static final String CACHE_KEY_VERIFY_PICTURE = "update-password-verify-picture";
+	}
+    
+    public static final class UpdatePhone{
+		private UpdatePhone(){}
+		
+		/**手机验证方式*/
+		public static final String CHECK_TYPE_PHONE = "1";
+		/**邮件验证方式*/
+		public static final String CHECK_TYPE_EMAIL = "2";
+		
+		/**邮箱模板路径*/
+		public static final String TEMPLATE_EMAIL_URL = "email/template/uac-updatephone-mail.xml";
+		
+		/** 缓存命名空间*/
+		public static final String CACHE_NAMESPACE = "com.ai.opt.uac.updatephone.cache";
+		
+		/** 邮箱验证码缓存key*/
+		public static final String CACHE_KEY_VERIFY_EMAIL = "update-phone-verify-email";
+		/** 手机验证码缓存key*/
+		public static final String CACHE_KEY_VERIFY_PHONE = "update-phone-verify-phone";
+		/** 图片验证码缓存key*/
+		public static final String CACHE_KEY_VERIFY_PICTURE = "update-phone-verify-picture";
+	}
+    
+    public static final class UpdateEmail{
+		private UpdateEmail(){}
+		
+		/**手机验证方式*/
+		public static final String CHECK_TYPE_PHONE = "1";
+		/**邮件验证方式*/
+		public static final String CHECK_TYPE_EMAIL = "2";
+		
+		/**邮箱模板路径*/
+		public static final String TEMPLATE_EMAIL_URL = "email/template/uac-updateemail-mail.xml";
+		
+		/** 缓存命名空间*/
+		public static final String CACHE_NAMESPACE = "com.ai.opt.uac.updateemail.cache";
+		
+		/** 邮箱验证码缓存key*/
+		public static final String CACHE_KEY_VERIFY_EMAIL = "update-email-verify-email";
+		/** 手机验证码缓存key*/
+		public static final String CACHE_KEY_VERIFY_PHONE = "update-email-verify-phone";
+		/** 图片验证码缓存key*/
+		public static final String CACHE_KEY_VERIFY_PICTURE = "update-email-verify-picture";
+	}
 }

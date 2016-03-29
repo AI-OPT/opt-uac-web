@@ -25,11 +25,13 @@ import com.ai.opt.sdk.util.DubboConsumerFactory;
 import com.ai.opt.sdk.util.Md5Encoder;
 import com.ai.opt.sdk.util.RandomUtil;
 import com.ai.opt.sdk.web.model.ResponseData;
+import com.ai.opt.sso.client.filter.SSOClientUser;
 import com.ai.opt.uac.api.account.interfaces.IAccountManageSV;
 import com.ai.opt.uac.api.account.param.AccountQueryRequest;
 import com.ai.opt.uac.api.account.param.AccountQueryResponse;
 import com.ai.opt.uac.api.security.interfaces.IAccountSecurityManageSV;
 import com.ai.opt.uac.api.security.param.AccountPasswordRequest;
+import com.ai.opt.uac.api.sso.interfaces.ILoginSV;
 import com.ai.opt.uac.api.sso.param.UserLoginResponse;
 import com.ai.opt.uac.web.constants.Constants;
 import com.ai.opt.uac.web.constants.Constants.ResultCode;
@@ -50,6 +52,43 @@ import com.ai.runner.center.mmp.api.manager.param.SMDataInfoNotify;
 public class RetakePasswordController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RetakePasswordController.class);
+	
+	/**
+	 * 填写用户名
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/userinfo")
+	public ModelAndView userInfo(HttpServletRequest request) {
+		return new ModelAndView("jsp/retakepassword/userinfo");
+	}
+	
+	/**
+	 * 获得账户信息
+	 * 
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/checkUserInfo")
+	@ResponseBody
+	public ResponseData<String> checkUserInfo(HttpServletRequest request, String username) {
+		
+		LOGGER.info("查询账户信息开始，查询参数为： username=" + username);
+		// 获取账户信息
+		ILoginSV loginService = DubboConsumerFactory.getService("iLoginSV");
+		UserLoginResponse userLoginResponse = loginService.queryAccountByUserName(username);
+		if(userLoginResponse != null){
+			ResponseHeader responseHeader = userLoginResponse.getResponseHeader();
+			if(Constants.ResultCode.SUCCESS_CODE.equals(responseHeader.getResultCode())){
+				SSOClientUser ssoClientUser = new SSOClientUser();
+				BeanUtils.copyProperties(ssoClientUser, userLoginResponse);
+				request.getSession().setAttribute(Constants.RetakePassword.USER_SESSION_KEY, ssoClientUser);
+				return new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "该用户存在", "/retakePassword/confirminfo");
+			}
+		}
+		return new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "该用户不存在", null);
+	}
 
 	/**
 	 * 身份认证界面
@@ -58,7 +97,7 @@ public class RetakePasswordController {
 	 * @return
 	 */
 	@RequestMapping("/confirminfo")
-	public ModelAndView retakePassPhone(HttpServletRequest request) {
+	public ModelAndView confirmInfo(HttpServletRequest request) {
 		return new ModelAndView("jsp/retakepassword/confirminfo");
 	}
 
@@ -71,14 +110,16 @@ public class RetakePasswordController {
 	@RequestMapping("/getAccountInfo")
 	@ResponseBody
 	public ResponseData<AccountData> getAccountInfo(HttpServletRequest request) {
-		// Long accountId =
-		// (Long)request.getSession().getAttribute("accountId");
+		// UserLoginResponse userLoginResponse = (UserLoginResponse)
+		// request.getSession().getAttribute(RetakePassword.USER_SESSION_KEY);
+		
 		Long accountId = 1L;
 		LOGGER.info("查询账户信息开始，查询参数为： accountId=" + accountId);
 		AccountQueryRequest accountQueryRequest = new AccountQueryRequest();
 		accountQueryRequest.setAccountId(accountId);
 		// 获取账户信息
 		AccountQueryResponse accountQueryResponse = getAccountInfoById(accountId);
+
 		// 加密
 		String phone = accountQueryResponse.getPhone();
 		String email = accountQueryResponse.getEmail();
@@ -89,8 +130,8 @@ public class RetakePasswordController {
 	@RequestMapping("/getImageVerifyCode")
 	@ResponseBody
 	public void getImageVerifyCode(HttpServletRequest request, HttpServletResponse response) {
-		String cacheKey = RetakePassword.CACHE_KEY_VERIFY_PICTURE+request.getSession().getId();
-		BufferedImage image = VerifyUtil.getImageVerifyCode(request, RetakePassword.CACHE_NAMESPACE,cacheKey );
+		String cacheKey = RetakePassword.CACHE_KEY_VERIFY_PICTURE + request.getSession().getId();
+		BufferedImage image = VerifyUtil.getImageVerifyCode(request, RetakePassword.CACHE_NAMESPACE, cacheKey);
 		try {
 			ImageIO.write(image, "PNG", response.getOutputStream());
 		} catch (IOException e) {
