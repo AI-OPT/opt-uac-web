@@ -238,7 +238,7 @@ public class RetakePasswordController {
 				return emailCheck;
 			}
 		}
-		return new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", "正确");
+		return new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", "/retakePassword/resetPassword");
 	}
 
 	/**
@@ -252,13 +252,13 @@ public class RetakePasswordController {
 	private ResponseData<String> checkPictureVerifyCode(SafetyConfirmData safetyConfirmData, ICacheClient cacheClient, String sessionId) {
 		String pictureVerifyCodeCache = cacheClient.get(RetakePassword.CACHE_KEY_VERIFY_PICTURE + sessionId);
 		String pictureVerifyCode = safetyConfirmData.getPictureVerifyCode();
-		ResponseData<String> responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", "正确");
+		ResponseData<String> responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", null);
 		if (pictureVerifyCodeCache != null) {
 			if (pictureVerifyCodeCache.compareToIgnoreCase(pictureVerifyCode) != 0) {
-				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "图形验证码错误", "图形验证码错误");
+				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "图形验证码错误", null);
 			}
 		} else {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "图形验证码已失效", "图形验证码已失效");
+			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "图形验证码已失效", null);
 		}
 		return responseData;
 	}
@@ -275,14 +275,14 @@ public class RetakePasswordController {
 		String cacheKey = RetakePassword.CACHE_KEY_VERIFY_PHONE + sessionId;
 		String verifyCodeCache = cacheClient.get(cacheKey);
 		String verifyCode = safetyConfirmData.getVerifyCode();
-		ResponseData<String> responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", "正确");
+		ResponseData<String> responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", null);
 		;
 		if (verifyCodeCache != null) {
 			if (!verifyCodeCache.equals(verifyCode)) {
-				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "手机校验码错误", "手机校验码错误");
+				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "手机校验码错误", null);
 			}
 		} else {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "手机校验码已失效", "手机校验码已失效");
+			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "手机校验码已失效", null);
 		}
 		return responseData;
 	}
@@ -299,13 +299,13 @@ public class RetakePasswordController {
 		String cacheKey = RetakePassword.CACHE_KEY_VERIFY_EMAIL + sessionId;
 		String verifyCodeCache = cacheClient.get(cacheKey);
 		String verifyCode = safetyConfirmData.getVerifyCode();
-		ResponseData<String> responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", "正确");
+		ResponseData<String> responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", null);
 		if (verifyCodeCache != null) {
 			if (!verifyCodeCache.equals(verifyCode)) {
-				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "邮箱校验码错误", "邮箱校验码错误");
+				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "邮箱校验码错误", null);
 			}
 		} else {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "邮箱校验码已失效", "邮箱校验码已失效");
+			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "邮箱校验码已失效", null);
 		}
 		return responseData;
 	}

@@ -51,6 +51,6 @@ public final class VerifyConstants {
 		/**图片验证码长度*/
 		public static final int VERIFY_SIZE = 4;
 		/**图片验证码超时时间*/
-		public static final int VERIFY_OVERTIME = 60;
+		public static final int VERIFY_OVERTIME = 180;
 	}
 }
