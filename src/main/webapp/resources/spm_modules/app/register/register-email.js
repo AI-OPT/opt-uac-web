@@ -15,11 +15,6 @@ define('app/register/register-email', function (require, exports, module) {
     	//属性，使用时由类的构造函数传入
     	attrs: {
     	},
-    	//事件代理
-    	events: {
-    		  //"click [id='BTN_PASS']":"_passEmail",
-    		  //"click [id='BTN_SUBMIT']":"_bindEmail"
-        },
     	//重写父类
     	setup: function () {
     		RegisterEmaillPager.superclass.setup.call(this);
@@ -27,9 +22,30 @@ define('app/register/register-email', function (require, exports, module) {
     		this._bindHandle();
     	},
     	_bindHandle: function(){
-    		$("#BTN_PASS").on("click",this._passEmail);
-    		$("#BTN_SUBMIT").on("click",this._bindEmail);
+    		$("#getIdentify").on("click",this._validServiceEmail);
     		$("#getIdentify").on("click",this._getIdentify);
+    		$("#BTN_PASS").on("click",this._passEmail);
+    		$("#BTN_SUBMIT").on("click",this._validServiceEmail);
+    		$("#BTN_SUBMIT").on("click",this._bindEmail);
+    	},
+    	_validServiceEmail: function(){
+    		$("#errorEmailMsg").attr("style","display:none");
+    		var emailCode = $('#email').val();
+    		if(emailCode!=""){
+    			if(/^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.(\\w+([-.]\\w+)*){2,}$/.test(emailCode)){
+    				$("#errorEmailMsg").attr("style","display:none");
+    				var emailIdenty = $('#identifyCode').val();
+    				if(emailIdenty==""){
+    					$("#showErroeEmIdentify").text("邮箱验证码不能为空 ");
+	    				$("#errorEmIdentifyMsg").attr("style","display:block");
+	    				return false;
+    				}
+    			}else{
+    				$("#showErroeEmail").text("邮箱地址格式错误 ");
+    				$("#errorEmailMsg").attr("style","display:block");
+    				return false;
+    			}
+    		}
     	},
     	_getIdentify: function(){
     		var	param={
@@ -72,7 +88,21 @@ define('app/register/register-email', function (require, exports, module) {
 			        data: param,
 			        message: "正在加载数据..",
 			        success: function (data) {
-			        	window.location.href="../reg/toRegisterSuccess";
+			        	if(data.responseHeader.resultCode=="000005"){
+			        		$("#showErroeEmIdentify").text("邮箱验证码失效 ");
+		    				$("#errorEmIdentifyMsg").attr("style","display:block");
+		    				return false;
+			        	}else if(data.responseHeader.resultCode=="000006"){
+			        		$("#showErroeEmIdentify").html("邮箱验证码错误 ");
+		    				$("#errorEmIdentifyMsg").attr("style","display:block");
+		    				return false;
+			        	}else if(data.responseHeader.resultCode=="10004"){
+			        		$("#showErroeEmail").html("邮箱已存在 ");
+		    				$("#errorEmailMsg").attr("style","display:block");
+		    				return false;
+			        	}else if(data.responseHeader.resultCode=="000000"){
+			        		window.location.href="../reg/toRegisterSuccess";
+			        	}
 			        },
 			        error: function(XMLHttpRequest, textStatus, errorThrown) {
 						 alert(XMLHttpRequest.status);
