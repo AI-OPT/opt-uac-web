@@ -191,7 +191,8 @@ public class RegisterController {
      */
     @RequestMapping("/getImageVerifyCode")
     public void getImageVerifyCode(HttpServletRequest request, HttpServletResponse response) {
-        BufferedImage image = VerifyUtil.getImageVerifyCode(request, Register.CACHE_NAMESPACE, Register.CACHE_KEY_VERIFY_PICTURE);
+    	String cacheKey =  Register.CACHE_KEY_VERIFY_PICTURE+request.getSession().getId();
+        BufferedImage image = VerifyUtil.getImageVerifyCode(request, Register.CACHE_NAMESPACE,cacheKey);
         try {
             ImageIO.write(image, "PNG", response.getOutputStream());
         } catch (IOException e) {

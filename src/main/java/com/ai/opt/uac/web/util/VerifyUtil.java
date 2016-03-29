@@ -23,6 +23,8 @@ import com.ai.opt.uac.web.constants.Constants;
 import com.ai.opt.uac.web.constants.VerifyConstants.PictureVerifyConstants;
 import com.ai.opt.uac.web.model.email.SendEmailRequest;
 import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
+import com.ai.runner.center.mmp.api.manager.interfaces.SMSServices;
+import com.ai.runner.center.mmp.api.manager.param.SMDataInfoNotify;
 
 public class VerifyUtil {
 	private static final Logger LOGGER = LoggerFactory.getLogger(VerifyUtil.class);
@@ -76,13 +78,38 @@ public class VerifyUtil {
 
 	}
 
-	public static void sendEmail(SendEmailRequest emailRequest) {
+	/**
+	 * 发送邮件
+	 * @param emailRequest
+	 * @return
+	 */
+	public static boolean sendEmail(SendEmailRequest emailRequest) {
+		boolean success = true;
 		String htmlcontext = EmailTemplateUtil.buildHtmlTextFromTemplate(emailRequest.getTemplateRUL(), emailRequest.getData());
 		try {
 			EmailFactory.SendEmail(emailRequest.getTomails(), emailRequest.getCcmails(), emailRequest.getSubject(), htmlcontext);
 		} catch (Exception e) {
+			success = false;
 			e.printStackTrace();
 		}
+		return success;
+	}
+	
+	/**
+	 * 发送手机信息
+	 * @param smDataInfoNotify
+	 * @return
+	 */
+	public static boolean sendPhoneInfo(SMDataInfoNotify smDataInfoNotify){
+		SMSServices smsService = DubboConsumerFactory.getService("sMSServices");
+		boolean isSuccess = true;
+		try {
+			smsService.dataInput(smDataInfoNotify);
+		} catch (Exception e) {
+			isSuccess = false;
+			e.printStackTrace();
+		}
+		return isSuccess;
 	}
 
 	/**
