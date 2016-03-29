@@ -37,7 +37,23 @@ request.setAttribute("_baasBase", _baasBase);
 			else{
 				$("div.login-note").css("padding","padding","3px 10px");
 			}
+			
+			
+			$("#username").bind("blur",function(){
+				resetErrMsg();
+			});
+			$("#password").bind("blur",function(){
+				resetErrMsg();
+			});
+			
 		});
+		
+		
+		function resetErrMsg(){
+			$("div.login-note").html("");
+			$("div.login-note").css("padding","0px");
+		}
+		
           function encryptPwd(){
           	if (event.keyCode == 13){
           		dologin(); 

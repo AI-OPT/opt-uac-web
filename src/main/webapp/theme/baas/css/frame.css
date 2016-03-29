@@ -20,7 +20,7 @@
 .nav ul li .current-cnt{ width:230px; float:left; position:absolute; left:200px; z-index:5; top:0; background:url(../images/cntbg.png);}
 .nav ul li .current-cnt a{ width:100%; z-index:7; float:left;background:none; border-left:none; padding-left:25px; z-index:6;}
 .nav ul li .current-cnt a:hover{ border:none; background:#0249a7;}
-.footer{ width:100%; float:left; border-top:2px solid #c8c9c9; height:70px; background:#fff; line-height:70px; color:#999; position:fixed; bottom:0; left:0; text-align:center; z-index:2; min-width:1360px;}
+.footer{ width:100%; float:left; border-top:2px solid #c8c9c9; height:70px; background:#fff; line-height:70px; color:#999; /* position:fixed; */ bottom:0; left:0; text-align:center; z-index:2; min-width:1360px;}
 .breadcrumb ul{ width:100%; float:left; height:27px; line-height:27px; border-left:4px solid #0697ef; padding-left:10px;}
 .breadcrumb ul li{ float:left; color:#043a86; font-size:18px;}
 .breadcrumb ul li i{ font-size:18px; color:#0697ef; margin:0 10px;}
