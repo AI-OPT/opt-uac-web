@@ -15,6 +15,8 @@ public class AccountData implements Serializable{
 	private String phone;
 	private String email;
 	
+	public AccountData(){}
+	
 	public AccountData(String phone,String email){
 		this.setPhone(phone);
 		this.setEmail(email);

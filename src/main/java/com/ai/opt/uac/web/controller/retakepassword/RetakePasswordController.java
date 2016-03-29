@@ -2,8 +2,10 @@ package com.ai.opt.uac.web.controller.retakepassword;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -26,9 +28,6 @@ import com.ai.opt.sdk.util.Md5Encoder;
 import com.ai.opt.sdk.util.RandomUtil;
 import com.ai.opt.sdk.web.model.ResponseData;
 import com.ai.opt.sso.client.filter.SSOClientUser;
-import com.ai.opt.uac.api.account.interfaces.IAccountManageSV;
-import com.ai.opt.uac.api.account.param.AccountQueryRequest;
-import com.ai.opt.uac.api.account.param.AccountQueryResponse;
 import com.ai.opt.uac.api.security.interfaces.IAccountSecurityManageSV;
 import com.ai.opt.uac.api.security.param.AccountPasswordRequest;
 import com.ai.opt.uac.api.sso.interfaces.ILoginSV;
@@ -52,7 +51,7 @@ import com.ai.runner.center.mmp.api.manager.param.SMDataInfoNotify;
 public class RetakePasswordController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(RetakePasswordController.class);
-	
+
 	/**
 	 * 填写用户名
 	 * 
@@ -63,7 +62,20 @@ public class RetakePasswordController {
 	public ModelAndView userInfo(HttpServletRequest request) {
 		return new ModelAndView("jsp/retakepassword/userinfo");
 	}
-	
+
+	@RequestMapping("/getUserImageVerifyCode")
+	@ResponseBody
+	public void getUserImageVerifyCode(HttpServletRequest request, HttpServletResponse response) {
+		String cacheKey = RetakePassword.CACHE_KEY_VERIFY_PICTURE_USER + request.getSession().getId();
+		BufferedImage image = VerifyUtil.getImageVerifyCode(request, RetakePassword.CACHE_NAMESPACE, cacheKey);
+		try {
+			ImageIO.write(image, "PNG", response.getOutputStream());
+		} catch (IOException e) {
+			LOGGER.error("生成图片验证码错误：" + e);
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * 获得账户信息
 	 * 
@@ -72,15 +84,19 @@ public class RetakePasswordController {
 	 */
 	@RequestMapping("/checkUserInfo")
 	@ResponseBody
-	public ResponseData<String> checkUserInfo(HttpServletRequest request, String username) {
-		
+	public ResponseData<String> checkUserInfo(HttpServletRequest request, String username, String pictureVerifyCode) {
 		LOGGER.info("查询账户信息开始，查询参数为： username=" + username);
+		String cacheKey = Constants.RetakePassword.CACHE_KEY_VERIFY_PICTURE_USER + request.getSession().getId();
+		ResponseData<String> checkPictureVerifyCode = checkPictureVerifyCode(pictureVerifyCode, cacheKey);
+		if (ResponseData.AJAX_STATUS_FAILURE.equals(checkPictureVerifyCode.getStatusCode())) {
+			return checkPictureVerifyCode;
+		}
 		// 获取账户信息
 		ILoginSV loginService = DubboConsumerFactory.getService("iLoginSV");
 		UserLoginResponse userLoginResponse = loginService.queryAccountByUserName(username);
-		if(userLoginResponse != null){
+		if (userLoginResponse != null) {
 			ResponseHeader responseHeader = userLoginResponse.getResponseHeader();
-			if(Constants.ResultCode.SUCCESS_CODE.equals(responseHeader.getResultCode())){
+			if (Constants.ResultCode.SUCCESS_CODE.equals(responseHeader.getResultCode())) {
 				SSOClientUser ssoClientUser = new SSOClientUser();
 				BeanUtils.copyProperties(ssoClientUser, userLoginResponse);
 				request.getSession().setAttribute(Constants.RetakePassword.USER_SESSION_KEY, ssoClientUser);
@@ -98,7 +114,13 @@ public class RetakePasswordController {
 	 */
 	@RequestMapping("/confirminfo")
 	public ModelAndView confirmInfo(HttpServletRequest request) {
-		return new ModelAndView("jsp/retakepassword/confirminfo");
+		SSOClientUser userClient = (SSOClientUser)request.getSession().getAttribute(Constants.RetakePassword.USER_SESSION_KEY);
+		Map<String,AccountData> model = new HashMap<String,AccountData>();
+		String phone = userClient.getPhone();
+		String email = userClient.getEmail();
+		AccountData confirmInfo = new AccountData(phone, email);
+		model.put("confirmInfo", confirmInfo);
+		return new ModelAndView("jsp/retakepassword/confirminfo",model);
 	}
 
 	/**
@@ -110,21 +132,17 @@ public class RetakePasswordController {
 	@RequestMapping("/getAccountInfo")
 	@ResponseBody
 	public ResponseData<AccountData> getAccountInfo(HttpServletRequest request) {
-		// UserLoginResponse userLoginResponse = (UserLoginResponse)
-		// request.getSession().getAttribute(RetakePassword.USER_SESSION_KEY);
-		
-		Long accountId = 1L;
-		LOGGER.info("查询账户信息开始，查询参数为： accountId=" + accountId);
-		AccountQueryRequest accountQueryRequest = new AccountQueryRequest();
-		accountQueryRequest.setAccountId(accountId);
-		// 获取账户信息
-		AccountQueryResponse accountQueryResponse = getAccountInfoById(accountId);
-
-		// 加密
-		String phone = accountQueryResponse.getPhone();
-		String email = accountQueryResponse.getEmail();
-		AccountData confirmInfo = new AccountData(phone, email);
-		return new ResponseData<AccountData>(ResponseData.AJAX_STATUS_SUCCESS, "信息查询成功", confirmInfo);
+		SSOClientUser userLoginResponse = (SSOClientUser) request.getSession().getAttribute(RetakePassword.USER_SESSION_KEY);
+		if (userLoginResponse != null) {
+			LOGGER.info("查询账户信息开始，查询参数为： accountId=" + userLoginResponse.getAccountId());
+			// 加密
+			String phone = userLoginResponse.getPhone();
+			String email = userLoginResponse.getEmail();
+			AccountData confirmInfo = new AccountData(phone, email);
+			return new ResponseData<AccountData>(ResponseData.AJAX_STATUS_SUCCESS, "信息查询成功", confirmInfo);
+		} else {
+			return new ResponseData<AccountData>(ResponseData.AJAX_STATUS_SUCCESS, "信息查询失败", new AccountData());
+		}
 	}
 
 	@RequestMapping("/getImageVerifyCode")
@@ -148,20 +166,14 @@ public class RetakePasswordController {
 	@RequestMapping("/sendVerify")
 	@ResponseBody
 	public ResponseData<String> sendVerify(HttpServletRequest request, SendVerifyRequest sendVerifyRequest) {
-		// UserLoginResponse userLoginResponse = (UserLoginResponse)
-		// request.getSession().getAttribute(RetakePassword.USER_SESSION_KEY);
+		SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(RetakePassword.USER_SESSION_KEY);
 		String checkType = sendVerifyRequest.getCheckType();
 		ResponseData<String> responseData = null;
 		String sessionId = request.getSession().getId();
-
-		UserLoginResponse userLoginResponse = new UserLoginResponse();
-		AccountQueryResponse accountQueryResponse = getAccountInfoById(1L);
-		BeanUtils.copyProperties(userLoginResponse, accountQueryResponse);
-
-		if (userLoginResponse != null) {
+		if (userClient != null) {
 			if (RetakePassword.CHECK_TYPE_PHONE.equals(checkType)) {
 				// 发送手机验证码
-				boolean isSuccess = sendPhoneVerifyCode(sessionId, userLoginResponse);
+				boolean isSuccess = sendPhoneVerifyCode(sessionId, userClient);
 				if (isSuccess) {
 					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "短信验证码发送成功", "短信验证码发送成功");
 				} else {
@@ -169,7 +181,7 @@ public class RetakePasswordController {
 				}
 			} else if (RetakePassword.CHECK_TYPE_EMAIL.equals(checkType)) {
 				// 发送邮件验证码
-				boolean isSuccess = sendEmailVerifyCode(sessionId, userLoginResponse);
+				boolean isSuccess = sendEmailVerifyCode(sessionId, userClient);
 				if (isSuccess) {
 					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "邮件验证码发送成功", "邮件验证码发送成功");
 				} else {
@@ -187,9 +199,9 @@ public class RetakePasswordController {
 	/**
 	 * 发送手机验证码
 	 * 
-	 * @param userLoginResponse
+	 * @param userClient
 	 */
-	private boolean sendPhoneVerifyCode(String sessionId, UserLoginResponse userLoginResponse) {
+	private boolean sendPhoneVerifyCode(String sessionId, SSOClientUser userClient) {
 		SMDataInfoNotify smDataInfoNotify = new SMDataInfoNotify();
 		String phoneVerifyCode = RandomUtil.randomNum(PhoneVerifyConstants.VERIFY_SIZE);
 		// 将验证码放入缓存
@@ -200,13 +212,13 @@ public class RetakePasswordController {
 		List<SMData> dataList = new LinkedList<SMData>();
 		SMData smData = new SMData();
 		smData.setGsmContent("${VERIFY}:" + phoneVerifyCode + "^${VALIDMINS}:" + PhoneVerifyConstants.VERIFY_OVERTIME / 60);
-		smData.setPhone(userLoginResponse.getPhone());
+		smData.setPhone(userClient.getPhone());
 		smData.setTemplateId(PhoneVerifyConstants.TEMPLATE_RETAKE_PASSWORD_ID);
 		smData.setServiceType(PhoneVerifyConstants.SERVICE_TYPE);
 		dataList.add(smData);
 		smDataInfoNotify.setDataList(dataList);
 		smDataInfoNotify.setMsgSeq(VerifyUtil.createPhoneMsgSeq());
-		smDataInfoNotify.setTenantId(userLoginResponse.getTenantId());
+		smDataInfoNotify.setTenantId(userClient.getTenantId());
 		smDataInfoNotify.setSystemId(Constants.SYSTEM_ID);
 		return VerifyUtil.sendPhoneInfo(smDataInfoNotify);
 	}
@@ -216,10 +228,10 @@ public class RetakePasswordController {
 	 * 
 	 * @param accountInfo
 	 */
-	private boolean sendEmailVerifyCode(String sessionId, UserLoginResponse userLoginResponse) {
+	private boolean sendEmailVerifyCode(String sessionId, SSOClientUser userClient) {
 		// 邮箱验证
-		String email = userLoginResponse.getEmail();
-		String nickName = userLoginResponse.getNickName();
+		String email = userClient.getEmail();
+		String nickName = userClient.getNickName();
 		SendEmailRequest emailRequest = new SendEmailRequest();
 		emailRequest.setTomails(new String[] { email });
 		emailRequest.setTemplateRUL(RetakePassword.TEMPLATE_EMAIL_URL);
@@ -236,18 +248,6 @@ public class RetakePasswordController {
 	}
 
 	/**
-	 * 获得账户信息
-	 * 
-	 * @param accountId
-	 */
-	private AccountQueryResponse getAccountInfoById(Long accountId) {
-		AccountQueryRequest accountQueryRequest = new AccountQueryRequest();
-		accountQueryRequest.setAccountId(accountId);
-		IAccountManageSV accountManageSV = DubboConsumerFactory.getService("iAccountManageSV");
-		return accountManageSV.queryBaseInfo(accountQueryRequest);
-	}
-
-	/**
 	 * 身份认证
 	 * 
 	 * @param request
@@ -257,24 +257,29 @@ public class RetakePasswordController {
 	@ResponseBody
 	public ResponseData<String> confirmInfo(HttpServletRequest request, SafetyConfirmData safetyConfirmData) {
 		String confirmType = safetyConfirmData.getConfirmType();
-		ICacheClient cacheClient = CacheClientFactory.getCacheClient(RetakePassword.CACHE_NAMESPACE);
 		String sessionId = request.getSession().getId();
 		// 检查图片验证码
-		ResponseData<String> pictureCheck = checkPictureVerifyCode(safetyConfirmData, cacheClient, sessionId);
+		String cacheKey = RetakePassword.CACHE_KEY_VERIFY_PICTURE + sessionId;
+		String pictureVerifyCode = safetyConfirmData.getPictureVerifyCode();
+		ResponseData<String> pictureCheck = checkPictureVerifyCode(pictureVerifyCode, cacheKey);
 		if (ResponseData.AJAX_STATUS_FAILURE.equals(pictureCheck.getStatusCode())) {
 			return pictureCheck;
 		}
 		// 检查短信或邮箱验证码
 		if (RetakePassword.CHECK_TYPE_PHONE.equals(confirmType)) {
 			// 检查短信验证码
-			ResponseData<String> phoneCheck = checkPhoneVerifyCode(safetyConfirmData, cacheClient, sessionId);
+			String phoneCacheKey = RetakePassword.CACHE_KEY_VERIFY_PHONE + sessionId;
+			String verifyCode = safetyConfirmData.getVerifyCode();
+			ResponseData<String> phoneCheck = checkPhoneVerifyCode(verifyCode, phoneCacheKey);
 			if (ResponseData.AJAX_STATUS_FAILURE.equals(phoneCheck.getStatusCode())) {
 				return phoneCheck;
 			}
 
 		} else if (RetakePassword.CHECK_TYPE_EMAIL.equals(confirmType)) {
 			// 检查邮箱验证码
-			ResponseData<String> emailCheck = checkEmailVerifyCode(safetyConfirmData, cacheClient, sessionId);
+			String emailCacheKey = RetakePassword.CACHE_KEY_VERIFY_EMAIL + sessionId;
+			String verifyCode = safetyConfirmData.getVerifyCode();
+			ResponseData<String> emailCheck = checkEmailVerifyCode(verifyCode, emailCacheKey);
 			if (ResponseData.AJAX_STATUS_FAILURE.equals(emailCheck.getStatusCode())) {
 				return emailCheck;
 			}
@@ -290,9 +295,9 @@ public class RetakePasswordController {
 	 * @param sessionId
 	 * @return
 	 */
-	private ResponseData<String> checkPictureVerifyCode(SafetyConfirmData safetyConfirmData, ICacheClient cacheClient, String sessionId) {
-		String pictureVerifyCodeCache = cacheClient.get(RetakePassword.CACHE_KEY_VERIFY_PICTURE + sessionId);
-		String pictureVerifyCode = safetyConfirmData.getPictureVerifyCode();
+	private ResponseData<String> checkPictureVerifyCode(String pictureVerifyCode, String cacheKey) {
+		ICacheClient cacheClient = CacheClientFactory.getCacheClient(RetakePassword.CACHE_NAMESPACE);
+		String pictureVerifyCodeCache = cacheClient.get(cacheKey);
 		ResponseData<String> responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", null);
 		if (pictureVerifyCodeCache != null) {
 			if (pictureVerifyCodeCache.compareToIgnoreCase(pictureVerifyCode) != 0) {
@@ -312,10 +317,9 @@ public class RetakePasswordController {
 	 * @param sessionId
 	 * @return
 	 */
-	private ResponseData<String> checkPhoneVerifyCode(SafetyConfirmData safetyConfirmData, ICacheClient cacheClient, String sessionId) {
-		String cacheKey = RetakePassword.CACHE_KEY_VERIFY_PHONE + sessionId;
+	private ResponseData<String> checkPhoneVerifyCode(String verifyCode, String cacheKey) {
+		ICacheClient cacheClient = CacheClientFactory.getCacheClient(RetakePassword.CACHE_NAMESPACE);
 		String verifyCodeCache = cacheClient.get(cacheKey);
-		String verifyCode = safetyConfirmData.getVerifyCode();
 		ResponseData<String> responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", null);
 		;
 		if (verifyCodeCache != null) {
@@ -336,10 +340,9 @@ public class RetakePasswordController {
 	 * @param sessionId
 	 * @return
 	 */
-	private ResponseData<String> checkEmailVerifyCode(SafetyConfirmData safetyConfirmData, ICacheClient cacheClient, String sessionId) {
-		String cacheKey = RetakePassword.CACHE_KEY_VERIFY_EMAIL + sessionId;
+	private ResponseData<String> checkEmailVerifyCode(String verifyCode, String cacheKey) {
+		ICacheClient cacheClient = CacheClientFactory.getCacheClient(RetakePassword.CACHE_NAMESPACE);
 		String verifyCodeCache = cacheClient.get(cacheKey);
-		String verifyCode = safetyConfirmData.getVerifyCode();
 		ResponseData<String> responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", null);
 		if (verifyCodeCache != null) {
 			if (!verifyCodeCache.equals(verifyCode)) {

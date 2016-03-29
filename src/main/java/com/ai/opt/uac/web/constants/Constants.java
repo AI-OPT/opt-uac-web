@@ -33,6 +33,8 @@ public final class Constants {
 		public static final String CACHE_KEY_VERIFY_PHONE = "retake-password-verify-phone";
 		/** 图片验证码缓存key*/
 		public static final String CACHE_KEY_VERIFY_PICTURE = "retake-password-verify-picture";
+		/** 图片验证码缓存key(填写用户页)*/
+		public static final String CACHE_KEY_VERIFY_PICTURE_USER = "retake-password-verify-picture-user";
 	}
     
     public static final class Register {

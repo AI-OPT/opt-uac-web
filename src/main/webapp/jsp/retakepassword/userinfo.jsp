@@ -65,10 +65,10 @@
          <li class="user">
           <p class="word">图形验证码</p>
           <p><input type="text" class="int-medium" id="pictureVerifyCode"></p>
-          <p><img src="images/ret-yzm.png"></p>
+          <p><img src="${_base}/retakePassword/getUserImageVerifyCode"></p>
           <p><A href="#">看不清?换一换</A></p>
          </li>
-         <li><input id="submitBtn" type="button" class="Submit-btn" value="提  交"  onclick="location.href='找回密码-身份验证-设置新密码.html';"></li>
+         <li><input id="submitBtn" type="button" class="Submit-btn" value="提  交"></li>
        
           </ul>
         
@@ -79,5 +79,15 @@
     </div>
   </div>
   <%@ include file="/inc/foot.jsp"%>
+  <script type="text/javascript">
+		(function() {
+			seajs.use([ 'app/retakepassword/userInfo' ], function(UserInfoPager) {
+				var pager = new UserInfoPager({
+					element : document.body
+				});
+				pager.render();
+			});
+		})(); 
+  </script>
 </body>
 </html>

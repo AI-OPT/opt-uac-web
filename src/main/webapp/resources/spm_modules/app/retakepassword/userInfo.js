@@ -36,15 +36,19 @@ define('app/retakepassword/userInfo', function (require, exports, module) {
 				type : "POST",
 				data : {
 					"username":function(){
-						return $("#userName").val();
+						return jQuery.trim($("#userName").val());
+					},
+					"pictureVerifyCode":function(){
+						return jQuery.trim($("#pictureVerifyCode").val());
 					}
 				},
 				url :_base+"/retakePassword/checkUserInfo",
 				processing: true,
 				message : "正在处理中，请稍候...",
 				success : function(data) {
-					var url = data.data;
-					if(url != null && url != undefined){
+					var status = data.statusCode;
+					if(status == "1"){
+						var url = data.data;
 						window.location.href = _base+url;
 					}else{
 						alert("该用户不存在！");
