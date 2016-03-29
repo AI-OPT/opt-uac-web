@@ -103,9 +103,13 @@ public final class BssCredentialsAuthencationHandler extends AbstractPreAndPostP
 				}
 			}
 			String dbPwd=user.getAccountPassword();
+			logger.info("dbPwd="+dbPwd);
 			String encryDbPwd=Md5Encoder.encodePassword(SSOConstants.AIOPT_SALT_KEY+dbPwd);
+			logger.info("encryDbPwd="+encryDbPwd);
+			logger.info("pwdFromPage="+pwdFromPage);
 			if(!pwdFromPage.equals(encryDbPwd)){
 				//密码不对
+				logger.error("密码错误！");
 				throw new PasswordErrorException();
 			}
 			/*if(!SSOConstants.ACCOUNT_ACITVE_STATE.equals(user.getState())){
