@@ -30,7 +30,7 @@ public class VerifyUtil {
 	private static final Logger LOGGER = LoggerFactory.getLogger(VerifyUtil.class);
 
 	public static BufferedImage getImageVerifyCode(HttpServletRequest request, String namespace, String cacheKey) {
-		int width = 100, height = 40;
+		int width = 100, height = 38;
 		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
 		// 获取图形上下文

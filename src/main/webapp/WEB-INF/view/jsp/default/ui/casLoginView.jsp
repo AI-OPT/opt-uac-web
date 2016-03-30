@@ -37,10 +37,31 @@ request.setAttribute("_baasBase", _baasBase);
 			else{
 				$("div.login-note").css("padding","padding","3px 10px");
 			}
+			
+			
+			$("#username").bind("blur",function(){
+				resetErrMsg();
+			});
+			$("#password").bind("blur",function(){
+				resetErrMsg();
+			});
+			
 		});
-          function encryptPwd(){
-          	if (event.keyCode == 13){
+		
+		
+		function resetErrMsg(){
+			$("div.login-note").html("");
+			$("div.login-note").css("padding","0px");
+		}
+		
+          function encryptPwd(event){
+          	if (event.keyCode == 13){//IE Chrome 回车键
           		dologin(); 
+          	}
+          	else {
+          		if (event.which == 13){//Firefox 回车键
+          			dologin(); 
+          		}
           	}
           }//end of encryPwd
           
@@ -51,8 +72,10 @@ request.setAttribute("_baasBase", _baasBase);
   				var passwordMd5 = hex_md5(onceCode
   						+ hex_md5(inputPassword));
   				document.getElementById("password").value = passwordMd5;
-  				document.getElementById("username").value = trim(document
+  				document.getElementById("username").value = $.trim(document
   						.getElementById("username").value);
+  				//提交表单
+  				document.getElementById('fm1').submit();
   				return true;
           	 }
           	else{
@@ -107,10 +130,10 @@ request.setAttribute("_baasBase", _baasBase);
 		         <li class="login-title">账户登录</li>
 		         <li class="user"><i class="icon-user"></i><form:input cssClass="required int-xlarge" cssErrorClass="error" id="username" tabindex="1" accesskey="${userNameAccessKey}" path="username" autocomplete="off" htmlEscape="true" placeholder="手机号/邮箱"/></li>
 		         <span><spring:message code="screen.welcome.label.netid.accesskey" var="userNameAccessKey" /></span>
-		         <li class="password"><i class="icon-lock"></i><form:password cssClass="required int-xlarge-password" cssErrorClass="error" id="password" size="25" tabindex="2" path="password"  accesskey="${passwordAccessKey}" htmlEscape="true" autocomplete="off"  placeholder="密码" onkeydown="encryptPwd()"/></li>
+		         <li class="password"><i class="icon-lock"></i><form:password cssClass="required int-xlarge-password" cssErrorClass="error" id="password" size="25" tabindex="2" path="password"  accesskey="${passwordAccessKey}" htmlEscape="true" autocomplete="off"  placeholder="密码" onkeydown="encryptPwd(event)"/></li>
 		         <span><spring:message code="screen.welcome.label.password.accesskey" var="passwordAccessKey" /></span>
 		         <li class="Remb-password" style="display: none;"><span><input id="rememberMe" name="rememberMe" type="checkbox" tabindex="3"></span><span>记住账号</span></li>
-		         <li><input class="login-btn" value="登 录"  accesskey="l" type="submit" tabindex="4" onclick="return dologin();" ></li>
+		         <li><input class="login-btn" value="登 录"  accesskey="l" type="button" tabindex="4" onclick="javascript:dologin();" ></li>
 		         <li class="Forget-password"><a href="身份验证-手机号.html">忘记密码？</a><a href="regsiter.html" class="right">立即注册</a></li>
 	         </ul>
 	         <input type="hidden" name="lt" value="${loginTicket}" />

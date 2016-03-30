@@ -31,37 +31,24 @@ define('app/retakepassword/confirmInfo', function (require, exports, module) {
     	setup: function () {
     		ConfirmInfoPager.superclass.setup.call(this);
     		//加载数据
-    		this.accountData = {};
+    		this.accountData = {
+    			"phone":function(){
+    				return $("#phoneValue").val();
+    			},
+    			"email":function(){
+    				return $("#emailValue").val();
+    			}
+    		};
     		this._renderAccountInfo();
     	},
     
     	//加载账户数据
     	_renderAccountInfo: function(){
 			var _this = this;
-			//获取账户信息
-			//var accountData = _this._getAccountData();
-			_this.accountData = {"phone":"132****1586","email":"1****2@test.com"};
 			//控制身份认证方式的界面属性
 			_this._controlConfirmTypeAttr();
 			//初始化展示页面
 			_this._initShowView();
-		},
-		//获取账户信息
-    	_getAccountData: function(){
-			var accountData = {};
-			ajaxController.ajax({
-				type : "POST",
-				url :_base+"/retakePassword/getAccountInfo",
-				processing: true,
-				message : "正在处理中，请稍候...",
-				success : function(data) {
-					accountData = data.data;
-				},
-				error: function() {
-					alert("连接服务器超时")
-				}
-			});
-			return accountData;
 		},
 		//控制身份认证方式的界面属性
 		_controlConfirmTypeAttr:function(){

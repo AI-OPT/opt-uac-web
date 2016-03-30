@@ -18,34 +18,41 @@
 <body>
   <%@ include file="/inc/head-pwd.jsp"%>
   <div class="wrappera">
+      <!-- 步骤开始 -->
    <div class="Retrieve-password">
-    
-         <div class="Retrieve-steps">
-         <div class="Retrieve-steps-round">
-  <div class="finished"><!--蓝色圆圈带蓝线 finished-->
-    <div class="wrap">
-      <div class="round"><i class="icon-user"></i></div>
-      <div class="bar"></div>
-    </div>
-    <label>1.身份验证</label>
-  </div>
-  <div class="current"><!--圆圈蓝色 current-->
-    <div class="wrap">
-      <div class="round"><i class="icon-pencil"></i></div>
-      <div class="bar"></div>
-    </div>
-    <label>2.设置新密码</label>
-  </div>
-  <div class="todo"><!--圆圈灰色 todo-->
-    <div class="wrap">
-      <div class="round"><i class=" icon-ok"></i></div>
-      
-    </div>
-    <label>3.完成</label>
-  </div>
-
-</div>
- </div><!--步骤结束-->
+    <div class="Retrieve-steps">
+      <div class="Retrieve-steps-round">
+  		<div class="finished"><!--蓝色圆圈带蓝线 finished-->
+		    <div class="wrap">
+		      <div class="round"><i class="icon-user"></i></div>
+		      <div class="bar"></div>
+		    </div>
+    		<label>1.填写用户名</label>
+  		</div>
+  		<div class="finished"><!--圆圈蓝色 current-->
+		    <div class="wrap">
+		      <div class="round"><i class="icon-key"></i></div>
+		      <div class="bar"></div>
+		    </div>
+		    <label>2.身份验证</label>
+	  	</div>
+	  	<div class="finished"><!--圆圈蓝色 current-->
+		    <div class="wrap">
+		      <div class="round"><i class="icon-pencil"></i></div>
+		      <div class="bar"></div>
+		    </div>
+		    <label>3.设置新密码</label>
+	  	</div>
+  		<div class="todo"><!--圆圈灰色 todo-->
+		    <div class="wrap">
+		      <div class="round"><i class=" icon-ok"></i></div>
+		      
+		    </div>
+		    <label>4.完成</label>
+  		</div>
+	  </div>
+ 	</div>
+ 	<!--步骤结束-->
          
      <!--表单验证-->
     <div class="Retrieve-cnt">
