@@ -46,7 +46,7 @@ define('app/retakepassword/confirmInfo', function (require, exports, module) {
     		};
     		this._renderAccountInfo();
     	},
-    
+    	
     	//加载账户数据
     	_renderAccountInfo: function(){
 			var _this = this;
@@ -95,6 +95,18 @@ define('app/retakepassword/confirmInfo', function (require, exports, module) {
 			$("#random_img").attr("src",_base+"/retakePassword/getImageVerifyCode?timestamp="+timestamp);
 		},
 		_sendVerify:function(){
+			 var step = 59;
+             $('#sendVerify').val('重新发送60');
+             var _res = setInterval(function(){
+                 $("#sendVerify").attr("disabled", true);//设置disabled属性
+                 $('#sendVerify').val('重新发送'+step);
+                 step-=1;
+                 if(step <= 0){
+                 $("#sendVerify").removeAttr("disabled"); //移除disabled属性
+                 $('#sendVerify').val('获取验证码');
+                 clearInterval(_res);//清除setInterval
+                 }
+             },1000);
 			var _this = this;
 			ajaxController.ajax({
 				type : "POST",
@@ -108,6 +120,12 @@ define('app/retakepassword/confirmInfo', function (require, exports, module) {
 				processing: true,
 				message : "正在处理中，请稍候...",
 				success : function(data) {
+					if(data.responseHeader.resultCode=="9999"){
+		        		$('#showSmsMsg').text("1分钟后可重复发送 ");
+		    			$("#errorSmsMsg").attr("style","display:block");
+		    			$("#phoneVerifyCode").val("");
+						return false;
+		        	}
 				},
 				error : function(){
 					alert("网络连接超时!");
