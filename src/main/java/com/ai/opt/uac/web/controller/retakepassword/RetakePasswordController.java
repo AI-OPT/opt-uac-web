@@ -123,28 +123,6 @@ public class RetakePasswordController {
 		return new ModelAndView("jsp/retakepassword/confirminfo",model);
 	}
 
-	/**
-	 * 获得账户信息
-	 * 
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping("/getAccountInfo")
-	@ResponseBody
-	public ResponseData<AccountData> getAccountInfo(HttpServletRequest request) {
-		SSOClientUser userLoginResponse = (SSOClientUser) request.getSession().getAttribute(RetakePassword.USER_SESSION_KEY);
-		if (userLoginResponse != null) {
-			LOGGER.info("查询账户信息开始，查询参数为： accountId=" + userLoginResponse.getAccountId());
-			// 加密
-			String phone = userLoginResponse.getPhone();
-			String email = userLoginResponse.getEmail();
-			AccountData confirmInfo = new AccountData(phone, email);
-			return new ResponseData<AccountData>(ResponseData.AJAX_STATUS_SUCCESS, "信息查询成功", confirmInfo);
-		} else {
-			return new ResponseData<AccountData>(ResponseData.AJAX_STATUS_SUCCESS, "信息查询失败", new AccountData());
-		}
-	}
-
 	@RequestMapping("/getImageVerifyCode")
 	@ResponseBody
 	public void getImageVerifyCode(HttpServletRequest request, HttpServletResponse response) {

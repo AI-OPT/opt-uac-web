@@ -1,9 +1,11 @@
-package com.ai.opt.uac.web.controller.accountcenter;
+package com.ai.opt.uac.web.controller.center;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -24,13 +26,13 @@ import com.ai.opt.sdk.util.DubboConsumerFactory;
 import com.ai.opt.sdk.util.Md5Encoder;
 import com.ai.opt.sdk.util.RandomUtil;
 import com.ai.opt.sdk.web.model.ResponseData;
-import com.ai.opt.sso.client.filter.SSOClientConstants;
+import com.ai.opt.sso.client.filter.SSOClientUser;
 import com.ai.opt.uac.api.security.interfaces.IAccountSecurityManageSV;
 import com.ai.opt.uac.api.security.param.AccountPasswordRequest;
-import com.ai.opt.uac.api.sso.param.UserLoginResponse;
 import com.ai.opt.uac.web.constants.Constants;
 import com.ai.opt.uac.web.constants.Constants.ResultCode;
-import com.ai.opt.uac.web.constants.Constants.UpdatePassword;
+import com.ai.opt.uac.web.constants.Constants.RetakePassword;
+import com.ai.opt.uac.web.constants.Constants.UpdateEmail;
 import com.ai.opt.uac.web.constants.VerifyConstants.EmailVerifyConstants;
 import com.ai.opt.uac.web.constants.VerifyConstants.PhoneVerifyConstants;
 import com.ai.opt.uac.web.model.email.SendEmailRequest;
@@ -42,43 +44,27 @@ import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
 import com.ai.runner.center.mmp.api.manager.param.SMData;
 import com.ai.runner.center.mmp.api.manager.param.SMDataInfoNotify;
 
-@RequestMapping("/accountSecurity/password")
+@RequestMapping("/center/email")
 @Controller
-public class UpdatePasswordController {
-	
-	private static final Logger LOGGER = LoggerFactory.getLogger(UpdatePasswordController.class);
-	
-    @RequestMapping("/confirminfo")
-    public ModelAndView updatePasswordStart(HttpServletRequest request) {
+public class UpdateEmialController {
+	private static final Logger LOGGER = LoggerFactory.getLogger(UpdateEmialController.class);
 
-        return new ModelAndView("jsp/accountsecurity/update-password-start");
-    }
-
-    /**
-	 * 获得账户信息
-	 * 
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping("/getAccountInfo")
-	@ResponseBody
-	public ResponseData<AccountData> getAccountInfo(HttpServletRequest request) {
-		 UserLoginResponse userLoginResponse = (UserLoginResponse)
-		 request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
-		
-		LOGGER.info("查询账户信息开始，查询参数为： accountId=" + userLoginResponse.getAccountId());
-		// 加密
-		String phone = userLoginResponse.getPhone();
-		String email = userLoginResponse.getEmail();
+	@RequestMapping("/confirminfo")
+	public ModelAndView updateEmailStart(HttpServletRequest request) {
+		SSOClientUser userClient = (SSOClientUser)request.getSession().getAttribute(Constants.RetakePassword.USER_SESSION_KEY);
+		Map<String,AccountData> model = new HashMap<String,AccountData>();
+		String phone = userClient.getPhone();
+		String email = userClient.getEmail();
 		AccountData confirmInfo = new AccountData(phone, email);
-		return new ResponseData<AccountData>(ResponseData.AJAX_STATUS_SUCCESS, "信息查询成功", confirmInfo);
+		model.put("confirmInfo", confirmInfo);
+		return new ModelAndView("jsp/accountsecurity/update-email-start",model);
 	}
-	
+
 	@RequestMapping("/getImageVerifyCode")
 	@ResponseBody
 	public void getImageVerifyCode(HttpServletRequest request, HttpServletResponse response) {
-		String cacheKey = UpdatePassword.CACHE_KEY_VERIFY_PICTURE + request.getSession().getId();
-		BufferedImage image = VerifyUtil.getImageVerifyCode(request, UpdatePassword.CACHE_NAMESPACE, cacheKey);
+		String cacheKey = UpdateEmail.CACHE_KEY_VERIFY_PICTURE + request.getSession().getId();
+		BufferedImage image = VerifyUtil.getImageVerifyCode(request, UpdateEmail.CACHE_NAMESPACE, cacheKey);
 		try {
 			ImageIO.write(image, "PNG", response.getOutputStream());
 		} catch (IOException e) {
@@ -95,24 +81,22 @@ public class UpdatePasswordController {
 	@RequestMapping("/sendVerify")
 	@ResponseBody
 	public ResponseData<String> sendVerify(HttpServletRequest request, SendVerifyRequest sendVerifyRequest) {
-		 UserLoginResponse userLoginResponse = (UserLoginResponse)
-		 request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
+		SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(RetakePassword.USER_SESSION_KEY);
 		String checkType = sendVerifyRequest.getCheckType();
 		ResponseData<String> responseData = null;
 		String sessionId = request.getSession().getId();
-
-		if (userLoginResponse != null) {
-			if (UpdatePassword.CHECK_TYPE_PHONE.equals(checkType)) {
+		if (userClient != null) {
+			if (UpdateEmail.CHECK_TYPE_PHONE.equals(checkType)) {
 				// 发送手机验证码
-				boolean isSuccess = sendPhoneVerifyCode(sessionId, userLoginResponse);
+				boolean isSuccess = sendPhoneVerifyCode(sessionId, userClient);
 				if (isSuccess) {
 					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "短信验证码发送成功", "短信验证码发送成功");
 				} else {
 					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "短信验证码发送失败", "服务器连接超时");
 				}
-			} else if (UpdatePassword.CHECK_TYPE_EMAIL.equals(checkType)) {
+			} else if (UpdateEmail.CHECK_TYPE_EMAIL.equals(checkType)) {
 				// 发送邮件验证码
-				boolean isSuccess = sendEmailVerifyCode(sessionId, userLoginResponse);
+				boolean isSuccess = sendEmailVerifyCode(sessionId, userClient);
 				if (isSuccess) {
 					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "邮件验证码发送成功", "邮件验证码发送成功");
 				} else {
@@ -130,26 +114,26 @@ public class UpdatePasswordController {
 	/**
 	 * 发送手机验证码
 	 * 
-	 * @param userLoginResponse
+	 * @param userClient
 	 */
-	private boolean sendPhoneVerifyCode(String sessionId, UserLoginResponse userLoginResponse) {
+	private boolean sendPhoneVerifyCode(String sessionId, SSOClientUser userClient) {
 		SMDataInfoNotify smDataInfoNotify = new SMDataInfoNotify();
 		String phoneVerifyCode = RandomUtil.randomNum(PhoneVerifyConstants.VERIFY_SIZE);
 		// 将验证码放入缓存
-		ICacheClient cacheClient = CacheClientFactory.getCacheClient(UpdatePassword.CACHE_NAMESPACE);
-		String cacheKey = UpdatePassword.CACHE_KEY_VERIFY_PHONE + sessionId;
+		ICacheClient cacheClient = CacheClientFactory.getCacheClient(UpdateEmail.CACHE_NAMESPACE);
+		String cacheKey = UpdateEmail.CACHE_KEY_VERIFY_PHONE + sessionId;
 		cacheClient.setex(cacheKey, PhoneVerifyConstants.VERIFY_OVERTIME, phoneVerifyCode);
 		// 设置短息信息
 		List<SMData> dataList = new LinkedList<SMData>();
 		SMData smData = new SMData();
 		smData.setGsmContent("${VERIFY}:" + phoneVerifyCode + "^${VALIDMINS}:" + PhoneVerifyConstants.VERIFY_OVERTIME / 60);
-		smData.setPhone(userLoginResponse.getPhone());
+		smData.setPhone(userClient.getPhone());
 		smData.setTemplateId(PhoneVerifyConstants.TEMPLATE_RETAKE_PASSWORD_ID);
 		smData.setServiceType(PhoneVerifyConstants.SERVICE_TYPE);
 		dataList.add(smData);
 		smDataInfoNotify.setDataList(dataList);
 		smDataInfoNotify.setMsgSeq(VerifyUtil.createPhoneMsgSeq());
-		smDataInfoNotify.setTenantId(userLoginResponse.getTenantId());
+		smDataInfoNotify.setTenantId(userClient.getTenantId());
 		smDataInfoNotify.setSystemId(Constants.SYSTEM_ID);
 		return VerifyUtil.sendPhoneInfo(smDataInfoNotify);
 	}
@@ -159,18 +143,18 @@ public class UpdatePasswordController {
 	 * 
 	 * @param accountInfo
 	 */
-	private boolean sendEmailVerifyCode(String sessionId, UserLoginResponse userLoginResponse) {
+	private boolean sendEmailVerifyCode(String sessionId, SSOClientUser userClient) {
 		// 邮箱验证
-		String email = userLoginResponse.getEmail();
-		String nickName = userLoginResponse.getNickName();
+		String email = userClient.getEmail();
+		String nickName = userClient.getNickName();
 		SendEmailRequest emailRequest = new SendEmailRequest();
 		emailRequest.setTomails(new String[] { email });
-		emailRequest.setTemplateRUL(UpdatePassword.TEMPLATE_EMAIL_URL);
+		emailRequest.setTemplateRUL(UpdateEmail.TEMPLATE_EMAIL_URL);
 		// 验证码
 		String verifyCode = RandomUtil.randomNum(EmailVerifyConstants.VERIFY_SIZE);
 		// 将验证码放入缓存
-		ICacheClient cacheClient = CacheClientFactory.getCacheClient(UpdatePassword.CACHE_NAMESPACE);
-		String cacheKey = UpdatePassword.CACHE_KEY_VERIFY_EMAIL + sessionId;
+		ICacheClient cacheClient = CacheClientFactory.getCacheClient(UpdateEmail.CACHE_NAMESPACE);
+		String cacheKey = UpdateEmail.CACHE_KEY_VERIFY_EMAIL + sessionId;
 		cacheClient.setex(cacheKey, EmailVerifyConstants.VERIFY_OVERTIME, verifyCode);
 		// 超时时间
 		String overTime = ObjectUtils.toString(EmailVerifyConstants.VERIFY_OVERTIME / 60);
@@ -188,7 +172,7 @@ public class UpdatePasswordController {
 	@ResponseBody
 	public ResponseData<String> confirmInfo(HttpServletRequest request, SafetyConfirmData safetyConfirmData) {
 		String confirmType = safetyConfirmData.getConfirmType();
-		ICacheClient cacheClient = CacheClientFactory.getCacheClient(UpdatePassword.CACHE_NAMESPACE);
+		ICacheClient cacheClient = CacheClientFactory.getCacheClient(UpdateEmail.CACHE_NAMESPACE);
 		String sessionId = request.getSession().getId();
 		// 检查图片验证码
 		ResponseData<String> pictureCheck = checkPictureVerifyCode(safetyConfirmData, cacheClient, sessionId);
@@ -196,21 +180,21 @@ public class UpdatePasswordController {
 			return pictureCheck;
 		}
 		// 检查短信或邮箱验证码
-		if (UpdatePassword.CHECK_TYPE_PHONE.equals(confirmType)) {
+		if (UpdateEmail.CHECK_TYPE_PHONE.equals(confirmType)) {
 			// 检查短信验证码
 			ResponseData<String> phoneCheck = checkPhoneVerifyCode(safetyConfirmData, cacheClient, sessionId);
 			if (ResponseData.AJAX_STATUS_FAILURE.equals(phoneCheck.getStatusCode())) {
 				return phoneCheck;
 			}
 
-		} else if (UpdatePassword.CHECK_TYPE_EMAIL.equals(confirmType)) {
+		} else if (UpdateEmail.CHECK_TYPE_EMAIL.equals(confirmType)) {
 			// 检查邮箱验证码
 			ResponseData<String> emailCheck = checkEmailVerifyCode(safetyConfirmData, cacheClient, sessionId);
 			if (ResponseData.AJAX_STATUS_FAILURE.equals(emailCheck.getStatusCode())) {
 				return emailCheck;
 			}
 		}
-		return new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", "/accountSecurity/password/setPassword");
+		return new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", "/accountSecurity/email/setEmail");
 	}
 
 	/**
@@ -222,7 +206,7 @@ public class UpdatePasswordController {
 	 * @return
 	 */
 	private ResponseData<String> checkPictureVerifyCode(SafetyConfirmData safetyConfirmData, ICacheClient cacheClient, String sessionId) {
-		String pictureVerifyCodeCache = cacheClient.get(UpdatePassword.CACHE_KEY_VERIFY_PICTURE + sessionId);
+		String pictureVerifyCodeCache = cacheClient.get(UpdateEmail.CACHE_KEY_VERIFY_PICTURE + sessionId);
 		String pictureVerifyCode = safetyConfirmData.getPictureVerifyCode();
 		ResponseData<String> responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", null);
 		if (pictureVerifyCodeCache != null) {
@@ -244,7 +228,7 @@ public class UpdatePasswordController {
 	 * @return
 	 */
 	private ResponseData<String> checkPhoneVerifyCode(SafetyConfirmData safetyConfirmData, ICacheClient cacheClient, String sessionId) {
-		String cacheKey = UpdatePassword.CACHE_KEY_VERIFY_PHONE + sessionId;
+		String cacheKey = UpdateEmail.CACHE_KEY_VERIFY_PHONE + sessionId;
 		String verifyCodeCache = cacheClient.get(cacheKey);
 		String verifyCode = safetyConfirmData.getVerifyCode();
 		ResponseData<String> responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", null);
@@ -268,7 +252,7 @@ public class UpdatePasswordController {
 	 * @return
 	 */
 	private ResponseData<String> checkEmailVerifyCode(SafetyConfirmData safetyConfirmData, ICacheClient cacheClient, String sessionId) {
-		String cacheKey = UpdatePassword.CACHE_KEY_VERIFY_EMAIL + sessionId;
+		String cacheKey = UpdateEmail.CACHE_KEY_VERIFY_EMAIL + sessionId;
 		String verifyCodeCache = cacheClient.get(cacheKey);
 		String verifyCode = safetyConfirmData.getVerifyCode();
 		ResponseData<String> responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", null);
@@ -283,26 +267,26 @@ public class UpdatePasswordController {
 	}
 
 	/**
-	 * 重置密码页跳转
+	 * 修改邮箱页跳转
 	 * 
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/setPassword")
-	public ModelAndView setPassword(HttpServletRequest request) {
-		return new ModelAndView("jsp/accountsecurity/update-password-new");
+	@RequestMapping("/setEmail")
+	public ModelAndView updateEmailPage(HttpServletRequest request) {
+		return new ModelAndView("jsp/accountsecurity/update-email-new");
 	}
 
 	/**
-	 * 设置密码
+	 * 设置新邮箱
 	 * 
 	 * @param request
 	 * @param newPassword
 	 * @return
 	 */
-	@RequestMapping("/setNewPassword")
+	@RequestMapping("/setNewEmail")
 	@ResponseBody
-	public ResponseData<String> setNewPassword(HttpServletRequest request, String password) {
+	public ResponseData<String> setNewEmail(HttpServletRequest request, String password) {
 		ResponseData<String> responseData = null;
 		IAccountSecurityManageSV accountManageSV = DubboConsumerFactory.getService("iAccountSecurityManageSV");
 		AccountPasswordRequest passwordRequest = new AccountPasswordRequest();
@@ -315,7 +299,7 @@ public class UpdatePasswordController {
 		String resultCode = responseHeader.getResultCode();
 		String resultMessage = responseHeader.getResultMessage();
 		if (ResultCode.SUCCESS_CODE.equals(resultCode)) {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "重置密码成功", "/accountSecurity/password/success");
+			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "重置密码成功", "/accountSecurity/email/success");
 		} else {
 			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, resultMessage, resultMessage);
 		}
@@ -324,6 +308,6 @@ public class UpdatePasswordController {
 
 	@RequestMapping("/success")
 	public ModelAndView successPage() {
-		return new ModelAndView("jsp/accountsecurity/update-password-success");
+		return new ModelAndView("jsp/accountsecurity/update-email-sucess");
 	}
 }

@@ -1,4 +1,4 @@
-package com.ai.opt.uac.web.controller.accountcenter;
+package com.ai.opt.uac.web.controller.center;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-@RequestMapping("/bandEmail")
+@RequestMapping("/center/bandEmail")
 @Controller
 public class BandEmailController {
     @RequestMapping("/bandEmailStart")
