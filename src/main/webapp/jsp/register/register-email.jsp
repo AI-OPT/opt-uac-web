@@ -15,7 +15,9 @@
 		pager.render();
 	});
 })();
-
+$(document).ready(function() { 
+	 $("#errorEmIdentifyMsg").attr("style","display:none");
+	});
 </script>
 </head>
 
@@ -37,10 +39,7 @@
           	<input type="text" class="int-medium" placeholder="" id="email" name="email">
           	<input type="hidden" name="accountId" id="accountId" value="${requestScope.accountId}"/>
           <span class="yzm"><p><A href="#" id="getIdentify">获取校验码</A></p></span>
-          <span class="regsiter-note" id="errorEmailMsg">
-         		<i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
-         		<span  id="showErroeEmail"></span>
-		   </span>
+          
          </li>
           <li class="user">
           <p class="word">邮箱校验码</p>

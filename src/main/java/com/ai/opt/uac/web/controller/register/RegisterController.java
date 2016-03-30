@@ -310,7 +310,7 @@ public class RegisterController {
             SMDataInfoNotify smData = new SMDataInfoNotify();
             smData.setTenantId(request.getSession().getId());
             smData.setSystemId(Constants.SYSTEM_ID);
-            smData.setMsgSeq("1");
+            smData.setMsgSeq(VerifyUtil.createPhoneMsgSeq());
             List<SMData> dataList = new ArrayList<SMData>();
             SMData data = new SMData();
             data.setPhone(sMDataReq.getPhone());

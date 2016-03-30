@@ -68,7 +68,7 @@
 		         <li class="identifying">
 		         	<input type="text" class="int-xlarge-identifying" placeholder="验证码" id="pictureVitenfy">
 		         	<span ><A href="#"><img src="${_base}/reg/getImageVerifyCode" id="randomImg"></A></span>
-		         	<span ><a href="" id="refresh">换一个</a></span>
+		         	<span ><a href="#"id="refresh">换一个</a></span>
 		         	<span class="regsiter-note" id="errorPicMsg">
 		         		<i class="icon-caret-left"></i>
 		         		<img src="${_base}/theme/baas/images/error.png"><span id="showPicMsg"></span>
@@ -82,7 +82,10 @@
 		         		<span id="showSmsMsg"></span>
 		         	</span>
 		         </li>
-		         <li><input type="button" class="regsiter-btn" value="注 册"  id="BTN_REGISTER"></li>
+		         <li>
+		         	<input type="button" class="regsiter-btn" value="注 册"  id="BTN_REGISTER">
+		         	<input type="hidden" id="errorFlag">
+		         </li>
 		         <li class="zuns">* 注册表示您同意遵守<A href="#">《云计费服务条款》</A></li>
 	
 	         </ul>

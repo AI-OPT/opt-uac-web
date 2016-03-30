@@ -38,6 +38,13 @@ define('app/register/register', function (require, exports, module) {
     	},
     	//获取短信验证码
     	_getPhoneVitentify: function(){
+    		var phone = $('#phone').val();
+    		if (phone==""){
+    			$('#showPhoneMsg').text("请输入手机号码");
+    			$("#errorPhoneMsg").attr("style","display:block");
+    			$('#errorFlag').val("0");
+				return false;
+			}
     		var	param={
 					phone:	$("#phone").val()
 				   };
@@ -61,8 +68,9 @@ define('app/register/register', function (require, exports, module) {
     	},
     	//刷新验证码
     	_refrashVitentify: function(){
-    		 $("#randomImg").removeAttr('src');
-    		 $("#randomImg").attr('src',"../reg/getImageVerifyCode");  
+    		var timestamp = (new Date()).valueOf();
+			$("#pictureVitenfy").html("");
+			$("#randomImg").attr("src",_base+"/reg/getImageVerifyCode?timestamp="+timestamp);
     	},
     	
     	//校验手机
@@ -71,12 +79,15 @@ define('app/register/register', function (require, exports, module) {
     		if (phone==""){
     			$('#showPhoneMsg').text("请输入手机号码");
     			$("#errorPhoneMsg").attr("style","display:block");
+    			$('#errorFlag').val("0");
 				return false;
 			}else if( /^1\d{10}$/.test(phone)){
+				$('#errorFlag').val("1");
 				$("#errorPhoneMsg").attr("style","display:none");
 			}else{
 				$('#showPhoneMsg').text("手机号码格式不正确");
 				$("#errorPhoneMsg").attr("style","display:block");
+				$('#errorFlag').val("0");
 				return false;
 			}
     	},
@@ -87,25 +98,30 @@ define('app/register/register', function (require, exports, module) {
     		if(password==""){
     			$('#showPawMsg').text("请输入密码");
     			$("#errorPawMsg").attr("style","display:block");
+    			$('#errorFlag').val("0");
 				return false;
     		}else if(/[\x01-\xFF]*/.test(password)){
     				if(/^\S*$/.test(password)){
-    					if(/^\w{6,14}$/.test(password)){
+    					if(/^[\x21-\x7E]{6,14}$/.test(password)){
     						$("#errorPawMsg").attr("style","display:none");
+    						$('#errorFlag').val("1");
     					}else{
     						$('#showPawMsg').text("长度为6-14个字符 ");
     		    			$("#errorPawMsg").attr("style","display:block");
+    		    			$('#errorFlag').val("0");
     						return false;
     					}
     					
     				}else{
     					$('#showPawMsg').text("不允许有空格 ");
             			$("#errorPawMsg").attr("style","display:block");
+            			$('#errorFlag').val("0");
         				return false;
     				}
     			}else{
     				$('#showPawMsg').text("支持数字、字母、符号组合 ");
         			$("#errorPawMsg").attr("style","display:block");
+        			$('#errorFlag').val("0");
     				return false;
     			}
     			
@@ -117,7 +133,11 @@ define('app/register/register', function (require, exports, module) {
     		if(pictureCode==""){
     			$('#showPicMsg').text("请输入图形验证码 ");
     			$("#errorPicMsg").attr("style","display:block");
+    			$('#errorFlag').val("0");
 				return false;
+    		}else{
+    			$('#errorFlag').val("1");
+    			return true;
     		}
     		
     	},
@@ -128,10 +148,16 @@ define('app/register/register', function (require, exports, module) {
     		if(smsCode==""){
     			$('#showSmsMsg').text("请输入短信验证码 ");
     			$("#errorSmsMsg").attr("style","display:block");
+    			$('#errorFlag').val("0");
 				return false;
+    		}else{
+    			$('#errorFlag').val("1");
+    			return true;
     		}
     	},
     	_sumbit: function(){
+    		var falg=$('#errorFlag').val();
+    		if(falg!="0"){
     			var	param={
     					phone:	$("#phone").val(),  
     					accountPassword:$("#password").val(),		   
@@ -165,6 +191,7 @@ define('app/register/register', function (require, exports, module) {
     			        	}else if(data.responseHeader.resultCode=="10003"){
     			        		$('#showPhoneMsg').text("手机号码已注册");
     							$("#errorPhoneMsg").attr("style","display:block");
+    							
     							return false;
     			        	}else if(data.responseHeader.resultCode=="000000"){
     			        		$("#errorSmsMsg").attr("style","display:none");
@@ -180,6 +207,8 @@ define('app/register/register', function (require, exports, module) {
     						}
     			        
     			    }); 
+    		}
+    			
     		
     	}
     });
