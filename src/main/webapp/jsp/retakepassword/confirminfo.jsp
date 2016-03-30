@@ -98,6 +98,8 @@
   <%@ include file="/inc/foot.jsp"%>
   
   <script type="text/javascript">
+  		var uuid = "${uuid}";
+  
 		(function() {
 			seajs.use([ 'app/retakepassword/confirmInfo' ], function(ConfirmInfoPager) {
 				var pager = new ConfirmInfoPager({

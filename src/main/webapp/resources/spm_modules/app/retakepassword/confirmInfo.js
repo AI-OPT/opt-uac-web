@@ -111,12 +111,11 @@ define('app/retakepassword/confirmInfo', function (require, exports, module) {
 			ajaxController.ajax({
 				type : "POST",
 				data : {
-					"accountId":1,
 					"checkType": function(){
 						return $("#confirmType").val()
 					}
 				},
-				url :_base+"/retakePassword/sendVerify",
+				url :_base+"/retakePassword/sendVerify?k="+uuid,
 				processing: true,
 				message : "正在处理中，请稍候...",
 				success : function(data) {
@@ -138,7 +137,7 @@ define('app/retakepassword/confirmInfo', function (require, exports, module) {
 			ajaxController.ajax({
 				type : "POST",
 				data : _this._getSafetyConfirmData(),
-				url :_base+"/retakePassword/confirmInfo",
+				url :_base+"/retakePassword/checkConfirmInfo?k="+uuid,
 				processing: true,
 				message : "正在处理中，请稍候...",
 				success : function(data) {
@@ -158,7 +157,6 @@ define('app/retakepassword/confirmInfo', function (require, exports, module) {
 		//获取界面填写验证信息
 		_getSafetyConfirmData:function(){
 			return{
-				"accountId":"1",
 				"confirmType":function () {
 			        return jQuery.trim($("#confirmType").val())
 			    },

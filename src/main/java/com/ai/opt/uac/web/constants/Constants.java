@@ -12,6 +12,14 @@ public final class Constants {
     	public static final String ERROR_CODE = "999999";
 	}
 	
+	public static final class UUID{
+		private UUID(){}
+		/*** 失效时间*/
+		public static final int OVERTIME = 300;
+		/*** 失效时间*/
+		public static final String KEY_NAME = "k";
+	}
+	
 	public static final class RetakePassword{
 		private RetakePassword(){}
 		

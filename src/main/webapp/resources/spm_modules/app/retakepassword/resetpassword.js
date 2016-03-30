@@ -32,27 +32,31 @@ define('app/retakepassword/resetpassword', function (require, exports, module) {
     
 		//获取账户信息
     	_resetPassword: function(){
-			var accountData = {};
-			ajaxController.ajax({
-				type : "POST",
-				data : {"password":function(){return jQuery.trim($("#newPassword").val())}},
-				url :_base+"/retakePassword/setNewPassword",
-				processing: true,
-				message : "正在处理中，请稍候...",
-				success : function(data) {
-					var statusCode = data.statusCode;
-					var url = data.data;
-					if(statusCode == "1"){
-						window.location.href = _base+url;
-					}else{
-						alert(data.statusInfo);
+    		var newPassword = jQuery.trim($("#newPassword").val());
+    		var confirmPassword = jQuery.trim($("#confirmPassword").val());
+    		if(newPassword != confirmPassword){
+    			alert("两次输入的密码不匹配");
+    		}else{
+				ajaxController.ajax({
+					type : "POST",
+					data : {"password":newPassword},
+					url :_base+"/retakePassword/setNewPassword?k="+uuid,
+					processing: true,
+					message : "正在处理中，请稍候...",
+					success : function(data) {
+						var statusCode = data.statusCode;
+						var url = data.data;
+						if(statusCode == "1"){
+							window.location.href = _base+url;
+						}else{
+							alert(data.statusInfo);
+						}
+					},
+					error : function(){
+						alert("网络连接超时，请重新修改登录密码");
 					}
-				},
-				error : function(){
-					alert("网络连接超时，请重新修改登录密码");
-				}
-			});
-			return accountData;
+				});
+    		}
 		}
     });
     module.exports = ResetPasswordPage

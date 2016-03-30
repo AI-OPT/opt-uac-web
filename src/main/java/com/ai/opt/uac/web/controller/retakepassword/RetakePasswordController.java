@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.ai.net.xss.util.StringUtil;
 import com.ai.opt.base.vo.BaseResponse;
 import com.ai.opt.base.vo.ResponseHeader;
 import com.ai.opt.sdk.cache.factory.CacheClientFactory;
@@ -27,6 +26,8 @@ import com.ai.opt.sdk.util.BeanUtils;
 import com.ai.opt.sdk.util.DubboConsumerFactory;
 import com.ai.opt.sdk.util.Md5Encoder;
 import com.ai.opt.sdk.util.RandomUtil;
+import com.ai.opt.sdk.util.StringUtil;
+import com.ai.opt.sdk.util.UUIDUtil;
 import com.ai.opt.sdk.web.model.ResponseData;
 import com.ai.opt.sso.client.filter.SSOClientUser;
 import com.ai.opt.uac.api.security.interfaces.IAccountSecurityManageSV;
@@ -34,7 +35,6 @@ import com.ai.opt.uac.api.security.param.AccountPasswordRequest;
 import com.ai.opt.uac.api.sso.interfaces.ILoginSV;
 import com.ai.opt.uac.api.sso.param.UserLoginResponse;
 import com.ai.opt.uac.web.constants.Constants;
-import com.ai.opt.uac.web.constants.Constants.Register;
 import com.ai.opt.uac.web.constants.Constants.ResultCode;
 import com.ai.opt.uac.web.constants.Constants.RetakePassword;
 import com.ai.opt.uac.web.constants.Constants.SMSUtil;
@@ -44,6 +44,7 @@ import com.ai.opt.uac.web.model.email.SendEmailRequest;
 import com.ai.opt.uac.web.model.retakepassword.AccountData;
 import com.ai.opt.uac.web.model.retakepassword.SafetyConfirmData;
 import com.ai.opt.uac.web.model.retakepassword.SendVerifyRequest;
+import com.ai.opt.uac.web.util.CacheUtil;
 import com.ai.opt.uac.web.util.VerifyUtil;
 import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
 import com.ai.runner.center.mmp.api.manager.param.SMData;
@@ -102,8 +103,11 @@ public class RetakePasswordController {
 			if (Constants.ResultCode.SUCCESS_CODE.equals(responseHeader.getResultCode())) {
 				SSOClientUser ssoClientUser = new SSOClientUser();
 				BeanUtils.copyProperties(ssoClientUser, userLoginResponse);
-				request.getSession().setAttribute(Constants.RetakePassword.USER_SESSION_KEY, ssoClientUser);
-				return new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "该用户存在", "/retakePassword/confirminfo");
+				String uuid = UUIDUtil.genId32();
+				//放入缓存
+				CacheUtil.setValue(uuid, Constants.UUID.OVERTIME, ssoClientUser, Constants.RetakePassword.CACHE_NAMESPACE);
+				//request.getSession().setAttribute(Constants.RetakePassword.USER_SESSION_KEY, ssoClientUser);
+				return new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "该用户存在", "/retakePassword/confirminfo?"+Constants.UUID.KEY_NAME+"="+uuid);
 			}
 		}
 		return new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "该用户不存在", null);
@@ -117,12 +121,23 @@ public class RetakePasswordController {
 	 */
 	@RequestMapping("/confirminfo")
 	public ModelAndView confirmInfo(HttpServletRequest request) {
-		SSOClientUser userClient = (SSOClientUser)request.getSession().getAttribute(Constants.RetakePassword.USER_SESSION_KEY);
-		Map<String,AccountData> model = new HashMap<String,AccountData>();
+		//是否存在uuid
+		String uuid = (String)request.getParameter(Constants.UUID.KEY_NAME);
+		if(StringUtil.isBlank(uuid)){
+			return new ModelAndView("jsp/retakepassword/userinfo");
+		}
+		//缓存中获取账户信息
+		SSOClientUser userClient = (SSOClientUser)CacheUtil.getValue(uuid, Constants.RetakePassword.CACHE_NAMESPACE, SSOClientUser.class);
+		if(userClient == null){
+			return new ModelAndView("jsp/retakepassword/userinfo");
+		}
+		//账户加密数据
+		Map<String,Object> model = new HashMap<String,Object>();
 		String phone = userClient.getPhone();
 		String email = userClient.getEmail();
 		AccountData confirmInfo = new AccountData(phone, email);
 		model.put("confirmInfo", confirmInfo);
+		model.put("uuid", uuid);
 		return new ModelAndView("jsp/retakepassword/confirminfo",model);
 	}
 
@@ -147,7 +162,8 @@ public class RetakePasswordController {
 	@RequestMapping("/sendVerify")
 	@ResponseBody
 	public ResponseData<String> sendVerify(HttpServletRequest request, SendVerifyRequest sendVerifyRequest) {
-		SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(RetakePassword.USER_SESSION_KEY);
+		String uuid = request.getParameter(Constants.UUID.KEY_NAME);
+		SSOClientUser userClient = (SSOClientUser) CacheUtil.getValue(uuid, Constants.RetakePassword.CACHE_NAMESPACE, SSOClientUser.class);
 		String checkType = sendVerifyRequest.getCheckType();
 		ResponseData<String> responseData = null;
 		String sessionId = request.getSession().getId();
@@ -271,7 +287,7 @@ public class RetakePasswordController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/confirmInfo")
+	@RequestMapping("/checkConfirmInfo")
 	@ResponseBody
 	public ResponseData<String> confirmInfo(HttpServletRequest request, SafetyConfirmData safetyConfirmData) {
 		String confirmType = safetyConfirmData.getConfirmType();
@@ -302,7 +318,13 @@ public class RetakePasswordController {
 				return emailCheck;
 			}
 		}
-		return new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", "/retakePassword/resetPassword");
+		//设置新缓存
+		String uuid = (String)request.getParameter(Constants.UUID.KEY_NAME);
+		SSOClientUser userClient = (SSOClientUser)CacheUtil.getValue(uuid, Constants.RetakePassword.CACHE_NAMESPACE, SSOClientUser.class);
+		String newuuid = UUIDUtil.genId32();
+		CacheUtil.setValue(newuuid, Constants.UUID.OVERTIME, userClient, Constants.RetakePassword.CACHE_NAMESPACE);
+		CacheUtil.deletCache(uuid, Constants.RetakePassword.CACHE_NAMESPACE);
+		return new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", "/retakePassword/resetPassword?"+Constants.UUID.KEY_NAME+"="+newuuid);
 	}
 
 	/**
@@ -380,7 +402,14 @@ public class RetakePasswordController {
 	 */
 	@RequestMapping("/resetPassword")
 	public ModelAndView resetPassword(HttpServletRequest request) {
-		return new ModelAndView("jsp/retakepassword/resetpassword");
+		String uuid = request.getParameter(Constants.UUID.KEY_NAME);
+		SSOClientUser userClient = (SSOClientUser)CacheUtil.getValue(uuid, Constants.RetakePassword.CACHE_NAMESPACE, SSOClientUser.class);
+		if(userClient == null){
+			return new ModelAndView("jsp/retakepassword/userinfo");
+		}
+		Map<String,Object> model = new HashMap<String,Object>();
+		model.put("uuid", uuid);
+		return new ModelAndView("jsp/retakepassword/resetpassword",model);
 	}
 
 	/**
@@ -393,7 +422,12 @@ public class RetakePasswordController {
 	@RequestMapping("/setNewPassword")
 	@ResponseBody
 	public ResponseData<String> setNewPassword(HttpServletRequest request, String password) {
-		SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(RetakePassword.USER_SESSION_KEY);
+		//SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(RetakePassword.USER_SESSION_KEY);
+		String uuid = request.getParameter(Constants.UUID.KEY_NAME);
+		SSOClientUser userClient = (SSOClientUser)CacheUtil.getValue(uuid, Constants.RetakePassword.CACHE_NAMESPACE, SSOClientUser.class);
+		if(userClient == null){
+			return new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "认证身份失效", "/retakePassword/userinfo");
+		}
 		ResponseData<String> responseData = null;
 		IAccountSecurityManageSV accountManageSV = DubboConsumerFactory.getService("iAccountSecurityManageSV");
 		AccountPasswordRequest passwordRequest = new AccountPasswordRequest();
@@ -410,6 +444,8 @@ public class RetakePasswordController {
 		} else {
 			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, resultMessage, resultMessage);
 		}
+		//删除缓存
+		CacheUtil.deletCache(uuid, Constants.RetakePassword.CACHE_NAMESPACE);
 		return responseData;
 	}
 
