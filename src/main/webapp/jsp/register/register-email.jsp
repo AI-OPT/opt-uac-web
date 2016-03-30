@@ -15,7 +15,9 @@
 		pager.render();
 	});
 })();
-
+$(document).ready(function() { 
+	 $("#errorEmIdentifyMsg").attr("style","display:none");
+	});
 </script>
 </head>
 
@@ -33,17 +35,19 @@
         <div class="regsiter-email-cnt">
           <ul>
           <li class="user">
-          <p class="word">邮箱地址</p>
-          <p>
+          <span><p class="word">邮箱地址</p></span>
           	<input type="text" class="int-medium" placeholder="" id="email" name="email">
           	<input type="hidden" name="accountId" id="accountId" value="${requestScope.accountId}"/>
-          </p>
-          <p><A href="#" id="getIdentify">获取校验码</A></p>
+          <span class="yzm"><p><A href="#" id="getIdentify">获取校验码</A></p></span>
+          
          </li>
           <li class="user">
           <p class="word">邮箱校验码</p>
           <p><input type="text" class="int-medium" placeholder="" id="identifyCode"></p>
-         
+         <span class="regsiter-note" id="errorEmIdentifyMsg">
+         		<i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
+         		<span  id="showErroeEmIdentify"></span>
+		   </span>
          </li>
          <li class="reminder">
          <p><i class="icon-lightbulb"></i>温馨提示</p>

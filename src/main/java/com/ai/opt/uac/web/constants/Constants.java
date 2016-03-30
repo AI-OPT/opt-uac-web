@@ -55,6 +55,26 @@ public final class Constants {
         public static final String REGISTER_EMAIL_NICK = "云计费";
         /** 图片验证码缓存key*/
         public static final String CACHE_KEY_VERIFY_PICTURE = "register-verify-picture";
+        /** 注册成功ID */
+        public static final String REGISTER_SUCCESS_ID = "000000";
+        /** 图片验证码 错误ID*/
+        public static final String REGISTER_PICTURE_ERROR = "000001";
+        /** 图片验证码 失效ID*/
+        public static final String REGISTER_PICTURE_OVERTIME_ERROR = "000002";
+        /** 短信验证码错误ID */
+        public static final String REGISTER_SSM_ERROR = "000003";
+        /** 短信验证码失效ID */
+        public static final String REGISTER_SSM_OVERTIME_ERROR = "000004";
+        /** 邮箱验证码失效ID */
+        public static final String REGISTER_EMAIL_OVERTIME_ERROR = "000005";
+        /** 邮箱验证码错误ID */
+        public static final String REGISTER_EMAIL_ERROR = "000006";
+        /** 绑定邮箱成功ID */
+        public static final String BAND_EMAIL_SUCCESS_ID = "000000";
+        /** 手机已经注册ID */
+        public static final String PHONE_NOTONE_ERROR = "10003";
+        /** 邮箱已经注册ID */
+        public static final String EMAIL_NOTONE_ERROR = "10004";
     }
     
     public static final class UpdatePassword{
@@ -127,4 +147,23 @@ public final class Constants {
 		/** 图片验证码缓存key*/
 		public static final String CACHE_KEY_VERIFY_PICTURE = "update-email-verify-picture";
 	}
+    public static final class SMSUtil{
+        private SMSUtil(){}
+        /** 注册时手机发送次数key*/
+        public static final String CACHE_KEY_SMS_REGISTER = "register-sms";
+        /** 修改手机发送次数key*/
+        public static final String CACHE_KEY_SMS_UPDATE_PHONE = "update-phone-sms";
+        /** 修改邮箱发送次数key*/
+        public static final String CACHE_KEY_SMS_UPDATE_EMAIL = "update-email-sms";
+        /** 找回密码发送次数key*/
+        public static final String CACHE_KEY_SMS_RETAKE_PASSWORD = "retake-password-sms";
+        /** 短信发送次数失败*/
+        public static final String CACHE_SMS_ERROR_CODE = "9999";
+        /** 短信重复发送时间*/
+        public static final int SMS_VERIFY_TIMES = 60;
+        /** 短信发送成功*/
+        public static final String CACHE_SMS_SUCCESS_CODE = "0000";
+        
+    }
+   
 }
