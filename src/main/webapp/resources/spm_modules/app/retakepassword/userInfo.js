@@ -25,6 +25,7 @@ define('app/retakepassword/userInfo', function (require, exports, module) {
     		//key的格式: 事件+空格+对象选择器;value:事件方法
     		"click [id='submitBtn']":"_checkUserInfo",
     		"click [id='random_img']":"_getRandomCode",
+    		"click [id='changeImage']":"_getRandomCode"
         },
         init: function(){
         	_getRandomCode();
@@ -35,6 +36,7 @@ define('app/retakepassword/userInfo', function (require, exports, module) {
     	},
     	_getRandomCode:function(){
 			var timestamp = (new Date()).valueOf();
+			$("#pictureVerifyCode").html("");
 			$("#random_img").attr("src",_base+"/retakePassword/getUserImageVerifyCode?timestamp="+timestamp);
 		},
 		//检查账户信息
