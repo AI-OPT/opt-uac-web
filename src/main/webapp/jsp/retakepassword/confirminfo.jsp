@@ -75,13 +75,13 @@
           <li class="user">
 	          <p class="word">图形验证码</p>
 	          <p><input type="text" class="int-medium" id="pictureVerifyCode"></p>
-	          <p><img src="${_base}/retakePassword/getImageVerifyCode"></p>
-	          <p><A href="#">看不清?换一换</A></p>
+	          <p><img id="random_img" src="${_base}/retakePassword/getImageVerifyCode"></p>
+	          <p><A id="changeImage">看不清?换一换</A></p>
           </li>
           <li class="user">
-	          <p class="word" id="verifyName">手机验证码</p>
+	          <p class="word" id="verifyName">短信验证码</p>
 	          <p><input type="text" class="int-medium" id="verifyCode"></p>
-	          <p class="huoqu"><A href="#" id="sendVerify">获取验证码</A></p>
+	          <p class="huoqu"><A id="sendVerify">获取验证码</A></p>
           </li>
          
        	  <li><input id="submitBtn" type="button" class="Submit-btn" value="提  交"></li>

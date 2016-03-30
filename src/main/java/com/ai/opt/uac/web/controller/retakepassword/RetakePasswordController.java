@@ -353,13 +353,14 @@ public class RetakePasswordController {
 	@RequestMapping("/setNewPassword")
 	@ResponseBody
 	public ResponseData<String> setNewPassword(HttpServletRequest request, String password) {
+		SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(RetakePassword.USER_SESSION_KEY);
 		ResponseData<String> responseData = null;
 		IAccountSecurityManageSV accountManageSV = DubboConsumerFactory.getService("iAccountSecurityManageSV");
 		AccountPasswordRequest passwordRequest = new AccountPasswordRequest();
-		passwordRequest.setAccountId(1L);
+		passwordRequest.setAccountId(userClient.getAccountId());
 		String encodePassword = Md5Encoder.encodePassword(password);
 		passwordRequest.setAccountPassword(encodePassword);
-		passwordRequest.setUpdateAccountId(1L);
+		passwordRequest.setUpdateAccountId(userClient.getAccountId());
 		BaseResponse resultData = accountManageSV.setPasswordData(passwordRequest);
 		ResponseHeader responseHeader = resultData.getResponseHeader();
 		String resultCode = responseHeader.getResultCode();
