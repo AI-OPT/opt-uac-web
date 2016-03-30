@@ -76,7 +76,10 @@
 		         </li>
 		         <li class="SMSidentifying">
 		         	<input type="text" class="int-xlarge-SMSidentifying" placeholder="短信验证码" id="phoneVerifyCode">
-		         	<span class="yzm" id="PHONE_IDENTIFY"><A href="#">获取验证码</A></span>
+		         	<span class="yzm">
+		         	 		<input id="PHONE_IDENTIFY"  type="button" value="获取验证码" >
+		         	 </span>
+		         		
 		         	<span class="regsiter-note" id="errorSmsMsg">
 		         		<i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
 		         		<span id="showSmsMsg"></span>

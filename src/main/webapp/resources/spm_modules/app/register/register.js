@@ -25,7 +25,6 @@ define('app/register/register', function (require, exports, module) {
     	_bindHandle: function(){
     		
     		$("#refresh").on("click",this._refrashVitentify);
-    		$("#PHONE_IDENTIFY").on("click",this._getPhoneVitentify);
     		$("#phone").on("blur",this._validServicePho);
     		$("#password").on("blur",this._validServicePaw);
     		$("#pictureVitenfy").on("blur",this._validServicePic);
@@ -33,6 +32,8 @@ define('app/register/register', function (require, exports, module) {
     		$("#BTN_REGISTER").on("click",this._validServicePho);
     		$("#BTN_REGISTER").on("click",this._validServicePaw);
     		$("#BTN_REGISTER").on("click",this._validServicePic);
+    		//$("#PHONE_IDENTIFY").on("click",this._smsTime);
+    		$("#PHONE_IDENTIFY").on("click",this._getPhoneVitentify);
     		$("#BTN_REGISTER").on("click",this._validServiceSSM);
     		$("#BTN_REGISTER").on("click",this._sumbit);
     	},
@@ -45,26 +46,48 @@ define('app/register/register', function (require, exports, module) {
     			$('#errorFlag').val("0");
 				return false;
 			}
-    		var	param={
-					phone:	$("#phone").val()
-				   };
-    		ajaxController.ajax({
-			        type: "post",
-			        processing: false,
-			        url: "../reg/toSendPhone",
-			        dataType: "json",
-			        data: param,
-			        message: "正在加载数据..",
-			        success: function (data) {
-			        	alert("ok");
-			        },
-			        error: function(XMLHttpRequest, textStatus, errorThrown) {
-						 alert(XMLHttpRequest.status);
-						 alert(XMLHttpRequest.readyState);
-						 alert(textStatus);
-						   }
-			        
-			    }); 
+    		var flag = $('#errorFlag').val();
+    		
+             if(flag!=0){
+            	 var step = 59;
+                 $('#PHONE_IDENTIFY').val('重新发送60');
+                 var _res = setInterval(function(){
+                     $("#PHONE_IDENTIFY").attr("disabled", true);//设置disabled属性
+                     $('#PHONE_IDENTIFY').val('重新发送'+step);
+                     step-=1;
+                     if(step <= 0){
+                     $("#PHONE_IDENTIFY").removeAttr("disabled"); //移除disabled属性
+                     $('#PHONE_IDENTIFY').val('获取验证码');
+                     clearInterval(_res);//清除setInterval
+                     }
+                 },1000);
+            	 var	param={
+     					phone:	$("#phone").val()
+     				   };
+         		ajaxController.ajax({
+     			        type: "post",
+     			        processing: false,
+     			        url: "../reg/toSendPhone",
+     			        dataType: "json",
+     			        data: param,
+     			        message: "正在加载数据..",
+     			        success: function (data) {
+     			        	if(data.responseHeader.resultCode=="9999"){
+    			        		$('#showSmsMsg').text("1分钟后可重复发送 ");
+    			    			$("#errorSmsMsg").attr("style","display:block");
+    			    			$("#phoneVerifyCode").val("");
+    							return false;
+    			        	}
+     			        },
+     			        error: function(XMLHttpRequest, textStatus, errorThrown) {
+     						 alert(XMLHttpRequest.status);
+     						 alert(XMLHttpRequest.readyState);
+     						 alert(textStatus);
+     						   }
+     			        
+     			    }); 
+             }
+    		
     	},
     	//刷新验证码
     	_refrashVitentify: function(){

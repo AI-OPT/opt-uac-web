@@ -37,6 +37,7 @@ import com.ai.opt.uac.api.security.param.AccountEmailRequest;
 import com.ai.opt.uac.web.constants.Constants;
 import com.ai.opt.uac.web.constants.Constants.Register;
 import com.ai.opt.uac.web.constants.Constants.ResultCode;
+import com.ai.opt.uac.web.constants.Constants.SMSUtil;
 import com.ai.opt.uac.web.constants.VerifyConstants.EmailVerifyConstants;
 import com.ai.opt.uac.web.constants.VerifyConstants.PhoneVerifyConstants;
 import com.ai.opt.uac.web.model.email.SendEmailRequest;
@@ -182,7 +183,7 @@ public class RegisterController {
             String identifyCode = iCacheClient
                     .get(Constants.Register.REGISTER_EMAIL_KEY + session.getId());
             ResponseHeader header = new ResponseHeader();
-            header.setIsSuccess(true);
+            header.setIsSuccess(false);
             //校验邮箱验证码是否失效
             if(StringUtil.isBlank(identifyCode)){
                 header.setResultCode(Register.REGISTER_EMAIL_OVERTIME_ERROR);
@@ -307,29 +308,52 @@ public class RegisterController {
             throws CallerException, Exception {
         ResponseData<String> responseData = null;
         try {
-            SMDataInfoNotify smData = new SMDataInfoNotify();
-            smData.setTenantId(request.getSession().getId());
-            smData.setSystemId(Constants.SYSTEM_ID);
-            smData.setMsgSeq(VerifyUtil.createPhoneMsgSeq());
-            List<SMData> dataList = new ArrayList<SMData>();
-            SMData data = new SMData();
-            data.setPhone(sMDataReq.getPhone());
-            data.setServiceType(PhoneVerifyConstants.SERVICE_TYPE);
-            data.setTemplateId(PhoneVerifyConstants.TEMPLATE_REGISTER_ID);
-            String identifyCode = RandomUtil.randomNum(PhoneVerifyConstants.VERIFY_SIZE);
-            String codeContent = "${VERIFY}:" + identifyCode;
-            String timeContent = "^${VALIDMINS}:" + PhoneVerifyConstants.VERIFY_OVERTIME;
-            data.setGsmContent(codeContent + timeContent);
-            dataList.add(data);
-            smData.setDataList(dataList);
-            SMSServices sMSServices = DubboConsumerFactory.getService("sMSServices");
-            sMSServices.dataInput(smData);
-            // 存验证码到缓存
-            String key = Register.REGISTER_PHONE_KEY + request.getSession().getId();
-            ICacheClient iCacheClient = CacheClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
-            iCacheClient.setex(key, PhoneVerifyConstants.VERIFY_OVERTIME, identifyCode);
-            responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "验证码获取成功",
-                    key);
+            //获取短信发送次数
+            String smstimes = "1";
+            String smskey = SMSUtil.CACHE_KEY_SMS_REGISTER + sMDataReq.getPhone();
+            ICacheClient cacheClient = CacheClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
+            String times = cacheClient.get(smskey);
+            if(StringUtil.isBlank(times)){
+                SMDataInfoNotify smData = new SMDataInfoNotify();
+                smData.setTenantId(request.getSession().getId());
+                smData.setSystemId(Constants.SYSTEM_ID);
+                smData.setMsgSeq(VerifyUtil.createPhoneMsgSeq());
+                List<SMData> dataList = new ArrayList<SMData>();
+                SMData data = new SMData();
+                data.setPhone(sMDataReq.getPhone());
+                data.setServiceType(PhoneVerifyConstants.SERVICE_TYPE);
+                data.setTemplateId(PhoneVerifyConstants.TEMPLATE_REGISTER_ID);
+                String identifyCode = RandomUtil.randomNum(PhoneVerifyConstants.VERIFY_SIZE);
+                String codeContent = "${VERIFY}:" + identifyCode;
+                String timeContent = "^${VALIDMINS}:" + PhoneVerifyConstants.VERIFY_OVERTIME;
+                data.setGsmContent(codeContent + timeContent);
+                dataList.add(data);
+                smData.setDataList(dataList);
+                SMSServices sMSServices = DubboConsumerFactory.getService("sMSServices");
+                sMSServices.dataInput(smData);
+                // 存验证码到缓存
+                String key = Register.REGISTER_PHONE_KEY + request.getSession().getId();
+                ICacheClient iCacheClient = CacheClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
+                iCacheClient.setex(key, PhoneVerifyConstants.VERIFY_OVERTIME, identifyCode);
+                //存发送次数到缓存
+                iCacheClient.setex(smskey, SMSUtil.SMS_VERIFY_TIMES, smstimes);
+                ResponseHeader header = new ResponseHeader();
+                header.setIsSuccess(true);
+                header.setResultCode(SMSUtil.CACHE_SMS_SUCCESS_CODE);
+                responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "验证码获取成功",
+                        null);
+                responseData.setResponseHeader(header);
+            }else{
+                ResponseHeader header = new ResponseHeader();
+                header.setIsSuccess(false);
+                header.setResultCode(SMSUtil.CACHE_SMS_ERROR_CODE);
+                header.setResultMessage("超过1分钟后，可重复发送");
+                responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS,
+                        "超过1分钟后，可重复发送", null);
+                responseData.setResponseHeader(header);
+                return responseData;
+            }
+            
         } catch (Exception e) {
             LOG.error("验证码获取失败！", e);
             responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "验证码获取失败",

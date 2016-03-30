@@ -147,4 +147,23 @@ public final class Constants {
 		/** 图片验证码缓存key*/
 		public static final String CACHE_KEY_VERIFY_PICTURE = "update-email-verify-picture";
 	}
+    public static final class SMSUtil{
+        private SMSUtil(){}
+        /** 注册时手机发送次数key*/
+        public static final String CACHE_KEY_SMS_REGISTER = "register-sms";
+        /** 修改手机发送次数key*/
+        public static final String CACHE_KEY_SMS_UPDATE_PHONE = "update-phone-sms";
+        /** 修改邮箱发送次数key*/
+        public static final String CACHE_KEY_SMS_UPDATE_EMAIL = "update-email-sms";
+        /** 找回密码发送次数key*/
+        public static final String CACHE_KEY_SMS_RETAKE_PASSWORD = "retake-password-sms";
+        /** 短信发送次数失败*/
+        public static final String CACHE_SMS_ERROR_CODE = "9999";
+        /** 短信重复发送时间*/
+        public static final int SMS_VERIFY_TIMES = 60;
+        /** 短信发送成功*/
+        public static final String CACHE_SMS_SUCCESS_CODE = "0000";
+        
+    }
+   
 }
