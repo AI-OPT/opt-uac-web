@@ -170,7 +170,7 @@ public class RetakePasswordController {
                      responseData.setResponseHeader(header);
                      return responseData;
 				}else {
-				    responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "短信验证码发送失败", "重复发送");
+				    responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "短信验证码发送失败", "重复发送");
 				    ResponseHeader header = new ResponseHeader();
                     header.setIsSuccess(false);
                     header.setResultCode(SMSUtil.CACHE_SMS_ERROR_CODE);
