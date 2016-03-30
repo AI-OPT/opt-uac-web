@@ -53,35 +53,45 @@
          
      <!--表单验证-->
     <div class="Retrieve-cnt">
-          <ul>
-          <li class="user">
-          <p class="word">已验证手机</p>
-         <p>150****1010</p> 
-          <p class="tong"><A href="#">通过已验证邮箱验证</A></p>
+      <input type="hidden" id="confirmType" value="1">
+      <ul>
+         <li class="user">
+          <p class="word" id="confirmTypeName">已验证手机</p>
+          <p id="phone">${confirmInfo.phone}</p> 
+          <p id="email">${confirmInfo.email}</p> 
+          <p class="tong"><A id="changeConfirmType">通过已验证邮箱验证</A></p>
          </li>
          <li class="user">
           <p class="word">图形验证码</p>
-          <p><input type="text" class="int-medium" placeholder=""></p>
-          <p><img src="${_base}/theme/baas/images/ret-yzm.png"></p>
-          <p><A href="#">看不清?换一换</A></p>
+          <p><input type="text" class="int-medium" placeholder="" id="pictureVerifyCode"></p>
+          <p><img id="random_img" src="${_base}/center/password/getImageVerifyCode"></p>
+          <p><A id="changeImage">看不清?换一换</A></p>
          </li>
          <li class="user">
-          <p class="word">短信校验码</p>
-          <p><input type="text" class="int-medium" placeholder=""></p>
-          <p class="huoqu"><A href="#">获取短信校验码</A></p>
+	          <p class="word" id="verifyName">短信校验码</p>
+	          <p><input type="text" class="int-medium" id="verifyCode"></p>
+	          <p class="huoqu"><A id="sendVerify">获取验证码</A></p>
          </li>
          
-         
-         <li><input type="button" class="Submit-btn" value="提  交" onclick="location.href='账户安全-修改手机-设置新手机号码.html';" ></li>
-       
-          </ul>
+         <li><input id="submitBtn" type="button" class="Submit-btn" value="提  交"></li>
+      </ul>
         
-        </div>
+    </div>
     
     
     
     </div>
   </div>
   <%@ include file="/inc/foot.jsp"%>
+  <script type="text/javascript">
+		(function() {
+			seajs.use([ 'app/center/phone/confirmInfo' ], function(ConfirmInfoPager) {
+				var pager = new ConfirmInfoPager({
+					element : document.body
+				});
+				pager.render();
+			});
+		})(); 
+  </script>
 </body>
 </html>

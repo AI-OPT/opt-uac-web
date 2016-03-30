@@ -24,6 +24,8 @@ public final class VerifyConstants {
         public static final String TEMPLATE_SET_PASSWORD_ID = "5";
         /** 短信找回密码模板ID */
         public static final String TEMPLATE_RETAKE_PASSWORD_ID = "6";
+        /** 短信设置新手机号模板ID */
+        public static final String TEMPLATE_RETAKE_SETPHONE_ID = "7";
         
         public static final String SERVICE_TYPE = "1";
 		
