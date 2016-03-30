@@ -36,6 +36,9 @@ public class IConfigCenterClientTest {
         String cachesnsConfig = "{\"com.ai.opt.uac.sso.unicache\":\"" + uacRedisHost
                 + "\",\"com.ai.opt.uac.register.cache\":\"" + uacRedisHost
                 + "\",\"com.ai.opt.uac.retakepassword.cache\":\"" + uacRedisHost
+                + "\",\"com.ai.opt.uac.updateemail.cache\":\"" + uacRedisHost
+                + "\",\"com.ai.opt.uac.updatephone.cache\":\"" + uacRedisHost
+                + "\",\"com.ai.opt.uac.updatepassword.cache\":\"" + uacRedisHost
                 + "\",\"com.ai.opt.uni.session.sessionclient.uacweb\":\"" + uacRedisHost + "\"}";
         
         StringBuilder bu=new StringBuilder();

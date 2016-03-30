@@ -23,15 +23,14 @@ import com.ai.opt.base.vo.BaseResponse;
 import com.ai.opt.base.vo.ResponseHeader;
 import com.ai.opt.sdk.cache.factory.CacheClientFactory;
 import com.ai.opt.sdk.util.DubboConsumerFactory;
-import com.ai.opt.sdk.util.Md5Encoder;
 import com.ai.opt.sdk.util.RandomUtil;
 import com.ai.opt.sdk.web.model.ResponseData;
+import com.ai.opt.sso.client.filter.SSOClientConstants;
 import com.ai.opt.sso.client.filter.SSOClientUser;
 import com.ai.opt.uac.api.security.interfaces.IAccountSecurityManageSV;
-import com.ai.opt.uac.api.security.param.AccountPasswordRequest;
+import com.ai.opt.uac.api.security.param.AccountEmailRequest;
 import com.ai.opt.uac.web.constants.Constants;
 import com.ai.opt.uac.web.constants.Constants.ResultCode;
-import com.ai.opt.uac.web.constants.Constants.RetakePassword;
 import com.ai.opt.uac.web.constants.Constants.UpdateEmail;
 import com.ai.opt.uac.web.constants.VerifyConstants.EmailVerifyConstants;
 import com.ai.opt.uac.web.constants.VerifyConstants.PhoneVerifyConstants;
@@ -51,13 +50,17 @@ public class UpdateEmialController {
 
 	@RequestMapping("/confirminfo")
 	public ModelAndView updateEmailStart(HttpServletRequest request) {
-		SSOClientUser userClient = (SSOClientUser)request.getSession().getAttribute(Constants.RetakePassword.USER_SESSION_KEY);
-		Map<String,AccountData> model = new HashMap<String,AccountData>();
-		String phone = userClient.getPhone();
-		String email = userClient.getEmail();
-		AccountData confirmInfo = new AccountData(phone, email);
-		model.put("confirmInfo", confirmInfo);
-		return new ModelAndView("jsp/accountsecurity/update-email-start",model);
+		SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
+		if (userClient != null) {
+			Map<String, AccountData> model = new HashMap<String, AccountData>();
+			String phone = userClient.getPhone();
+			String email = userClient.getEmail();
+			AccountData confirmInfo = new AccountData(phone, email);
+			model.put("confirmInfo", confirmInfo);
+			return new ModelAndView("jsp/center/update-email-start", model);
+		} else {
+			return new ModelAndView("jsp/center/update-email-start");
+		}
 	}
 
 	@RequestMapping("/getImageVerifyCode")
@@ -81,7 +84,7 @@ public class UpdateEmialController {
 	@RequestMapping("/sendVerify")
 	@ResponseBody
 	public ResponseData<String> sendVerify(HttpServletRequest request, SendVerifyRequest sendVerifyRequest) {
-		SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(RetakePassword.USER_SESSION_KEY);
+		SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
 		String checkType = sendVerifyRequest.getCheckType();
 		ResponseData<String> responseData = null;
 		String sessionId = request.getSession().getId();
@@ -161,7 +164,7 @@ public class UpdateEmialController {
 		emailRequest.setData(new String[] { nickName, verifyCode, overTime });
 		return VerifyUtil.sendEmail(emailRequest);
 	}
-
+	
 	/**
 	 * 身份认证
 	 * 
@@ -194,7 +197,7 @@ public class UpdateEmialController {
 				return emailCheck;
 			}
 		}
-		return new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", "/accountSecurity/email/setEmail");
+		return new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", "/center/email/setEmail");
 	}
 
 	/**
@@ -274,9 +277,43 @@ public class UpdateEmialController {
 	 */
 	@RequestMapping("/setEmail")
 	public ModelAndView updateEmailPage(HttpServletRequest request) {
-		return new ModelAndView("jsp/accountsecurity/update-email-new");
+		return new ModelAndView("jsp/center/update-email-new");
+	}
+	
+	/**
+	 * 发送邮件验证码(修改新邮箱时验证)
+	 * @param request
+	 * @param sessionId
+	 * @param email
+	 * @return
+	 */
+	@RequestMapping("/sendEmailVerify")
+	@ResponseBody
+	public ResponseData<String> sendEmailVerifyCode(HttpServletRequest request, String email) {
+		// 邮箱验证
+		SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
+		String nickName = userClient.getNickName();
+		SendEmailRequest emailRequest = new SendEmailRequest();
+		emailRequest.setTomails(new String[] { email });
+		emailRequest.setTemplateRUL(UpdateEmail.TEMPLATE_SETEMAIL_URL);
+		// 验证码
+		String verifyCode = RandomUtil.randomNum(EmailVerifyConstants.VERIFY_SIZE);
+		// 将验证码放入缓存
+		ICacheClient cacheClient = CacheClientFactory.getCacheClient(UpdateEmail.CACHE_NAMESPACE);
+		String cacheKey = UpdateEmail.CACHE_KEY_VERIFY_SETEMAIL + request.getSession().getId();
+		cacheClient.setex(cacheKey, EmailVerifyConstants.VERIFY_OVERTIME, verifyCode);
+		// 超时时间
+		String overTime = ObjectUtils.toString(EmailVerifyConstants.VERIFY_OVERTIME / 60);
+		emailRequest.setData(new String[] { nickName, verifyCode, overTime });
+		boolean isSuccess =  VerifyUtil.sendEmail(emailRequest);
+		if(isSuccess){
+			return new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS,"发送成功","发送成功");
+		}else{
+			return new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE,"发送失败","发送失败");
+		}
 	}
 
+	
 	/**
 	 * 设置新邮箱
 	 * 
@@ -286,28 +323,56 @@ public class UpdateEmialController {
 	 */
 	@RequestMapping("/setNewEmail")
 	@ResponseBody
-	public ResponseData<String> setNewEmail(HttpServletRequest request, String password) {
-		ResponseData<String> responseData = null;
-		IAccountSecurityManageSV accountManageSV = DubboConsumerFactory.getService("iAccountSecurityManageSV");
-		AccountPasswordRequest passwordRequest = new AccountPasswordRequest();
-		passwordRequest.setAccountId(1L);
-		String encodePassword = Md5Encoder.encodePassword(password);
-		passwordRequest.setAccountPassword(encodePassword);
-		passwordRequest.setUpdateAccountId(1L);
-		BaseResponse resultData = accountManageSV.setPasswordData(passwordRequest);
+	public ResponseData<String> setNewEmail(HttpServletRequest request, String email, String verifyCode) {
+		SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
+		//检查验证码
+		ICacheClient cacheClient = CacheClientFactory.getCacheClient(UpdateEmail.CACHE_NAMESPACE);
+ 		ResponseData<String> responseData = checkSetEmailVerifyCode(verifyCode, cacheClient, request.getSession().getId());
+		if(ResponseData.AJAX_STATUS_FAILURE.equals(responseData.getStatusCode())){
+			return responseData;
+		}
+		//更新邮箱
+		IAccountSecurityManageSV accountSecurityManageSV = DubboConsumerFactory.getService("iAccountSecurityManageSV");
+		AccountEmailRequest accountEmailRequest = new AccountEmailRequest();
+		accountEmailRequest.setAccountId(userClient.getAccountId());
+		accountEmailRequest.setEmail(email);
+		accountEmailRequest.setUpdateAccountId(userClient.getAccountId());
+		BaseResponse resultData = accountSecurityManageSV.setEmailData(accountEmailRequest );
 		ResponseHeader responseHeader = resultData.getResponseHeader();
 		String resultCode = responseHeader.getResultCode();
 		String resultMessage = responseHeader.getResultMessage();
 		if (ResultCode.SUCCESS_CODE.equals(resultCode)) {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "重置密码成功", "/accountSecurity/email/success");
+			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "修改邮箱成功", "/center/email/success");
 		} else {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, resultMessage, resultMessage);
+			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, resultMessage, null);
+		}
+		return responseData;
+	}
+	
+	/**
+	 * 检查邮箱验证码
+	 * 
+	 * @param safetyConfirmData
+	 * @param cacheClient
+	 * @param sessionId
+	 * @return
+	 */
+	private ResponseData<String> checkSetEmailVerifyCode( String verifyCode,ICacheClient cacheClient, String sessionId) {
+		String cacheKey = UpdateEmail.CACHE_KEY_VERIFY_SETEMAIL + sessionId;
+		String verifyCodeCache = cacheClient.get(cacheKey);
+		ResponseData<String> responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", "正确");
+		if (verifyCodeCache != null) {
+			if (!verifyCodeCache.equals(verifyCode)) {
+				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "邮箱校验码错误", "邮箱校验码错误");
+			}
+		} else {
+			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "邮箱校验码已失效", "邮箱校验码已失效");
 		}
 		return responseData;
 	}
 
 	@RequestMapping("/success")
 	public ModelAndView successPage() {
-		return new ModelAndView("jsp/accountsecurity/update-email-sucess");
+		return new ModelAndView("jsp/center/update-email-success");
 	}
 }

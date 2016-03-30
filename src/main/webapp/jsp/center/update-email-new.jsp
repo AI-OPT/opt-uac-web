@@ -56,17 +56,17 @@
          <ul>
          <li class="user">
           <p class="word">邮箱地址</p>
-          <p><input type="password"class="int-medium" ></p>
-          <p class="huoqu"><A href="#">获取校验码</A></p>
+          <p><input class="int-medium" id="email"></p>
+          <p class="huoqu"><A id="sendEmailBtn">获取校验码</A></p>
           </li>
           
           <li class="user">
           <p class="word">邮箱校验码</p>
-          <p><input type="password" class="int-medium" ></p>
+          <p><input type="password" class="int-medium" id="verifyCode"></p>
           </li>
        
          
-         <li><input type="button" class="Submit-btn" value="提  交" onclick="location.href='账户安全-修改邮箱-完成.html';"></li>
+         <li><input id="submitBtn" type="button" class="Submit-btn" value="提  交"></li>
        
           </ul>
         
@@ -79,5 +79,15 @@
     </div>
   </div>
   <%@ include file="/inc/foot.jsp"%>
+   <script type="text/javascript">
+		(function() {
+			seajs.use([ 'app/center/email/setEmail' ], function(UpdateEmailPager) {
+				var pager = new UpdateEmailPager({
+					element : document.body
+				});
+				pager.render();
+			});
+		})(); 
+  </script>
 </body>
 </html>

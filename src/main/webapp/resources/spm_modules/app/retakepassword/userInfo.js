@@ -24,17 +24,17 @@ define('app/retakepassword/userInfo', function (require, exports, module) {
     	events: {
     		//key的格式: 事件+空格+对象选择器;value:事件方法
     		"click [id='submitBtn']":"_checkUserInfo",
-    		"click [id='random_img']":"_getRandomCode",
-    		"click [id='changeImage']":"_getRandomCode"
+    		"click [id='random_img']":"_getImageRandomCode",
+    		"click [id='changeImage']":"_getImageRandomCode"
         },
         init: function(){
-        	_getRandomCode();
+        	_getImageRandomCode();
         },
     	//重写父类
     	setup: function () {
     		UsetInfoPager.superclass.setup.call(this);
     	},
-    	_getRandomCode:function(){
+    	_getImageRandomCode:function(){
 			var timestamp = (new Date()).valueOf();
 			$("#pictureVerifyCode").val("");
 			$("#random_img").attr("src",_base+"/retakePassword/getUserImageVerifyCode?timestamp="+timestamp);

@@ -112,11 +112,16 @@ public final class Constants {
 		/**邮箱模板路径*/
 		public static final String TEMPLATE_EMAIL_URL = "email/template/uac-updateemail-mail.xml";
 		
+		/**邮箱模板路径*/
+		public static final String TEMPLATE_SETEMAIL_URL = "email/template/uac-setemail-mail.xml";
+		
 		/** 缓存命名空间*/
 		public static final String CACHE_NAMESPACE = "com.ai.opt.uac.updateemail.cache";
 		
 		/** 邮箱验证码缓存key*/
 		public static final String CACHE_KEY_VERIFY_EMAIL = "update-email-verify-email";
+		/** 设置新邮箱验证码缓存key*/
+		public static final String CACHE_KEY_VERIFY_SETEMAIL = "update-setemail-verify-email";
 		/** 手机验证码缓存key*/
 		public static final String CACHE_KEY_VERIFY_PHONE = "update-email-verify-phone";
 		/** 图片验证码缓存key*/
