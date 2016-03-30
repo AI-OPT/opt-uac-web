@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.ai.net.xss.util.StringUtil;
 import com.ai.opt.base.vo.BaseResponse;
 import com.ai.opt.base.vo.ResponseHeader;
 import com.ai.opt.sdk.cache.factory.CacheClientFactory;
@@ -33,8 +34,10 @@ import com.ai.opt.uac.api.security.param.AccountPasswordRequest;
 import com.ai.opt.uac.api.sso.interfaces.ILoginSV;
 import com.ai.opt.uac.api.sso.param.UserLoginResponse;
 import com.ai.opt.uac.web.constants.Constants;
+import com.ai.opt.uac.web.constants.Constants.Register;
 import com.ai.opt.uac.web.constants.Constants.ResultCode;
 import com.ai.opt.uac.web.constants.Constants.RetakePassword;
+import com.ai.opt.uac.web.constants.Constants.SMSUtil;
 import com.ai.opt.uac.web.constants.VerifyConstants.EmailVerifyConstants;
 import com.ai.opt.uac.web.constants.VerifyConstants.PhoneVerifyConstants;
 import com.ai.opt.uac.web.model.email.SendEmailRequest;
@@ -151,11 +154,29 @@ public class RetakePasswordController {
 		if (userClient != null) {
 			if (RetakePassword.CHECK_TYPE_PHONE.equals(checkType)) {
 				// 发送手机验证码
-				boolean isSuccess = sendPhoneVerifyCode(sessionId, userClient);
-				if (isSuccess) {
-					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "短信验证码发送成功", "短信验证码发送成功");
-				} else {
+				String isSuccess = sendPhoneVerifyCode(sessionId, userClient);
+				if (isSuccess.equals("0000")) {
+					    responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "短信验证码发送成功", "短信验证码发送成功");
+					    ResponseHeader header = new ResponseHeader();
+		                header.setIsSuccess(true);
+		                header.setResultCode(ResultCode.SUCCESS_CODE);
+		                responseData.setResponseHeader(header);
+		                return responseData;
+				} else if(isSuccess.equals("0001")){
 					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "短信验证码发送失败", "服务器连接超时");
+					 ResponseHeader header = new ResponseHeader();
+                     header.setIsSuccess(false);
+                     header.setResultCode(ResultCode.ERROR_CODE);
+                     responseData.setResponseHeader(header);
+                     return responseData;
+				}else {
+				    responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "短信验证码发送失败", "重复发送");
+				    ResponseHeader header = new ResponseHeader();
+                    header.setIsSuccess(false);
+                    header.setResultCode(SMSUtil.CACHE_SMS_ERROR_CODE);
+                    header.setResultMessage("重复发送");
+                    responseData.setResponseHeader(header);
+                    return responseData;
 				}
 			} else if (RetakePassword.CHECK_TYPE_EMAIL.equals(checkType)) {
 				// 发送邮件验证码
@@ -179,26 +200,45 @@ public class RetakePasswordController {
 	 * 
 	 * @param userClient
 	 */
-	private boolean sendPhoneVerifyCode(String sessionId, SSOClientUser userClient) {
+	private String sendPhoneVerifyCode(String sessionId, SSOClientUser userClient) {
 		SMDataInfoNotify smDataInfoNotify = new SMDataInfoNotify();
 		String phoneVerifyCode = RandomUtil.randomNum(PhoneVerifyConstants.VERIFY_SIZE);
-		// 将验证码放入缓存
-		ICacheClient cacheClient = CacheClientFactory.getCacheClient(RetakePassword.CACHE_NAMESPACE);
-		String cacheKey = RetakePassword.CACHE_KEY_VERIFY_PHONE + sessionId;
-		cacheClient.setex(cacheKey, PhoneVerifyConstants.VERIFY_OVERTIME, phoneVerifyCode);
-		// 设置短息信息
-		List<SMData> dataList = new LinkedList<SMData>();
-		SMData smData = new SMData();
-		smData.setGsmContent("${VERIFY}:" + phoneVerifyCode + "^${VALIDMINS}:" + PhoneVerifyConstants.VERIFY_OVERTIME / 60);
-		smData.setPhone(userClient.getPhone());
-		smData.setTemplateId(PhoneVerifyConstants.TEMPLATE_RETAKE_PASSWORD_ID);
-		smData.setServiceType(PhoneVerifyConstants.SERVICE_TYPE);
-		dataList.add(smData);
-		smDataInfoNotify.setDataList(dataList);
-		smDataInfoNotify.setMsgSeq(VerifyUtil.createPhoneMsgSeq());
-		smDataInfoNotify.setTenantId(userClient.getTenantId());
-		smDataInfoNotify.setSystemId(Constants.SYSTEM_ID);
-		return VerifyUtil.sendPhoneInfo(smDataInfoNotify);
+		//查询是否发送过短信
+		String smstimes = "1";
+        String smskey = SMSUtil.CACHE_KEY_SMS_RETAKE_PASSWORD + userClient.getPhone();
+        ICacheClient cacheClient = CacheClientFactory.getCacheClient(RetakePassword.CACHE_NAMESPACE);
+        String times = cacheClient.get(smskey);
+        if(StringUtil.isBlank(times)){
+         // 将验证码放入缓存
+            String cacheKey = RetakePassword.CACHE_KEY_VERIFY_PHONE + sessionId;
+            cacheClient.setex(cacheKey, PhoneVerifyConstants.VERIFY_OVERTIME, phoneVerifyCode);
+            //将发送次数放入缓存
+            cacheClient.setex(smskey, SMSUtil.SMS_VERIFY_TIMES, smstimes);
+            // 设置短息信息
+            List<SMData> dataList = new LinkedList<SMData>();
+            SMData smData = new SMData();
+            smData.setGsmContent("${VERIFY}:" + phoneVerifyCode + "^${VALIDMINS}:" + PhoneVerifyConstants.VERIFY_OVERTIME / 60);
+            smData.setPhone(userClient.getPhone());
+            smData.setTemplateId(PhoneVerifyConstants.TEMPLATE_RETAKE_PASSWORD_ID);
+            smData.setServiceType(PhoneVerifyConstants.SERVICE_TYPE);
+            dataList.add(smData);
+            smDataInfoNotify.setDataList(dataList);
+            smDataInfoNotify.setMsgSeq(VerifyUtil.createPhoneMsgSeq());
+            smDataInfoNotify.setTenantId(userClient.getTenantId());
+            smDataInfoNotify.setSystemId(Constants.SYSTEM_ID);
+            boolean flag= VerifyUtil.sendPhoneInfo(smDataInfoNotify);
+            if(flag){
+                //成功
+                return "0000";
+            }else{
+                //失败
+                return "0002";
+            }
+        }else{
+            //已经发送
+            return "0003";
+        }
+		
 	}
 
 	/**

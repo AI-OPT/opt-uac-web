@@ -9,6 +9,7 @@ public final class Constants {
 		private ResultCode(){}
     	
     	public static final String SUCCESS_CODE = "000000";
+    	public static final String ERROR_CODE = "999999";
 	}
 	
 	public static final class RetakePassword{
