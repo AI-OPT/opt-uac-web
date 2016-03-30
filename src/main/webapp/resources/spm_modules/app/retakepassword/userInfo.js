@@ -36,7 +36,7 @@ define('app/retakepassword/userInfo', function (require, exports, module) {
     	},
     	_getRandomCode:function(){
 			var timestamp = (new Date()).valueOf();
-			$("#pictureVerifyCode").html("");
+			$("#pictureVerifyCode").val("");
 			$("#random_img").attr("src",_base+"/retakePassword/getUserImageVerifyCode?timestamp="+timestamp);
 		},
 		//检查账户信息
