@@ -57,32 +57,16 @@
           <ul>
          <li class="user">
           <p class="word">新密码</p>
-          <p><input type="password"class="int-medium" placeholder=""></p>
-          <div class="Set-password">
-          <p class="low">
-          <span class="f00"></span>
-          <span>低</span>
-          </p>
-           <p class="in">
-          <span class="eb6100"></span>
-          <span>中</span>
-          </p>
-          <p class="gao">
-          <span class="green"></span>
-          <span>高</span>
-          </p>
-          
-          </div>
-         
+          <p><input type="password"class="int-medium" placeholder="" id="password"></p>
           </li>
           
           <li class="user">
           <p class="word">确认密码</p>
-          <p><input type="password" class="int-medium" placeholder=""><span class="regsiter-note"><i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/correct.png">密码必须由字母和数字/符号组成，不能低于6个字符</span></p>
+          <p><input type="password" class="int-medium" placeholder="" id="confirmPassword"></p>
           </li>
        
          
-         <li><input type="button" class="Submit-btn" value="提  交" onclick="location.href='账户安全-修改密码-完成.html';" ></li>
+         <li><input id="submitBtn" type="button" class="Submit-btn" value="提  交" ></li>
        
           </ul>
         
@@ -94,5 +78,15 @@
     </div>
   </div>
   <%@ include file="/inc/foot.jsp"%>
+  <script type="text/javascript">
+		(function() {
+			seajs.use([ 'app/center/password/setPassword' ], function(UpdatePasswordPager) {
+				var pager = new UpdatePasswordPager({
+					element : document.body
+				});
+				pager.render();
+			});
+		})(); 
+  </script>
 </body>
 </html>
