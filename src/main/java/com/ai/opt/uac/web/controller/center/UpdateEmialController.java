@@ -24,6 +24,7 @@ import com.ai.opt.base.vo.ResponseHeader;
 import com.ai.opt.sdk.cache.factory.CacheClientFactory;
 import com.ai.opt.sdk.util.DubboConsumerFactory;
 import com.ai.opt.sdk.util.RandomUtil;
+import com.ai.opt.sdk.util.UUIDUtil;
 import com.ai.opt.sdk.web.model.ResponseData;
 import com.ai.opt.sso.client.filter.SSOClientConstants;
 import com.ai.opt.sso.client.filter.SSOClientUser;
@@ -38,6 +39,7 @@ import com.ai.opt.uac.web.model.email.SendEmailRequest;
 import com.ai.opt.uac.web.model.retakepassword.AccountData;
 import com.ai.opt.uac.web.model.retakepassword.SafetyConfirmData;
 import com.ai.opt.uac.web.model.retakepassword.SendVerifyRequest;
+import com.ai.opt.uac.web.util.CacheUtil;
 import com.ai.opt.uac.web.util.VerifyUtil;
 import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
 import com.ai.runner.center.mmp.api.manager.param.SMData;
@@ -197,7 +199,11 @@ public class UpdateEmialController {
 				return emailCheck;
 			}
 		}
-		return new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", "/center/email/setEmail");
+		//用户信息放入缓存
+		String uuid = UUIDUtil.genId32();
+		SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
+		CacheUtil.setValue(uuid, Constants.UUID.OVERTIME, userClient, Constants.UpdateEmail.CACHE_NAMESPACE);
+		return new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", "/center/email/setEmail?"+Constants.UUID.KEY_NAME+"="+uuid);
 	}
 
 	/**
@@ -235,7 +241,6 @@ public class UpdateEmialController {
 		String verifyCodeCache = cacheClient.get(cacheKey);
 		String verifyCode = safetyConfirmData.getVerifyCode();
 		ResponseData<String> responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", null);
-		;
 		if (verifyCodeCache != null) {
 			if (!verifyCodeCache.equals(verifyCode)) {
 				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "手机校验码错误", null);
@@ -277,7 +282,14 @@ public class UpdateEmialController {
 	 */
 	@RequestMapping("/setEmail")
 	public ModelAndView updateEmailPage(HttpServletRequest request) {
-		return new ModelAndView("jsp/center/update-email-new");
+		String uuid = request.getParameter(Constants.UUID.KEY_NAME);
+		SSOClientUser userClient = (SSOClientUser)CacheUtil.getValue(uuid, Constants.UpdateEmail.CACHE_NAMESPACE, SSOClientUser.class);
+		if(userClient == null){
+			return updateEmailStart(request);
+		}
+		Map<String,Object> model = new HashMap<String,Object>();
+		model.put("uuid", uuid);
+		return new ModelAndView("jsp/center/update-email-new",model);
 	}
 	
 	/**
@@ -290,8 +302,12 @@ public class UpdateEmialController {
 	@RequestMapping("/sendEmailVerify")
 	@ResponseBody
 	public ResponseData<String> sendEmailVerifyCode(HttpServletRequest request, String email) {
-		// 邮箱验证
-		SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
+		//SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
+		String uuid = request.getParameter(Constants.UUID.KEY_NAME);
+		SSOClientUser userClient = (SSOClientUser)CacheUtil.getValue(uuid, Constants.UpdateEmail.CACHE_NAMESPACE, SSOClientUser.class);
+		if(userClient == null){
+			return new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS,"身份认证失效","/center/email/confirminfo");
+		}
 		String nickName = userClient.getNickName();
 		SendEmailRequest emailRequest = new SendEmailRequest();
 		emailRequest.setTomails(new String[] { email });
@@ -307,9 +323,9 @@ public class UpdateEmialController {
 		emailRequest.setData(new String[] { nickName, verifyCode, overTime });
 		boolean isSuccess =  VerifyUtil.sendEmail(emailRequest);
 		if(isSuccess){
-			return new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS,"发送成功","发送成功");
+			return new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS,"发送成功",null);
 		}else{
-			return new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE,"发送失败","发送失败");
+			return new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE,"发送失败,请稍后再试",null);
 		}
 	}
 
@@ -324,7 +340,12 @@ public class UpdateEmialController {
 	@RequestMapping("/setNewEmail")
 	@ResponseBody
 	public ResponseData<String> setNewEmail(HttpServletRequest request, String email, String verifyCode) {
-		SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
+		//SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
+		String uuid = request.getParameter(Constants.UUID.KEY_NAME);
+		SSOClientUser userClient = (SSOClientUser)CacheUtil.getValue(uuid, Constants.UpdateEmail.CACHE_NAMESPACE, SSOClientUser.class);
+		if(userClient == null){
+			return new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS,"身份认证失效","/center/email/confirminfo");
+		}
 		//检查验证码
 		ICacheClient cacheClient = CacheClientFactory.getCacheClient(UpdateEmail.CACHE_NAMESPACE);
  		ResponseData<String> responseData = checkSetEmailVerifyCode(verifyCode, cacheClient, request.getSession().getId());
@@ -346,6 +367,7 @@ public class UpdateEmialController {
 		} else {
 			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, resultMessage, null);
 		}
+		CacheUtil.deletCache(uuid, Constants.UpdateEmail.CACHE_NAMESPACE);
 		return responseData;
 	}
 	

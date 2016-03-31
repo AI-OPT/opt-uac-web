@@ -25,6 +25,7 @@ import com.ai.opt.sdk.cache.factory.CacheClientFactory;
 import com.ai.opt.sdk.util.DubboConsumerFactory;
 import com.ai.opt.sdk.util.Md5Encoder;
 import com.ai.opt.sdk.util.RandomUtil;
+import com.ai.opt.sdk.util.UUIDUtil;
 import com.ai.opt.sdk.web.model.ResponseData;
 import com.ai.opt.sso.client.filter.SSOClientConstants;
 import com.ai.opt.sso.client.filter.SSOClientUser;
@@ -39,6 +40,7 @@ import com.ai.opt.uac.web.model.email.SendEmailRequest;
 import com.ai.opt.uac.web.model.retakepassword.AccountData;
 import com.ai.opt.uac.web.model.retakepassword.SafetyConfirmData;
 import com.ai.opt.uac.web.model.retakepassword.SendVerifyRequest;
+import com.ai.opt.uac.web.util.CacheUtil;
 import com.ai.opt.uac.web.util.VerifyUtil;
 import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
 import com.ai.runner.center.mmp.api.manager.param.SMData;
@@ -47,9 +49,9 @@ import com.ai.runner.center.mmp.api.manager.param.SMDataInfoNotify;
 @RequestMapping("/center/password")
 @Controller
 public class UpdatePasswordController {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(UpdatePasswordController.class);
-	
+
 	@RequestMapping("/confirminfo")
 	public ModelAndView UpdatePasswordStart(HttpServletRequest request) {
 		SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
@@ -166,7 +168,7 @@ public class UpdatePasswordController {
 		emailRequest.setData(new String[] { nickName, verifyCode, overTime });
 		return VerifyUtil.sendEmail(emailRequest);
 	}
-	
+
 	/**
 	 * 身份认证
 	 * 
@@ -199,7 +201,11 @@ public class UpdatePasswordController {
 				return emailCheck;
 			}
 		}
-		return new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", "/center/password/setPassword");
+		// 用户信息放入缓存
+		String uuid = UUIDUtil.genId32();
+		SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
+		CacheUtil.setValue(uuid, Constants.UUID.OVERTIME, userClient, Constants.UpdatePassword.CACHE_NAMESPACE);
+		return new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", "/center/password/setPassword?" + Constants.UUID.KEY_NAME + "=" + uuid);
 	}
 
 	/**
@@ -279,9 +285,16 @@ public class UpdatePasswordController {
 	 */
 	@RequestMapping("/setPassword")
 	public ModelAndView UpdatePasswordPage(HttpServletRequest request) {
-		return new ModelAndView("jsp/center/update-password-new");
+		String uuid = request.getParameter(Constants.UUID.KEY_NAME);
+		SSOClientUser userClient = (SSOClientUser) CacheUtil.getValue(uuid, Constants.UpdatePassword.CACHE_NAMESPACE, SSOClientUser.class);
+		if (userClient == null) {
+			return UpdatePasswordStart(request);
+		}
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("uuid", uuid);
+		return new ModelAndView("jsp/center/update-password-new", model);
 	}
-	
+
 	/**
 	 * 设置新邮箱
 	 * 
@@ -292,16 +305,22 @@ public class UpdatePasswordController {
 	@RequestMapping("/setNewPassword")
 	@ResponseBody
 	public ResponseData<String> setNewPassword(HttpServletRequest request, String password) {
-		SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
-		//检查验证码
- 		ResponseData<String> responseData = null;
-		//更新邮箱
+		// SSOClientUser userClient = (SSOClientUser)
+		// request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
+		String uuid = request.getParameter(Constants.UUID.KEY_NAME);
+		SSOClientUser userClient = (SSOClientUser) CacheUtil.getValue(uuid, Constants.UpdatePassword.CACHE_NAMESPACE, SSOClientUser.class);
+		if (userClient == null) {
+			return new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "身份认证失效", "/center/password/confirminfo");
+		}
+		// 检查验证码
+		ResponseData<String> responseData = null;
+		// 更新邮箱
 		IAccountSecurityManageSV accountSecurityManageSV = DubboConsumerFactory.getService("iAccountSecurityManageSV");
 		AccountPasswordRequest accountPasswordRequest = new AccountPasswordRequest();
 		accountPasswordRequest.setAccountId(userClient.getAccountId());
 		accountPasswordRequest.setAccountPassword(Md5Encoder.encodePassword(password));
 		accountPasswordRequest.setUpdateAccountId(userClient.getAccountId());
-		BaseResponse resultData = accountSecurityManageSV.setPasswordData(accountPasswordRequest );
+		BaseResponse resultData = accountSecurityManageSV.setPasswordData(accountPasswordRequest);
 		ResponseHeader responseHeader = resultData.getResponseHeader();
 		String resultCode = responseHeader.getResultCode();
 		String resultMessage = responseHeader.getResultMessage();
@@ -312,7 +331,7 @@ public class UpdatePasswordController {
 		}
 		return responseData;
 	}
-	
+
 	@RequestMapping("/success")
 	public ModelAndView successPage() {
 		return new ModelAndView("jsp/center/update-password-success");

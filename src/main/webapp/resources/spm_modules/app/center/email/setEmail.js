@@ -40,10 +40,14 @@ define('app/center/email/setEmail', function (require, exports, module) {
 						return $("#email").val()
 					}
 				},
-				url :_base+"/center/email/sendEmailVerify",
+				url :_base+"/center/email/sendEmailVerify?k="+uuid,
 				processing: true,
 				message : "正在处理中，请稍候...",
 				success : function(data) {
+					var url = data.data;
+					if(url!=null || url!=undefined){
+						window.location.href = _base+url;
+					}
 				},
 				error : function(){
 					alert("网络连接超时!");
@@ -56,7 +60,7 @@ define('app/center/email/setEmail', function (require, exports, module) {
 			ajaxController.ajax({
 				type : "POST",
 				data : _this._getSafetyConfirmData(),
-				url :_base+"/center/email/setNewEmail",
+				url :_base+"/center/email/setNewEmail?k="+uuid,
 				processing: true,
 				message : "正在处理中，请稍候...",
 				success : function(data) {

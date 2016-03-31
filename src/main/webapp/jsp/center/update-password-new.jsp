@@ -79,6 +79,7 @@
   </div>
   <%@ include file="/inc/foot.jsp"%>
   <script type="text/javascript">
+  		var uuid = "${uuid}";
 		(function() {
 			seajs.use([ 'app/center/password/setPassword' ], function(UpdatePasswordPager) {
 				var pager = new UpdatePasswordPager({

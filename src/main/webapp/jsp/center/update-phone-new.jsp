@@ -81,6 +81,7 @@
   </div>
   <%@ include file="/inc/foot.jsp"%>
   <script type="text/javascript">
+  		var uuid = "${uuid}";
 		(function() {
 			seajs.use([ 'app/center/phone/setPhone' ], function(UpdatePhonePager) {
 				var pager = new UpdatePhonePager({

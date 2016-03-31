@@ -40,7 +40,7 @@ define('app/center/password/setPassword', function (require, exports, module) {
 				ajaxController.ajax({
 					type : "POST",
 					data : {"password":password},
-					url :_base+"/center/password/setNewPassword",
+					url :_base+"/center/password/setNewPassword?k="+uuid,
 					processing: true,
 					message : "正在处理中，请稍候...",
 					success : function(data) {

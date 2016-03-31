@@ -24,6 +24,7 @@ import com.ai.opt.base.vo.ResponseHeader;
 import com.ai.opt.sdk.cache.factory.CacheClientFactory;
 import com.ai.opt.sdk.util.DubboConsumerFactory;
 import com.ai.opt.sdk.util.RandomUtil;
+import com.ai.opt.sdk.util.UUIDUtil;
 import com.ai.opt.sdk.web.model.ResponseData;
 import com.ai.opt.sso.client.filter.SSOClientConstants;
 import com.ai.opt.sso.client.filter.SSOClientUser;
@@ -38,6 +39,7 @@ import com.ai.opt.uac.web.model.email.SendEmailRequest;
 import com.ai.opt.uac.web.model.retakepassword.AccountData;
 import com.ai.opt.uac.web.model.retakepassword.SafetyConfirmData;
 import com.ai.opt.uac.web.model.retakepassword.SendVerifyRequest;
+import com.ai.opt.uac.web.util.CacheUtil;
 import com.ai.opt.uac.web.util.VerifyUtil;
 import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
 import com.ai.runner.center.mmp.api.manager.param.SMData;
@@ -46,9 +48,9 @@ import com.ai.runner.center.mmp.api.manager.param.SMDataInfoNotify;
 @RequestMapping("/center/phone")
 @Controller
 public class UpdatePhoneController {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(UpdatePhoneController.class);
-	
+
 	@RequestMapping("/confirminfo")
 	public ModelAndView UpdatePhoneStart(HttpServletRequest request) {
 		SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
@@ -165,7 +167,7 @@ public class UpdatePhoneController {
 		emailRequest.setData(new String[] { nickName, verifyCode, overTime });
 		return VerifyUtil.sendEmail(emailRequest);
 	}
-	
+
 	/**
 	 * 身份认证
 	 * 
@@ -198,7 +200,11 @@ public class UpdatePhoneController {
 				return emailCheck;
 			}
 		}
-		return new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", "/center/phone/setPhone");
+		// 用户信息放入缓存
+		String uuid = UUIDUtil.genId32();
+		SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
+		CacheUtil.setValue(uuid, Constants.UUID.OVERTIME, userClient, Constants.UpdatePhone.CACHE_NAMESPACE);
+		return new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", "/center/phone/setPhone?" + Constants.UUID.KEY_NAME + "=" + uuid);
 	}
 
 	/**
@@ -278,11 +284,20 @@ public class UpdatePhoneController {
 	 */
 	@RequestMapping("/setPhone")
 	public ModelAndView UpdatePhonePage(HttpServletRequest request) {
-		return new ModelAndView("jsp/center/update-phone-new");
+		String uuid = request.getParameter(Constants.UUID.KEY_NAME);
+		SSOClientUser userClient = (SSOClientUser) CacheUtil.getValue(uuid, Constants.UpdatePhone.CACHE_NAMESPACE, SSOClientUser.class);
+		if (userClient == null) {
+			UpdatePhoneStart(request);
+			return UpdatePhoneStart(request);
+		}
+		Map<String, Object> model = new HashMap<String, Object>();
+		model.put("uuid", uuid);
+		return new ModelAndView("jsp/center/update-phone-new", model);
 	}
-	
+
 	/**
 	 * 发送短信验证码(修改新手机时验证)
+	 * 
 	 * @param request
 	 * @param sessionId
 	 * @param email
@@ -291,7 +306,13 @@ public class UpdatePhoneController {
 	@RequestMapping("/sendPhoneVerify")
 	@ResponseBody
 	public ResponseData<String> sendPhoneVerifyCode(HttpServletRequest request, String phone) {
-		SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
+		// SSOClientUser userClient = (SSOClientUser)
+		// request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
+		String uuid = request.getParameter(Constants.UUID.KEY_NAME);
+		SSOClientUser userClient = (SSOClientUser) CacheUtil.getValue(uuid, Constants.UpdatePhone.CACHE_NAMESPACE, SSOClientUser.class);
+		if (userClient == null) {
+			return new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "身份认证失效", "/center/phone/confirminfo");
+		}
 		SMDataInfoNotify smDataInfoNotify = new SMDataInfoNotify();
 		String phoneVerifyCode = RandomUtil.randomNum(PhoneVerifyConstants.VERIFY_SIZE);
 		// 将验证码放入缓存
@@ -311,14 +332,13 @@ public class UpdatePhoneController {
 		smDataInfoNotify.setTenantId(userClient.getTenantId());
 		smDataInfoNotify.setSystemId(Constants.SYSTEM_ID);
 		boolean isSuccess = VerifyUtil.sendPhoneInfo(smDataInfoNotify);
-		if(isSuccess){
-			return new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS,"发送成功","发送成功");
-		}else{
-			return new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE,"发送失败","发送失败");
+		if (isSuccess) {
+			return new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "发送成功", null);
+		} else {
+			return new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "发送失败，请稍后再试", null);
 		}
 	}
 
-	
 	/**
 	 * 设置新手机号
 	 * 
@@ -329,20 +349,26 @@ public class UpdatePhoneController {
 	@RequestMapping("/setNewPhone")
 	@ResponseBody
 	public ResponseData<String> setNewPhone(HttpServletRequest request, String phone, String verifyCode) {
-		SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
-		//检查验证码
+		// SSOClientUser userClient = (SSOClientUser)
+		// request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
+		String uuid = request.getParameter(Constants.UUID.KEY_NAME);
+		SSOClientUser userClient = (SSOClientUser) CacheUtil.getValue(uuid, Constants.UpdatePhone.CACHE_NAMESPACE, SSOClientUser.class);
+		if (userClient == null) {
+			return new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "身份认证失效", "/center/phone/confirminfo");
+		}
+		// 检查验证码
 		ICacheClient cacheClient = CacheClientFactory.getCacheClient(UpdatePhone.CACHE_NAMESPACE);
- 		ResponseData<String> responseData = checkSetPhoneVerifyCode(verifyCode, cacheClient, request.getSession().getId());
-		if(ResponseData.AJAX_STATUS_FAILURE.equals(responseData.getStatusCode())){
+		ResponseData<String> responseData = checkSetPhoneVerifyCode(verifyCode, cacheClient, request.getSession().getId());
+		if (ResponseData.AJAX_STATUS_FAILURE.equals(responseData.getStatusCode())) {
 			return responseData;
 		}
-		//更新手机
+		// 更新手机
 		IAccountSecurityManageSV accountSecurityManageSV = DubboConsumerFactory.getService("iAccountSecurityManageSV");
 		AccountPhoneRequest accountPhoneRequest = new AccountPhoneRequest();
 		accountPhoneRequest.setAccountId(userClient.getAccountId());
 		accountPhoneRequest.setPhone(phone);
 		accountPhoneRequest.setUpdateAccountId(userClient.getAccountId());
-		BaseResponse resultData = accountSecurityManageSV.setPhoneData(accountPhoneRequest );
+		BaseResponse resultData = accountSecurityManageSV.setPhoneData(accountPhoneRequest);
 		ResponseHeader responseHeader = resultData.getResponseHeader();
 		String resultCode = responseHeader.getResultCode();
 		String resultMessage = responseHeader.getResultMessage();
@@ -353,7 +379,7 @@ public class UpdatePhoneController {
 		}
 		return responseData;
 	}
-	
+
 	/**
 	 * 检查短信验证码
 	 * 
@@ -362,7 +388,7 @@ public class UpdatePhoneController {
 	 * @param sessionId
 	 * @return
 	 */
-	private ResponseData<String> checkSetPhoneVerifyCode( String verifyCode,ICacheClient cacheClient, String sessionId) {
+	private ResponseData<String> checkSetPhoneVerifyCode(String verifyCode, ICacheClient cacheClient, String sessionId) {
 		String cacheKey = UpdatePhone.CACHE_KEY_VERIFY_SETPHONE + sessionId;
 		String verifyCodeCache = cacheClient.get(cacheKey);
 		ResponseData<String> responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", "正确");

@@ -40,7 +40,7 @@ define('app/center/phone/setPhone', function (require, exports, module) {
 						return $("#phone").val()
 					}
 				},
-				url :_base+"/center/phone/sendPhoneVerify",
+				url :_base+"/center/phone/sendPhoneVerify?k="+uuid,
 				processing: true,
 				message : "正在处理中，请稍候...",
 				success : function(data) {
@@ -56,7 +56,7 @@ define('app/center/phone/setPhone', function (require, exports, module) {
 			ajaxController.ajax({
 				type : "POST",
 				data : _this._getSafetyConfirmData(),
-				url :_base+"/center/phone/setNewPhone",
+				url :_base+"/center/phone/setNewPhone?k="+uuid,
 				processing: true,
 				message : "正在处理中，请稍候...",
 				success : function(data) {
