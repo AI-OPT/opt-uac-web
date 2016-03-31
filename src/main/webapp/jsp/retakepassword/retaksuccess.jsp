@@ -54,11 +54,22 @@
  	</div>
  	<!--步骤结束-->
          
-      <div class="password-success">恭喜您，密码重设成功！</div>
+      <div class="password-success">恭喜您，密码重设成功！<a id="gotoLogin">立即登录</a></div>
     
     
     </div>
   </div>
   <%@ include file="/inc/foot.jsp"%>
+  <script type="text/javascript">
+  		var uuid="${uuid}";
+		(function() {
+			seajs.use([ 'app/retakepassword/success' ], function(SuccessPager) {
+				var pager = new SuccessPager({
+					element : document.body
+				});
+				pager.render();
+			});
+		})(); 
+  </script>
 </body>
 </html>

@@ -20,6 +20,22 @@ public final class Constants {
 		public static final String KEY_NAME = "k";
 	}
 	
+	public static final class LoginConstant{
+		private LoginConstant(){}
+		/** 缓存命名空间*/
+		public static final String CACHE_NAMESPACE = "com.ai.opt.uac.login.cache";
+	}
+	
+	/**
+	 * 配置中心中的key 具体url存放在配置中心
+	 */
+	public static final class URLConstant{
+		private URLConstant(){}
+		
+		/**首页*/
+		public static final String INDEX_URL_KEY = "opt_uac_web_index_url";
+	}
+	
 	public static final class RetakePassword{
 		private RetakePassword(){}
 		
@@ -44,6 +60,10 @@ public final class Constants {
 		public static final String CACHE_KEY_VERIFY_PICTURE = "retake-password-verify-picture";
 		/** 图片验证码缓存key(填写用户页)*/
 		public static final String CACHE_KEY_VERIFY_PICTURE_USER = "retake-password-verify-picture-user";
+		
+		public static final String FAIL_CODE = "0";
+		
+		public static final String SUCCESS_CODE = "1";
 	}
     
     public static final class Register {

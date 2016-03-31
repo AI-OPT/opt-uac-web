@@ -9,6 +9,7 @@ import org.junit.Test;
 import com.ai.opt.sdk.configcenter.client.IConfigCenterClient;
 import com.ai.opt.sdk.configcenter.factory.ConfigCenterFactory;
 import com.ai.opt.sdk.constants.SDKConstants;
+import com.ai.opt.uac.web.constants.Constants;
 
 public class IConfigCenterClientTest {
 
@@ -39,6 +40,7 @@ public class IConfigCenterClientTest {
                 + "\",\"com.ai.opt.uac.updateemail.cache\":\"" + uacRedisHost
                 + "\",\"com.ai.opt.uac.updatephone.cache\":\"" + uacRedisHost
                 + "\",\"com.ai.opt.uac.updatepassword.cache\":\"" + uacRedisHost
+                + "\",\""+Constants.LoginConstant.CACHE_NAMESPACE+"\":\"" + uacRedisHost
                 + "\",\"com.ai.opt.uni.session.sessionclient.uacweb\":\"" + uacRedisHost + "\"}";
         
         StringBuilder bu=new StringBuilder();
@@ -129,5 +131,18 @@ public class IConfigCenterClientTest {
 
         System.out.println("DBConf config ... end");
     }
+     
+     @Test
+     public void addUrlConfig(){
+    	 System.out.println("url config ... start");
+    	 String indexUrl = "/index";
+    	 if (!client.exists(Constants.URLConstant.INDEX_URL_KEY)) {
+             client.add(Constants.URLConstant.INDEX_URL_KEY, indexUrl);
+         } else {
+             client.modify(Constants.URLConstant.INDEX_URL_KEY, indexUrl);
+         }
+
+    	 System.out.println("url config ... end");
+     }
 
 }

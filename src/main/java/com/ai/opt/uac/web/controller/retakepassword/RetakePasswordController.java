@@ -22,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ai.opt.base.vo.BaseResponse;
 import com.ai.opt.base.vo.ResponseHeader;
 import com.ai.opt.sdk.cache.factory.CacheClientFactory;
+import com.ai.opt.sdk.configcenter.factory.ConfigCenterFactory;
 import com.ai.opt.sdk.util.BeanUtils;
 import com.ai.opt.sdk.util.DubboConsumerFactory;
 import com.ai.opt.sdk.util.Md5Encoder;
@@ -30,6 +31,7 @@ import com.ai.opt.sdk.util.StringUtil;
 import com.ai.opt.sdk.util.UUIDUtil;
 import com.ai.opt.sdk.web.model.ResponseData;
 import com.ai.opt.sso.client.filter.SSOClientUser;
+import com.ai.opt.sso.client.filter.SSOClientUtil;
 import com.ai.opt.uac.api.security.interfaces.IAccountSecurityManageSV;
 import com.ai.opt.uac.api.security.param.AccountPasswordRequest;
 import com.ai.opt.uac.api.sso.interfaces.ILoginSV;
@@ -41,6 +43,7 @@ import com.ai.opt.uac.web.constants.Constants.SMSUtil;
 import com.ai.opt.uac.web.constants.VerifyConstants.EmailVerifyConstants;
 import com.ai.opt.uac.web.constants.VerifyConstants.PhoneVerifyConstants;
 import com.ai.opt.uac.web.model.email.SendEmailRequest;
+import com.ai.opt.uac.web.model.login.LoginUser;
 import com.ai.opt.uac.web.model.retakepassword.AccountData;
 import com.ai.opt.uac.web.model.retakepassword.SafetyConfirmData;
 import com.ai.opt.uac.web.model.retakepassword.SendVerifyRequest;
@@ -453,10 +456,50 @@ public class RetakePasswordController {
 		String uuid = request.getParameter(Constants.UUID.KEY_NAME);
 		SSOClientUser userClient = (SSOClientUser)CacheUtil.getValue(uuid, Constants.RetakePassword.CACHE_NAMESPACE, SSOClientUser.class);
 		if(userClient == null){
-			return new ModelAndView("redirect:/retakepassword/confirminfo");
+			return new ModelAndView("redirect:/retakePassword/userinfo");
+		}
+		Map<String,Object> model = new HashMap<String,Object>();
+		model.put("uuid", uuid);
+		//CacheUtil.deletCache(uuid, Constants.RetakePassword.CACHE_NAMESPACE);
+		return new ModelAndView("jsp/retakepassword/retaksuccess",model);
+	}
+	
+	@RequestMapping("/login")
+	@ResponseBody
+	public ResponseData<String> autoLogin(HttpServletRequest request,HttpServletResponse response){
+		String uuid = request.getParameter(Constants.UUID.KEY_NAME);
+		SSOClientUser userClient = (SSOClientUser)CacheUtil.getValue(uuid, Constants.RetakePassword.CACHE_NAMESPACE, SSOClientUser.class);
+		//删除缓存
+		if(userClient == null){
+			//跳转到登录页面
+			String casServerLoginUrlRuntime = SSOClientUtil.getCasServerLoginUrlRuntime(request);
+			ResponseData<String> responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS,"认证失效",casServerLoginUrlRuntime);
+			ResponseHeader responseHeader=new ResponseHeader(false, Constants.RetakePassword.FAIL_CODE, null);
+			responseData.setResponseHeader(responseHeader);
+			return responseData;
 		}
 		CacheUtil.deletCache(uuid, Constants.RetakePassword.CACHE_NAMESPACE);
-		return new ModelAndView("jsp/retakepassword/retaksuccess");
-	}
+		ILoginSV iloginSV = DubboConsumerFactory.getService("iLoginSV");
+		UserLoginResponse account = iloginSV.queryAccountByUserName(userClient.getPhone());
+		String phone = account.getPhone();
+		String accountPassword = account.getAccountPassword();
+		LoginUser loginUser = new LoginUser(phone,accountPassword);
+		String newuuid = UUIDUtil.genId32();
+		CacheUtil.setValue(newuuid, Constants.UUID.OVERTIME, loginUser, Constants.LoginConstant.CACHE_NAMESPACE);
+		// localhost:8080/uac/registerLogin?k=UUID&service=URL
+		String service_url = "";
+		if (StringUtil.isBlank(uuid)) {
+			// 跳转到登录页面
+			service_url = SSOClientUtil.getCasServerLoginUrlRuntime(request);
+		} else {
+			// 从配置中心读取跳转地址
+			service_url = ConfigCenterFactory.getConfigCenterClient().get(Constants.URLConstant.INDEX_URL_KEY);
+		}
+		String url = "/registerLogin?"+Constants.UUID.KEY_NAME+"="+newuuid+"&service="+service_url;
+		ResponseData<String> responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS,"成功，跳转",url);
+		ResponseHeader responseHeader=new ResponseHeader(true, Constants.RetakePassword.SUCCESS_CODE, null);
+		responseData.setResponseHeader(responseHeader);
+		return responseData;
+	} 
 
 }
