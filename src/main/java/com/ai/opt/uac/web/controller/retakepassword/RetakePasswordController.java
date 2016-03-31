@@ -436,17 +436,26 @@ public class RetakePasswordController {
 		String resultCode = responseHeader.getResultCode();
 		String resultMessage = responseHeader.getResultMessage();
 		if (ResultCode.SUCCESS_CODE.equals(resultCode)) {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "重置密码成功", "/retakePassword/success");
+			
+			String newuuid = UUIDUtil.genId32();
+			CacheUtil.setValue(newuuid, Constants.UUID.OVERTIME, userClient, Constants.RetakePassword.CACHE_NAMESPACE);
+			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "重置密码成功", "/retakePassword/success?"+Constants.UUID.KEY_NAME+"="+newuuid);
+			//删除缓存
+			CacheUtil.deletCache(uuid, Constants.RetakePassword.CACHE_NAMESPACE);
 		} else {
 			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, resultMessage, resultMessage);
 		}
-		//删除缓存
-		CacheUtil.deletCache(uuid, Constants.RetakePassword.CACHE_NAMESPACE);
 		return responseData;
 	}
 
 	@RequestMapping("/success")
-	public ModelAndView successPage() {
+	public ModelAndView successPage(HttpServletRequest request) {
+		String uuid = request.getParameter(Constants.UUID.KEY_NAME);
+		SSOClientUser userClient = (SSOClientUser)CacheUtil.getValue(uuid, Constants.RetakePassword.CACHE_NAMESPACE, SSOClientUser.class);
+		if(userClient == null){
+			return new ModelAndView("redirect:/retakepassword/confirminfo");
+		}
+		CacheUtil.deletCache(uuid, Constants.RetakePassword.CACHE_NAMESPACE);
 		return new ModelAndView("jsp/retakepassword/retaksuccess");
 	}
 

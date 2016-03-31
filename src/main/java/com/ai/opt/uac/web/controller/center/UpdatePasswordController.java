@@ -342,7 +342,6 @@ public class UpdatePasswordController {
 		if(userClient == null){
 			return new ModelAndView("redirect:/center/password/confirminfo");
 		}
-		request.getSession().setAttribute(SSOClientConstants.USER_SESSION_KEY, userClient);
 		CacheUtil.deletCache(uuid, Constants.UpdatePassword.CACHE_NAMESPACE);
 		return new ModelAndView("jsp/center/update-password-success");
 	}

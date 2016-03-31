@@ -46,6 +46,9 @@ public class AccountData implements Serializable{
 			String start = email.substring(0, 1);
 			int index = email.indexOf("@");
 			String end = email.substring(index-1);
+			if(index == 1){
+				end = email.substring(index);
+			}
 			sslEmail =  start+"****"+end;
 		}
 		this.email = sslEmail;

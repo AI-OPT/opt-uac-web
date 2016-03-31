@@ -373,7 +373,7 @@ public class UpdatePhoneController {
 		String resultMessage = responseHeader.getResultMessage();
 		if (ResultCode.SUCCESS_CODE.equals(resultCode)) {
 			String newuuid = UUIDUtil.genId32();
-			userClient.setEmail(phone);//更改为新邮箱
+			userClient.setPhone(phone);//更改为新手机号
 			CacheUtil.setValue(newuuid, Constants.UUID.OVERTIME, userClient, Constants.UpdatePhone.CACHE_NAMESPACE);
 			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "修改邮箱成功", "/center/phone/success?"+Constants.UUID.KEY_NAME+"="+newuuid);
 			CacheUtil.deletCache(uuid, Constants.UpdatePhone.CACHE_NAMESPACE);
