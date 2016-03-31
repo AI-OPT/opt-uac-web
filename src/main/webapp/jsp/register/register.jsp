@@ -23,12 +23,7 @@
 		el: '#togglePassword'
 	});
 }); 
- $(document).ready(function() { 
-	 $("#errorPhoneMsg").attr("style","display:none");
-	 $("#errorPawMsg").attr("style","display:none");
-	 $("#errorPicMsg").attr("style","display:none");
-	 $("#errorSmsMsg").attr("style","display:none");
-	});
+
 </script>
 </head>
 

@@ -15,12 +15,21 @@ define('app/register/register', function (require, exports, module) {
     	//属性，使用时由类的构造函数传入
     	attrs: {
     	},
+    	 init: function(){
+    		 _hideErroText();
+         },
     	//重写父类
     	setup: function () {
     		RegisterPager.superclass.setup.call(this);
+    		this._hideErroText();
     		this._bindHandle();
     	},
-    	
+    	_hideInfo: function(){
+    		 $("#errorPhoneMsg").attr("style","display:none");
+    		 $("#errorPawMsg").attr("style","display:none");
+    		 $("#errorPicMsg").attr("style","display:none");
+    		 $("#errorSmsMsg").attr("style","display:none");
+    	},
     	//带下划线的方法，约定为内部私有方法
     	_bindHandle: function(){
     		
@@ -36,6 +45,11 @@ define('app/register/register', function (require, exports, module) {
     		$("#PHONE_IDENTIFY").on("click",this._getPhoneVitentify);
     		$("#BTN_REGISTER").on("click",this._validServiceSSM);
     		$("#BTN_REGISTER").on("click",this._sumbit);
+    	},
+    	_hideErroText: function(){
+    		var _this = this;
+			//初始化展示业务类型
+			_this._hideInfo();
     	},
     	//获取短信验证码
     	_getPhoneVitentify: function(){

@@ -37,6 +37,7 @@ $(document).ready(function() {
           <li class="user">
           <span><p class="word">邮箱地址</p></span>
           	<input type="text" class="int-medium" placeholder="" id="email" name="email">
+          	<input type="hidden" id="flag">
           	<input type="hidden" name="accountIdKey" id="accountIdKey" value="${requestScope.accountIdKey}"/>
           <span class="yzm"><p><A href="#" id="getIdentify">获取校验码</A></p></span>
           

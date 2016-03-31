@@ -39,19 +39,23 @@ define('app/register/register-email', function (require, exports, module) {
     				if(emailIdenty==""){
     					$("#showErroeEmIdentify").text("邮箱验证码不能为空 ");
 	    				$("#errorEmIdentifyMsg").attr("style","display:block");
+	    				$("#flag").val("0");
 	    				return false;
     				}
     			}else{
     				$("#showErroeEmIdentify").text("邮箱地址格式错误 ");
     				$("#errorEmIdentifyMsg").attr("style","display:block");
+    				$("#flag").val("0");
     				return false;
     			}
+    		}else{
+    			$("#flag").val("1");
     		}
     	},
     	_getIdentify: function(){
     		var emailCode = $('#email').val();
 	    	if(emailCode==""){
-	    		$("#showErroeEmIdentify").text("邮箱验证码不能为空 ");
+	    		$("#showErroeEmIdentify").text("邮箱不能为空 ");
 				$("#errorEmIdentifyMsg").attr("style","display:block");
 				return false;
 	    	}
@@ -83,44 +87,49 @@ define('app/register/register-email', function (require, exports, module) {
     	},
     	
     	_bindEmail: function(){
-    		var	param={
-					email:	$("#email").val(),
-					accountIdKey:$("#accountIdKey").val(),
-					identifyCode:$("#identifyCode").val()
-				   };
-    		ajaxController.ajax({
-			        type: "post",
-			        processing: false,
-			        url: _base+"/reg/bindEmail",
-			        dataType: "json",
-			        data: param,
-			        message: "正在加载数据..",
-			        success: function (data) {
-			        	if(data.responseHeader.resultCode=="000005"){
-			        		$("#showErroeEmIdentify").text("邮箱验证码失效 ");
-		    				$("#errorEmIdentifyMsg").attr("style","display:block");
-		    				return false;
-			        	}else if(data.responseHeader.resultCode=="000006"){
-			        		$("#showErroeEmIdentify").html("邮箱验证码错误 ");
-		    				$("#errorEmIdentifyMsg").attr("style","display:block");
-		    				return false;
-			        	}else if(data.responseHeader.resultCode=="10004"){
-			        		$("#showErroeEmIdentify").html("邮箱已存在 ");
-		    				$("#errorEmIdentifyMsg").attr("style","display:block");
-		    				return false;
-			        	}else if(data.responseHeader.resultCode=="1100"){
-			        		window.location.href=_base+"/reg/toRegister";
-			        	}else if(data.responseHeader.resultCode=="000000"){
-			        		$("#errorEmIdentifyMsg").attr("style","display:none");
-			        		window.location.href=_base+"/reg/toRegisterSuccess";
-			        	}
-			        },
-			        error: function(XMLHttpRequest, textStatus, errorThrown) {
-						 alert(XMLHttpRequest.status);
-						 alert(XMLHttpRequest.readyState);
-						 alert(textStatus);
-						   }
-			    }); 
+    		var flag = $("#flag").val();
+    		if(flag!="0"){
+    			var	param={
+    					email:	$("#email").val(),
+    					accountIdKey:$("#accountIdKey").val(),
+    					identifyCode:$("#identifyCode").val()
+    				   };
+        		ajaxController.ajax({
+    			        type: "post",
+    			        processing: false,
+    			        url: _base+"/reg/bindEmail",
+    			        dataType: "json",
+    			        data: param,
+    			        message: "正在加载数据..",
+    			        success: function (data) {
+    			        	if(data.responseHeader.resultCode=="000005"){
+    			        		$("#showErroeEmIdentify").text("邮箱验证码失效 ");
+    		    				$("#errorEmIdentifyMsg").attr("style","display:block");
+    		    				return false;
+    			        	}else if(data.responseHeader.resultCode=="000006"){
+    			        		$("#showErroeEmIdentify").html("邮箱验证码错误 ");
+    		    				$("#errorEmIdentifyMsg").attr("style","display:block");
+    		    				return false;
+    			        	}else if(data.responseHeader.resultCode=="10004"){
+    			        		$("#showErroeEmIdentify").html("邮箱已存在 ");
+    		    				$("#errorEmIdentifyMsg").attr("style","display:block");
+    		    				return false;
+    			        	}else if(data.responseHeader.resultCode=="1100"){
+    			        		window.location.href=_base+"/reg/toRegister";
+    			        	}else if(data.responseHeader.resultCode=="000000"){
+    			        		$("#errorEmIdentifyMsg").attr("style","display:none");
+    			        		var key = $("#accountIdKey").val()
+    			        		window.location.href=_base+"/reg/toRegisterSuccess?key="+key;
+    			        	}
+    			        },
+    			        error: function(XMLHttpRequest, textStatus, errorThrown) {
+    						 alert(XMLHttpRequest.status);
+    						 alert(XMLHttpRequest.readyState);
+    						 alert(textStatus);
+    						   }
+    			    }); 
+    		}
+    		
     	}
     	
     });   
