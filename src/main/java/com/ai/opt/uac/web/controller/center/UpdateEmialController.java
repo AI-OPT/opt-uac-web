@@ -363,11 +363,14 @@ public class UpdateEmialController {
 		String resultCode = responseHeader.getResultCode();
 		String resultMessage = responseHeader.getResultMessage();
 		if (ResultCode.SUCCESS_CODE.equals(resultCode)) {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "修改邮箱成功", "/center/email/success");
+			String newuuid = UUIDUtil.genId32();
+			userClient.setEmail(email);//更改为新邮箱
+			CacheUtil.setValue(newuuid, Constants.UUID.OVERTIME, userClient, Constants.UpdateEmail.CACHE_NAMESPACE);
+			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "修改邮箱成功", "/center/email/success?"+Constants.UUID.KEY_NAME+"="+newuuid);
+			CacheUtil.deletCache(uuid, Constants.UpdateEmail.CACHE_NAMESPACE);
 		} else {
 			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, resultMessage, null);
 		}
-		CacheUtil.deletCache(uuid, Constants.UpdateEmail.CACHE_NAMESPACE);
 		return responseData;
 	}
 	
@@ -394,7 +397,14 @@ public class UpdateEmialController {
 	}
 
 	@RequestMapping("/success")
-	public ModelAndView successPage() {
+	public ModelAndView successPage(HttpServletRequest request) {
+		String uuid = request.getParameter(Constants.UUID.KEY_NAME);
+		SSOClientUser userClient = (SSOClientUser)CacheUtil.getValue(uuid, Constants.UpdateEmail.CACHE_NAMESPACE, SSOClientUser.class);
+		if(userClient == null){
+			return new ModelAndView("redirect:/center/email/confirminfo");
+		}
+		request.getSession().setAttribute(SSOClientConstants.USER_SESSION_KEY, userClient);
+		CacheUtil.deletCache(uuid, Constants.UpdateEmail.CACHE_NAMESPACE);
 		return new ModelAndView("jsp/center/update-email-success");
 	}
 }

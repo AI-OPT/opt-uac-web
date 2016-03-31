@@ -66,7 +66,7 @@
          <li class="user">
           <p class="word">图形验证码</p>
           <p><input type="text" class="int-medium" placeholder="" id="pictureVerifyCode"></p>
-          <p><img id="random_img" src="${_base}/center/password/getImageVerifyCode"></p>
+          <p><img id="random_img" src="${_base}/center/email/getImageVerifyCode"></p>
           <p><A id="changeImage">看不清?换一换</A></p>
          </li>
          <li class="user">

@@ -372,7 +372,11 @@ public class UpdatePhoneController {
 		String resultCode = responseHeader.getResultCode();
 		String resultMessage = responseHeader.getResultMessage();
 		if (ResultCode.SUCCESS_CODE.equals(resultCode)) {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "修改邮箱成功", "/center/phone/success");
+			String newuuid = UUIDUtil.genId32();
+			userClient.setEmail(phone);//更改为新邮箱
+			CacheUtil.setValue(newuuid, Constants.UUID.OVERTIME, userClient, Constants.UpdatePhone.CACHE_NAMESPACE);
+			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "修改邮箱成功", "/center/phone/success?"+Constants.UUID.KEY_NAME+"="+newuuid);
+			CacheUtil.deletCache(uuid, Constants.UpdatePhone.CACHE_NAMESPACE);
 		} else {
 			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, resultMessage, null);
 		}
@@ -402,7 +406,14 @@ public class UpdatePhoneController {
 	}
 
 	@RequestMapping("/success")
-	public ModelAndView successPage() {
+	public ModelAndView successPage(HttpServletRequest request) {
+		String uuid = request.getParameter(Constants.UUID.KEY_NAME);
+		SSOClientUser userClient = (SSOClientUser)CacheUtil.getValue(uuid, Constants.UpdatePhone.CACHE_NAMESPACE, SSOClientUser.class);
+		if(userClient == null){
+			return new ModelAndView("redirect:/center/email/confirminfo");
+		}
+		request.getSession().setAttribute(SSOClientConstants.USER_SESSION_KEY, userClient);
+		CacheUtil.deletCache(uuid, Constants.UpdatePhone.CACHE_NAMESPACE);
 		return new ModelAndView("jsp/center/update-phone-success");
 	}
 }
