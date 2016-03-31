@@ -1,19 +1,24 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <html >
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width; initial-scale=0.8;  user-scalable=0;" />
+<%@ include file="/inc/inc.jsp"%>
     <title>无标题文档</title>
      <link href="${_base}/theme/baas/css/bootstrap.css" rel="stylesheet" type="text/css">
      <link href="${_base}/theme/baas/css/font-awesome.css" rel="stylesheet" type="text/css">
      <link href="${_base}/theme/baas/css/frame.css" rel="stylesheet" type="text/css">
      <link href="${_base}/theme/baas/css/global.css" rel="stylesheet" type="text/css">
      <link href="${_base}/theme/baas/css/modular.css" rel="stylesheet" type="text/css">
-     <script type="text/javascript" src="${_base}/theme/baas/js/jquery-1.11.1.min.js" ></script>
-     <script type="text/javascript" src="${_base}/theme/baas/js/bootstrap.js" ></script>
      <script type="text/javascript" src="${_base}/theme/baas/js/frame.js" ></script>
      <script type="text/javascript" src="${_base}/theme/baas/js/comp.js" ></script>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<script type="text/javascript">
+(function () {
+	seajs.use('app/center/baseinfo/initBaseInfo', function (BaseInfoPager) {
+		var pager = new BaseInfoPager();
+		pager.render();
+	});
+})(); 
+</script>
 </head>
 
 <body>
@@ -37,24 +42,42 @@
           <ul>
           <li class="user">
           <p class="word">用户名</p>
-          <p>156****1120</p>
+          <p>
+          	${accountInfo.phone}
+          	<input type="hidden" id="accountId" value="${accountInfo.accountId}">
+          	<input type="hidden" id="flag">
+          </p>
           </li>
           
           <li class="user">
           <p class="word">昵称</p>
-          <p class="ctn-a">cici<a href="#"><i class="icon-edit"></i></a></p>
-          <p class="ctn-b" style=" display:none;"><input type="password" class="int-medium" placeholder=""></p>
+          <p class="ctn-a">
+          ${accountInfo.nickName}
+          <input type="hidden" value="${accountInfo.nickName}" id="nk">
+          <a href="#"><i class="icon-edit"></i></a>
+          </p>
+          <p class="ctn-b" style=" display:none;" id="setnick"><input type="text" id="nickName" class="int-medium" placeholder=""></p>
           </li>
           
            <li class="user">
           <p class="word">手机号码</p>
-          <p>156****1120</p>
+          <p>${accountInfo.phone}</p>
           <p><a href="账户安全-修改手机号.html">去修改</a></p>
           </li>
           
            <li class="user">
-          <p class="word">邮箱</p>
-          <p><a href="邮箱绑定.html"><i class="icon-link"></i>绑定邮箱</a></p>
+           <div id="bandEmail">
+           	<p class="word">邮箱</p>
+          	<p>
+          		<a href="邮箱绑定.html"><i class="icon-link"></i>绑定邮箱</a>
+          	<input type="hidden" id="email" value="${accountInfo.email}">
+          	</p>
+           </div>
+          <div id="haveEmail">
+	          <p class="word">邮箱</p>
+	          <p id="email">${accountInfo.email}</p>
+	          <p><a href="账户安全-修改邮箱.html">去修改</a></p>
+          </div>
           </li>
 
           </ul>
@@ -74,18 +97,35 @@
           
           <div class="information-cnt">
           <ul>
-          <li class="user">
-          <p class="word">企业名称</p>
-          <p><input type="password" class="int-medium" placeholder=""></p>
-          </li>
-          
-          <li class="user">
-          <p class="word">企业类型</p>
-          <p><select class="select-medium">
-            <option>计算机软件</option>
-          </select></p>
-          </li>
-   
+	          <div id="allInfo">
+		          <li class="user">
+		          <p class="word">企业名称</p>
+		          <p><input type="text" class="int-medium" placeholder="" id="tenantName"></p>
+		          </li>
+		          
+		          <li class="user">
+		          <p class="word">企业类型</p>
+		          <p>
+		          	<select class="select-medium" id="indutry">
+		          	</select>
+		          </p>
+		          </li>
+	   			</div>
+	   			<div id="oneInfo">
+	   				<ul>
+			          <li class="user">
+			          <p class="word" >
+			          ${accountInfo.tenantName}
+			          <input type="hidden" id="tenant" value="${accountInfo.tenantName}">
+			          </p>
+			          <p>亚信科技</p>
+			          </li>
+			          <li class="user">
+			          <p class="word">企业类型</p>
+			          <p>${accountInfo.industryCode}</p>
+			          </li>
+          			</ul>
+	   			</div>
 
           </ul>
  
@@ -97,14 +137,11 @@
         
         </div>
       
-        <div class="btn_wrap" ><input type="button" class="information-btn" value="提  交" onclick="location.href='';" ></div>
+        <div class="btn_wrap" >
+        	<input type="button" class="information-btn" value="提  交" id="submitBtn" >
+        	
+        </div>
         
-        
-       
-      
-  
-      
-      
     
   
    </div>

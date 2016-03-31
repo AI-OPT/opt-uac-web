@@ -23,7 +23,7 @@ define('app/register/register-email', function (require, exports, module) {
     	},
     	_bindHandle: function(){
     		$("#email").on("blur",this._validServiceEmail);
-    		$("#getIdentify").on("click",this._validServiceEmail);
+    		//$("#getIdentify").on("click",this._validServiceEmail);
     		$("#getIdentify").on("click",this._getIdentify);
     		$("#BTN_PASS").on("click",this._passEmail);
     		$("#BTN_SUBMIT").on("click",this._validServiceEmail);
@@ -57,12 +57,12 @@ define('app/register/register-email', function (require, exports, module) {
 	    	}
     		var	param={
 					email:	$("#email").val(),
-					accountId:$("#accountId").val()
+					accountIdKey:$("#accountIdKey").val()
 				   };
     		ajaxController.ajax({
 		        type: "post",
 		        processing: false,
-		        url: "../reg/toSendEmail",
+		        url: _base+"/reg/toSendEmail",
 		        dataType: "json",
 		        data: param,
 		        message: "正在加载数据..",
@@ -78,19 +78,19 @@ define('app/register/register-email', function (require, exports, module) {
 		    }); 
     	},
     	_passEmail: function(){
-    		window.location.href="../reg/toRegisterSuccess";
+    		window.location.href=_base+"/reg/toRegisterSuccess";
     	},
     	
     	_bindEmail: function(){
     		var	param={
 					email:	$("#email").val(),
-					accountId:$("#accountId").val(),
+					accountIdKey:$("#accountIdKey").val(),
 					identifyCode:$("#identifyCode").val()
 				   };
     		ajaxController.ajax({
 			        type: "post",
 			        processing: false,
-			        url: "../reg/bindEmail",
+			        url: _base+"/reg/bindEmail",
 			        dataType: "json",
 			        data: param,
 			        message: "正在加载数据..",
@@ -107,9 +107,11 @@ define('app/register/register-email', function (require, exports, module) {
 			        		$("#showErroeEmIdentify").html("邮箱已存在 ");
 		    				$("#errorEmIdentifyMsg").attr("style","display:block");
 		    				return false;
+			        	}else if(data.responseHeader.resultCode=="1100"){
+			        		window.location.href=_base+"/reg/toRegister";
 			        	}else if(data.responseHeader.resultCode=="000000"){
 			        		$("#errorEmIdentifyMsg").attr("style","display:none");
-			        		window.location.href="../reg/toRegisterSuccess";
+			        		window.location.href=_base+"/reg/toRegisterSuccess";
 			        	}
 			        },
 			        error: function(XMLHttpRequest, textStatus, errorThrown) {

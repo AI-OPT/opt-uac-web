@@ -76,6 +76,12 @@ public final class Constants {
         public static final String PHONE_NOTONE_ERROR = "10003";
         /** 邮箱已经注册ID */
         public static final String EMAIL_NOTONE_ERROR = "10004";
+        /**uuid失效 */
+        public static final String UUID_INVIAL_ERROR = "1100";
+        /** 账号ID的key */
+        public static final String CACHE_KEY_REGISTER_ACCOUNT_ID = "account-id";
+        /** 账号ID的存储时间 */
+        public static final int CACHE_REGISTER_ACCOUNT_ID_TIME = 300;
     }
     
     public static final class UpdatePassword{

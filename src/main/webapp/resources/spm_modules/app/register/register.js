@@ -67,7 +67,7 @@ define('app/register/register', function (require, exports, module) {
          		ajaxController.ajax({
      			        type: "post",
      			        processing: false,
-     			        url: "../reg/toSendPhone",
+     			        url: _base+"/reg/toSendPhone",
      			        dataType: "json",
      			        data: param,
      			        message: "正在加载数据..",
@@ -190,7 +190,7 @@ define('app/register/register', function (require, exports, module) {
         		ajaxController.ajax({
     			        type: "post",
     			        processing: false,
-    			        url: "../reg/register",
+    			        url: _base+"/reg/register",
     			        dataType: "json",
     			        data: param,
     			        message: "正在加载数据..",
@@ -218,8 +218,8 @@ define('app/register/register', function (require, exports, module) {
     							return false;
     			        	}else if(data.responseHeader.resultCode=="000000"){
     			        		$("#errorSmsMsg").attr("style","display:none");
-    			        		var accountId = data.data;
-        			        	window.location.href="../reg/toRegisterEmail?accountId="+accountId;
+    			        		var key = data.data;
+        			        	window.location.href=_base+"/reg/toRegisterEmail?accountIdKey="+key;
     			        	}
     			        	
     			        },

@@ -9,7 +9,7 @@ public class UpdateEmailReq {
 
     private String identifyCode;
 
-    private String key;
+    private String accountIdKey;
     
 
     public String getAccountId() {
@@ -44,12 +44,14 @@ public class UpdateEmailReq {
         this.identifyCode = identifyCode;
     }
 
-    public String getKey() {
-        return key;
+    public String getAccountIdKey() {
+        return accountIdKey;
     }
 
-    public void setKey(String key) {
-        this.key = key;
+    public void setAccountIdKey(String accountIdKey) {
+        this.accountIdKey = accountIdKey;
     }
+
+   
 
 }

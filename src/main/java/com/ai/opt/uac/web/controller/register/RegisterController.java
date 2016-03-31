@@ -25,6 +25,7 @@ import com.ai.opt.base.vo.ResponseHeader;
 import com.ai.opt.sdk.cache.factory.CacheClientFactory;
 import com.ai.opt.sdk.util.DubboConsumerFactory;
 import com.ai.opt.sdk.util.RandomUtil;
+import com.ai.opt.sdk.util.UUIDUtil;
 import com.ai.opt.sdk.web.model.ResponseData;
 import com.ai.opt.uac.api.account.interfaces.IAccountManageSV;
 import com.ai.opt.uac.api.account.param.AccountQueryRequest;
@@ -64,9 +65,9 @@ public class RegisterController {
 
     @RequestMapping("/toRegisterEmail")
     public ModelAndView registerEmail(
-            @RequestParam(value = "accountId", required = false) String accountId,
+            @RequestParam(value = "accountIdKey", required = false) String accountIdKey,
             HttpServletRequest request) {
-        request.setAttribute("accountId", accountId);
+        request.setAttribute("accountIdKey", accountIdKey);
         return new ModelAndView("jsp/register/register-email");
     }
 
@@ -147,8 +148,11 @@ public class RegisterController {
             }else if (ResultCode.SUCCESS_CODE.equals(code)) {
                 header.setResultCode(Register.REGISTER_SUCCESS_ID);
                 header.setResultMessage("注册成功");
+                String accountIdKey = UUIDUtil.genId32();
+                //将账号id存到缓存中
+                iCacheClient.setex(accountIdKey, Register.CACHE_REGISTER_ACCOUNT_ID_TIME, accountId);
                 responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "注册成功",
-                        accountId);
+                        accountIdKey);
                 responseData.setResponseHeader(header);
             } else {
                 responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, message,
@@ -205,30 +209,45 @@ public class RegisterController {
             IAccountSecurityManageSV iAccountSecurityManageSV = DubboConsumerFactory
                     .getService("iAccountSecurityManageSV");
             AccountEmailRequest req = new AccountEmailRequest();
-            long accountId = Long.parseLong(request.getAccountId());
-            req.setAccountId(accountId);
-            req.setEmail(request.getEmail());
-            req.setUpdateAccountId(accountId);
-            BaseResponse  baseInfo = iAccountSecurityManageSV.setEmailData(req);
-            String resultCode = baseInfo.getResponseHeader().getResultCode();
-            String resultMessage = baseInfo.getResponseHeader().getResultMessage();
-            if(Register.EMAIL_NOTONE_ERROR.equals(resultCode)){
-                header.setResultCode(Register.EMAIL_NOTONE_ERROR);
-                header.setResultMessage("邮箱已经注册");
-                responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "邮箱已经注册",
+            //从缓存获取账号ID
+            String id = iCacheClient.get(request.getAccountIdKey());
+            if(StringUtil.isBlank(id)){
+                //跳转到注册页面
+                header.setResultCode(Register.UUID_INVIAL_ERROR);
+                header.setResultMessage("uuid失效");
+                responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "uuid失效",
                         null);
                 responseData.setResponseHeader(header);
                 return responseData;
-            }else if (ResultCode.SUCCESS_CODE.equals(resultCode)) {
-                header.setResultCode(Register.BAND_EMAIL_SUCCESS_ID);
-                header.setResultMessage("绑定邮箱成功");
-                responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "绑定邮箱成功",
-                        null);
-                responseData.setResponseHeader(header);
-            } else {
-                responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, resultMessage,
-                        null);
+            }else{
+                long accountId = Long.parseLong(id);
+                req.setAccountId(accountId);
+                req.setEmail(request.getEmail());
+                req.setUpdateAccountId(accountId);
+                BaseResponse  baseInfo = iAccountSecurityManageSV.setEmailData(req);
+                String resultCode = baseInfo.getResponseHeader().getResultCode();
+                String resultMessage = baseInfo.getResponseHeader().getResultMessage();
+                if(Register.EMAIL_NOTONE_ERROR.equals(resultCode)){
+                    header.setResultCode(Register.EMAIL_NOTONE_ERROR);
+                    header.setResultMessage("邮箱已经注册");
+                    responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "邮箱已经注册",
+                            null);
+                    responseData.setResponseHeader(header);
+                    return responseData;
+                }else if (ResultCode.SUCCESS_CODE.equals(resultCode)) {
+                    header.setResultCode(Register.BAND_EMAIL_SUCCESS_ID);
+                    header.setResultMessage("绑定邮箱成功");
+                    responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "绑定邮箱成功",
+                            null);
+                    responseData.setResponseHeader(header);
+                    //删除缓存
+                   
+                } else {
+                    responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, resultMessage,
+                            null);
+                }
             }
+           
         } catch (Exception e) {
             LOG.error("绑定邮箱失败！", e);
             responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "绑定邮箱失败",
@@ -248,12 +267,14 @@ public class RegisterController {
     @ResponseBody
     public ResponseData<String> sendEmail(UpdateEmailReq emailReq, HttpServletRequest request) {
         ResponseData<String> responseData = null;
-
+        ICacheClient  iCacheClient=  CacheClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
         IAccountManageSV  iAccountManageSV=  DubboConsumerFactory
 		        .getService("iAccountManageSV");
 		AccountQueryRequest req = new AccountQueryRequest();
 		String email = emailReq.getEmail();
-		req.setAccountId(Long.valueOf(emailReq.getAccountId()));
+		//获取账号key
+		String accountid = iCacheClient.get(emailReq.getAccountIdKey());
+		req.setAccountId(Long.valueOf(accountid));
 		AccountQueryResponse response =  iAccountManageSV.queryBaseInfo(req);
 		String nickName = Constants.Register.REGISTER_EMAIL_NICK+response.getNickName();
 		String identifyCode = RandomUtil.randomNum(EmailVerifyConstants.VERIFY_SIZE);
@@ -269,7 +290,7 @@ public class RegisterController {
 		VerifyUtil.sendEmail(emailRequest);
 		//存验证码到缓存
 		String key = Register.REGISTER_EMAIL_KEY+request.getSession().getId();
-		ICacheClient  iCacheClient=  CacheClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
+		
 		iCacheClient.setex(key, EmailVerifyConstants.VERIFY_OVERTIME, identifyCode);
 		responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "验证码获取成功",
 		        key);
@@ -325,7 +346,7 @@ public class RegisterController {
                 data.setTemplateId(PhoneVerifyConstants.TEMPLATE_REGISTER_ID);
                 String identifyCode = RandomUtil.randomNum(PhoneVerifyConstants.VERIFY_SIZE);
                 String codeContent = "${VERIFY}:" + identifyCode;
-                String timeContent = "^${VALIDMINS}:" + PhoneVerifyConstants.VERIFY_OVERTIME;
+                String timeContent = "^${VALIDMINS}:" + PhoneVerifyConstants.VERIFY_OVERTIME/60;
                 data.setGsmContent(codeContent + timeContent);
                 dataList.add(data);
                 smData.setDataList(dataList);
