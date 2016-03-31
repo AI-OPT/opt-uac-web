@@ -67,8 +67,9 @@ define('app/register/register-email', function (require, exports, module) {
 		        data: param,
 		        message: "正在加载数据..",
 		        success: function (data) {
-		        	//校验验证码是否正确
-		        	alert("ok");
+		        	if(data.responseHeader.resultCode=="1100"){
+		        		window.location.href=_base+"/reg/toRegister";
+		        	}
 		        },
 		        error: function(XMLHttpRequest, textStatus, errorThrown) {
 					 alert(XMLHttpRequest.status);

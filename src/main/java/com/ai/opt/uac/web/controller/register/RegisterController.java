@@ -44,6 +44,7 @@ import com.ai.opt.uac.web.constants.VerifyConstants.PhoneVerifyConstants;
 import com.ai.opt.uac.web.model.email.SendEmailRequest;
 import com.ai.opt.uac.web.model.register.GetSMDataReq;
 import com.ai.opt.uac.web.model.register.UpdateEmailReq;
+import com.ai.opt.uac.web.util.CacheUtil;
 import com.ai.opt.uac.web.util.Md5Util;
 import com.ai.opt.uac.web.util.VerifyUtil;
 import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
@@ -211,6 +212,8 @@ public class RegisterController {
             AccountEmailRequest req = new AccountEmailRequest();
             //从缓存获取账号ID
             String id = iCacheClient.get(request.getAccountIdKey());
+            //删除缓存账号ID
+            CacheUtil.deletCache(request.getAccountIdKey(), Register.CACHE_NAMESPACE);
             if(StringUtil.isBlank(id)){
                 //跳转到注册页面
                 header.setResultCode(Register.UUID_INVIAL_ERROR);
@@ -240,8 +243,6 @@ public class RegisterController {
                     responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "绑定邮箱成功",
                             null);
                     responseData.setResponseHeader(header);
-                    //删除缓存
-                   
                 } else {
                     responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, resultMessage,
                             null);
@@ -274,26 +275,38 @@ public class RegisterController {
 		String email = emailReq.getEmail();
 		//获取账号key
 		String accountid = iCacheClient.get(emailReq.getAccountIdKey());
-		req.setAccountId(Long.valueOf(accountid));
-		AccountQueryResponse response =  iAccountManageSV.queryBaseInfo(req);
-		String nickName = Constants.Register.REGISTER_EMAIL_NICK+response.getNickName();
-		String identifyCode = RandomUtil.randomNum(EmailVerifyConstants.VERIFY_SIZE);
-		String[] tomails = new String[] { email };
-        //超时时间
-		String overTime = ObjectUtils.toString(EmailVerifyConstants.VERIFY_OVERTIME/60);
-		String[] data = new String[] { nickName, identifyCode ,overTime};
-		SendEmailRequest emailRequest = new SendEmailRequest();
-		emailRequest.setSubject(EmailVerifyConstants.EMAIL_SUBJECT);
-		emailRequest.setTemplateRUL(Register.TEMPLATE_EMAIL_URL);
-		emailRequest.setTomails(tomails);
-		emailRequest.setData(data);
-		VerifyUtil.sendEmail(emailRequest);
-		//存验证码到缓存
-		String key = Register.REGISTER_EMAIL_KEY+request.getSession().getId();
-		
-		iCacheClient.setex(key, EmailVerifyConstants.VERIFY_OVERTIME, identifyCode);
-		responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "验证码获取成功",
-		        key);
+		if(StringUtil.isBlank(accountid)){
+		    //跳转到注册页面
+		    ResponseHeader header = new ResponseHeader();
+            header.setIsSuccess(false);
+            header.setResultCode(Register.UUID_INVIAL_ERROR);
+            header.setResultMessage("uuid失效");
+            responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "uuid失效",
+                    null);
+            responseData.setResponseHeader(header);
+            return responseData;
+		}else{
+    		req.setAccountId(Long.valueOf(accountid));
+    		AccountQueryResponse response =  iAccountManageSV.queryBaseInfo(req);
+    		String nickName = Constants.Register.REGISTER_EMAIL_NICK+response.getNickName();
+    		String identifyCode = RandomUtil.randomNum(EmailVerifyConstants.VERIFY_SIZE);
+    		String[] tomails = new String[] { email };
+            //超时时间
+    		String overTime = ObjectUtils.toString(EmailVerifyConstants.VERIFY_OVERTIME/60);
+    		String[] data = new String[] { nickName, identifyCode ,overTime};
+    		SendEmailRequest emailRequest = new SendEmailRequest();
+    		emailRequest.setSubject(EmailVerifyConstants.EMAIL_SUBJECT);
+    		emailRequest.setTemplateRUL(Register.TEMPLATE_EMAIL_URL);
+    		emailRequest.setTomails(tomails);
+    		emailRequest.setData(data);
+    		VerifyUtil.sendEmail(emailRequest);
+    		//存验证码到缓存
+    		String key = Register.REGISTER_EMAIL_KEY+request.getSession().getId();
+    		
+    		iCacheClient.setex(key, EmailVerifyConstants.VERIFY_OVERTIME, identifyCode);
+    		responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "验证码获取成功",
+    		        key);
+		}
         return responseData;
     }
 
