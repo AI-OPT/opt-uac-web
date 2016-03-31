@@ -501,5 +501,4 @@ public class RetakePasswordController {
 		responseData.setResponseHeader(responseHeader);
 		return responseData;
 	} 
-
 }

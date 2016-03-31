@@ -31,7 +31,6 @@ public class IndexController {
         if(!StringUtil.isBlank(decoratorPath)){
             welcomePath=decoratorPath.replace(TEMPLATE_JSP, WELCOME_JSP);           
         }
-        
         return "forward:"+welcomePath;
     }*/
 }
