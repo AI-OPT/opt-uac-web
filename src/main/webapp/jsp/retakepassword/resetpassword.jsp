@@ -96,6 +96,7 @@
   </div>
   <%@ include file="/inc/foot.jsp"%>
   <script type="text/javascript">
+  		var uuid = "${uuid}";
 		(function() {
 			seajs.use([ 'app/retakepassword/resetpassword' ], function(ResetPasswordPage) {
 				var pager = new ResetPasswordPage({

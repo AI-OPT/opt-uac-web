@@ -1,4 +1,4 @@
-define('app/center/email/setEmail', function (require, exports, module) {
+define('app/center/phone/setPhone', function (require, exports, module) {
     'use strict';
     var $=require('jquery'),
     Widget = require('arale-widget/1.2.0/widget'),
@@ -16,51 +16,47 @@ define('app/center/email/setEmail', function (require, exports, module) {
     var ajaxController = new AjaxController();
     
     //定义页面组件类
-    var UpdateEmailPager = Widget.extend({
+    var UpdatePhonePager = Widget.extend({
     	//属性，使用时由类的构造函数传入
     	attrs: {
     	},
     	//事件代理
     	events: {
     		//key的格式: 事件+空格+对象选择器;value:事件方法
-    		"click [id='sendEmailBtn']":"_sendEmail",
-    		"click [id='submitBtn']":"_updateEmail"
+    		"click [id='sendPhoneBtn']":"_sendPhone",
+    		"click [id='submitBtn']":"_updatePhone"
         },
     	//重写父类
     	setup: function () {
-    		UpdateEmailPager.superclass.setup.call(this);
+    		UpdatePhonePager.superclass.setup.call(this);
     	},
     
-    	_sendEmail:function(){
+    	_sendPhone:function(){
 			var _this = this;
 			ajaxController.ajax({
 				type : "POST",
 				data : {
-					"email": function(){
-						return $("#email").val()
+					"phone": function(){
+						return $("#phone").val()
 					}
 				},
-				url :_base+"/center/email/sendEmailVerify?k="+uuid,
+				url :_base+"/center/phone/sendPhoneVerify?k="+uuid,
 				processing: true,
 				message : "正在处理中，请稍候...",
 				success : function(data) {
-					var url = data.data;
-					if(url!=null || url!=undefined){
-						window.location.href = _base+url;
-					}
 				},
 				error : function(){
 					alert("网络连接超时!");
 				}
 			});
 		},
-		//更新邮箱
-		_updateEmail:function(){
+		//更新手机
+		_updatePhone:function(){
 			var _this = this;
 			ajaxController.ajax({
 				type : "POST",
 				data : _this._getSafetyConfirmData(),
-				url :_base+"/center/email/setNewEmail?k="+uuid,
+				url :_base+"/center/phone/setNewPhone?k="+uuid,
 				processing: true,
 				message : "正在处理中，请稍候...",
 				success : function(data) {
@@ -80,8 +76,8 @@ define('app/center/email/setEmail', function (require, exports, module) {
 		//获取界面填写验证信息
 		_getSafetyConfirmData:function(){
 			return{
-				"email":function () {
-			        return jQuery.trim($("#email").val())
+				"phone":function () {
+			        return jQuery.trim($("#phone").val())
 			    },
 				"verifyCode":function () {
 			        return jQuery.trim($("#verifyCode").val())
@@ -92,5 +88,5 @@ define('app/center/email/setEmail', function (require, exports, module) {
     });
     
     
-    module.exports = UpdateEmailPager
+    module.exports = UpdatePhonePager
 });

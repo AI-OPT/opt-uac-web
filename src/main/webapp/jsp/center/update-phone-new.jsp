@@ -56,18 +56,18 @@
          <ul>
          <li class="user">
           <p class="word">手机号码</p>
-          <p><input type="password"class="int-medium" placeholder=""><span class="regsiter-note"><i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/correct.png">密码必须由字母和数字/符号组成，不能低于6个字符</span><!--把提示信息放在input后面即可--></p>
+          <p><input class="int-medium" placeholder="" id="phone"><span class="regsiter-note"><i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/correct.png">密码必须由字母和数字/符号组成，不能低于6个字符</span><!--把提示信息放在input后面即可--></p>
          
           </li>
           
           <li class="user">
           <p class="word">短信校验码</p>
-          <p><input type="password" class="int-medium" placeholder=""></p>
-           <p class="huoqu"><A href="#">获取短信校验码</A></p>
+          <p><input class="int-medium" placeholder="" id="verifyCode"></p>
+           <p class="huoqu"><A id="sendPhoneBtn">获取短信校验码</A></p>
           </li>
        
          
-         <li><input type="button" class="Submit-btn" value="提  交" onclick="location.href='账户安全-修改手机-完成.html';" ></li>
+         <li><input id="submitBtn" type="button" class="Submit-btn" value="提  交"></li>
        
           </ul>
         
@@ -80,5 +80,16 @@
     </div>
   </div>
   <%@ include file="/inc/foot.jsp"%>
+  <script type="text/javascript">
+  		var uuid = "${uuid}";
+		(function() {
+			seajs.use([ 'app/center/phone/setPhone' ], function(UpdatePhonePager) {
+				var pager = new UpdatePhonePager({
+					element : document.body
+				});
+				pager.render();
+			});
+		})(); 
+  </script>
 </body>
 </html>

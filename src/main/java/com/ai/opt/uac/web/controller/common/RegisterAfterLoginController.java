@@ -10,6 +10,12 @@ import org.springframework.web.bind.ServletRequestUtils;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.AbstractController;
 
+import com.ai.net.xss.util.StringUtil;
+import com.ai.opt.sdk.cache.factory.CacheClientFactory;
+import com.ai.opt.sdk.configcenter.factory.ConfigCenterFactory;
+import com.ai.opt.sdk.util.Md5Encoder;
+import com.ai.opt.sso.client.filter.SSOClientUtil;
+import com.ai.opt.sso.constants.SSOConstants;
 import com.ai.opt.sso.principal.BssCredentials;
 
 /**
@@ -29,11 +35,28 @@ public class RegisterAfterLoginController extends AbstractController
             HttpServletResponse response) throws Exception
     {
         ModelAndView signinView=new ModelAndView();
-        //TODO 
+        //TODO  从cache处理
+        //localhost:8080/uac/registerLogin?k=UUID&service=URL
+        String k=request.getParameter("k");
+        CacheClientFactory.getCacheClient("namespace").get(k);
+        //TODO username 和password从cache里取
         String username=request.getParameter("username");
         String password=request.getParameter("password");
+        
+        
+        String service_url="";
+        if(StringUtil.isBlank(k)){
+        	//跳转到登录页面
+        	service_url=SSOClientUtil.getCasServerLoginUrlRuntime(request);
+        }
+        else{
+        	//从配置中心读取跳转地址
+        	service_url=ConfigCenterFactory.getConfigCenterClient().get("跳转地址key");
+        }
+        //
         //username="13811095237";
         //password="7A526DC30120A1027100F39F2A03F562";
+        password=Md5Encoder.encodePassword(SSOConstants.AIOPT_SALT_KEY+password);
         bindTicketGrantingTicket(username, password, request, response);
         String viewName=getSignInView(request);
         signinView.setViewName(getSignInView(request));

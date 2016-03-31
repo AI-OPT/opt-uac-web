@@ -10,7 +10,7 @@ public final class VerifyConstants {
 		public static final int VERIFY_SIZE = 6;
 		
 		/**手机验证码超时时间*/
-		public static final int VERIFY_OVERTIME = 300;
+		public static final int VERIFY_OVERTIME = 600;
 		
 		/** 短信注册模板ID */
         public static final String TEMPLATE_REGISTER_ID = "1";
@@ -24,6 +24,8 @@ public final class VerifyConstants {
         public static final String TEMPLATE_SET_PASSWORD_ID = "5";
         /** 短信找回密码模板ID */
         public static final String TEMPLATE_RETAKE_PASSWORD_ID = "6";
+        /** 短信设置新手机号模板ID */
+        public static final String TEMPLATE_RETAKE_SETPHONE_ID = "7";
         
         public static final String SERVICE_TYPE = "1";
 		

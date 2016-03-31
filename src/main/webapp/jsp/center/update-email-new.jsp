@@ -57,12 +57,12 @@
          <li class="user">
           <p class="word">邮箱地址</p>
           <p><input class="int-medium" id="email"></p>
-          <p class="huoqu"><A id="sendEmailBtn">获取校验码</A></p>
           </li>
           
           <li class="user">
           <p class="word">邮箱校验码</p>
-          <p><input type="password" class="int-medium" id="verifyCode"></p>
+          <p><input class="int-medium" id="verifyCode"></p>
+          <p class="huoqu"><A id="sendEmailBtn">获取校验码</A></p>
           </li>
        
          
@@ -80,6 +80,7 @@
   </div>
   <%@ include file="/inc/foot.jsp"%>
    <script type="text/javascript">
+   		var uuid = "${uuid}";
 		(function() {
 			seajs.use([ 'app/center/email/setEmail' ], function(UpdateEmailPager) {
 				var pager = new UpdateEmailPager({

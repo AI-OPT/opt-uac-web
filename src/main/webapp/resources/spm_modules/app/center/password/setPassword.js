@@ -1,4 +1,4 @@
-define('app/retakepassword/resetpassword', function (require, exports, module) {
+define('app/center/password/setPassword', function (require, exports, module) {
     'use strict';
     var $=require('jquery'),
     Widget = require('arale-widget/1.2.0/widget'),
@@ -16,31 +16,31 @@ define('app/retakepassword/resetpassword', function (require, exports, module) {
     var ajaxController = new AjaxController();
     
     //定义页面组件类
-    var ResetPasswordPage = Widget.extend({
+    var UpdatePasswordPager = Widget.extend({
     	//属性，使用时由类的构造函数传入
     	attrs: {
     	},
     	//事件代理
     	events: {
     		//key的格式: 事件+空格+对象选择器;value:事件方法
-    		"click [id='submitBtn']":"_resetPassword"
+    		"click [id='submitBtn']":"_updatePassword"
         },
     	//重写父类
     	setup: function () {
-    		ResetPasswordPage.superclass.setup.call(this);
+    		UpdatePasswordPager.superclass.setup.call(this);
     	},
-    
-		//获取账户信息
-    	_resetPassword: function(){
-    		var newPassword = jQuery.trim($("#newPassword").val());
-    		var confirmPassword = jQuery.trim($("#confirmPassword").val());
-    		if(newPassword != confirmPassword){
-    			alert("两次输入的密码不匹配");
-    		}else{
+		//更新密码
+		_updatePassword:function(){
+			var _this = this;
+			var password = jQuery.trim($("#password").val());
+		    var confirmPassword =jQuery.trim($("#confirmPassword").val());
+		    if(password != confirmPassword){
+		    	alert("两次输入的密码不匹配"+password+"-"+confirmPassword);
+		    }else{
 				ajaxController.ajax({
 					type : "POST",
-					data : {"password":newPassword},
-					url :_base+"/retakePassword/setNewPassword?k="+uuid,
+					data : {"password":password},
+					url :_base+"/center/password/setNewPassword?k="+uuid,
 					processing: true,
 					message : "正在处理中，请稍候...",
 					success : function(data) {
@@ -56,8 +56,10 @@ define('app/retakepassword/resetpassword', function (require, exports, module) {
 						alert("网络连接超时，请重新修改登录密码");
 					}
 				});
-    		}
-		}
+		    }
+		}		
     });
-    module.exports = ResetPasswordPage
+    
+    
+    module.exports = UpdatePasswordPager
 });

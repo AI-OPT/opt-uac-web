@@ -12,6 +12,14 @@ public final class Constants {
     	public static final String ERROR_CODE = "999999";
 	}
 	
+	public static final class UUID{
+		private UUID(){}
+		/*** 失效时间*/
+		public static final int OVERTIME = 300;
+		/*** 失效时间*/
+		public static final String KEY_NAME = "k";
+	}
+	
 	public static final class RetakePassword{
 		private RetakePassword(){}
 		
@@ -124,6 +132,8 @@ public final class Constants {
 		public static final String CACHE_KEY_VERIFY_EMAIL = "update-phone-verify-email";
 		/** 手机验证码缓存key*/
 		public static final String CACHE_KEY_VERIFY_PHONE = "update-phone-verify-phone";
+		/** 设置新手机验证码缓存key*/
+		public static final String CACHE_KEY_VERIFY_SETPHONE = "update-phone-verify-setphone";
 		/** 图片验证码缓存key*/
 		public static final String CACHE_KEY_VERIFY_PICTURE = "update-phone-verify-picture";
 	}
