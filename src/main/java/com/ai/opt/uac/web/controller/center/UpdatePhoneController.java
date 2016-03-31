@@ -287,8 +287,7 @@ public class UpdatePhoneController {
 		String uuid = request.getParameter(Constants.UUID.KEY_NAME);
 		SSOClientUser userClient = (SSOClientUser) CacheUtil.getValue(uuid, Constants.UpdatePhone.CACHE_NAMESPACE, SSOClientUser.class);
 		if (userClient == null) {
-			UpdatePhoneStart(request);
-			return UpdatePhoneStart(request);
+			return new ModelAndView("redirect:/center/phone/confirminfo");
 		}
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("uuid", uuid);

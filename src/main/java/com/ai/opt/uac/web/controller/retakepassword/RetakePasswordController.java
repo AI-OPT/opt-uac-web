@@ -121,15 +121,11 @@ public class RetakePasswordController {
 	 */
 	@RequestMapping("/confirminfo")
 	public ModelAndView confirmInfo(HttpServletRequest request) {
-		//是否存在uuid
-		String uuid = (String)request.getParameter(Constants.UUID.KEY_NAME);
-		if(StringUtil.isBlank(uuid)){
-			return new ModelAndView("jsp/retakepassword/userinfo");
-		}
 		//缓存中获取账户信息
+		String uuid = (String)request.getParameter(Constants.UUID.KEY_NAME);
 		SSOClientUser userClient = (SSOClientUser)CacheUtil.getValue(uuid, Constants.RetakePassword.CACHE_NAMESPACE, SSOClientUser.class);
 		if(userClient == null){
-			return new ModelAndView("jsp/retakepassword/userinfo");
+			return new ModelAndView("redirect:/retakePassword/userinfo");
 		}
 		//账户加密数据
 		Map<String,Object> model = new HashMap<String,Object>();
@@ -405,7 +401,7 @@ public class RetakePasswordController {
 		String uuid = request.getParameter(Constants.UUID.KEY_NAME);
 		SSOClientUser userClient = (SSOClientUser)CacheUtil.getValue(uuid, Constants.RetakePassword.CACHE_NAMESPACE, SSOClientUser.class);
 		if(userClient == null){
-			return new ModelAndView("jsp/retakepassword/userinfo");
+			return new ModelAndView("redirect:/retakePassword/userinfo");
 		}
 		Map<String,Object> model = new HashMap<String,Object>();
 		model.put("uuid", uuid);

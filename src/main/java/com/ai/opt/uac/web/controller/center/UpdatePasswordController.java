@@ -288,7 +288,7 @@ public class UpdatePasswordController {
 		String uuid = request.getParameter(Constants.UUID.KEY_NAME);
 		SSOClientUser userClient = (SSOClientUser) CacheUtil.getValue(uuid, Constants.UpdatePassword.CACHE_NAMESPACE, SSOClientUser.class);
 		if (userClient == null) {
-			return UpdatePasswordStart(request);
+			return new ModelAndView("redirect:/center/password/confirminfo");
 		}
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("uuid", uuid);

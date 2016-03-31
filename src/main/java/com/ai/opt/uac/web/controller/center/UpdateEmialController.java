@@ -285,7 +285,7 @@ public class UpdateEmialController {
 		String uuid = request.getParameter(Constants.UUID.KEY_NAME);
 		SSOClientUser userClient = (SSOClientUser)CacheUtil.getValue(uuid, Constants.UpdateEmail.CACHE_NAMESPACE, SSOClientUser.class);
 		if(userClient == null){
-			return updateEmailStart(request);
+			return new ModelAndView("redirect:/center/email/confirminfo");
 		}
 		Map<String,Object> model = new HashMap<String,Object>();
 		model.put("uuid", uuid);
