@@ -23,40 +23,99 @@ define('app/center/password/setPassword', function (require, exports, module) {
     	//事件代理
     	events: {
     		//key的格式: 事件+空格+对象选择器;value:事件方法
-    		"click [id='submitBtn']":"_updatePassword"
+    		"click [id='submitBtn']":"_updatePassword",
+    		"blur [id='password']":"_checkNewPassword",
+    		"blur [id='confirmPassword']":"_checkConfirmPassword"
         },
     	//重写父类
     	setup: function () {
     		UpdatePasswordPager.superclass.setup.call(this);
     	},
+    	//检查新密码格式
+		_checkNewPassword: function(){
+			var newPassword = $("#password").val();
+			var msg = "";
+			if(newPassword == "" || newPassword == null || newPassword == undefined){
+				msg = "请输入密码";
+			}else{
+				if(!/^[\x21-\x7E]{6,14}$/.test(newPassword)){
+					msg = msg +"长度为6-14个字符 \n";
+				}
+				if(!/[\x01-\xFF]*/.test(newPassword)){
+					msg = msg +"支持数字、字母、符号组合\n";
+				}
+				if(!/^\S*$/.test(newPassword)){
+					msg = msg +"不允许有空格 \n";
+				}
+			}
+			if(msg == ""){
+				this._controlMsgText("newPwdMsg","");
+				this._controlMsgAttr("newPwdMsgDiv",1);
+				return true;
+			}else{
+				this._controlMsgText("newPwdMsg",msg);
+				this._controlMsgAttr("newPwdMsgDiv",2);
+				return false;
+			}
+		},
+		//检查确认密码
+		_checkConfirmPassword: function(){
+			var confirmPassword = $("#confirmPassword").val();
+			var newPassword = $("#newPassword").val();
+			if(confirmPassword == "" || confirmPassword == null || confirmPassword == undefined){
+				this._controlMsgText("confirmPwdMsg","请输入确认密码");
+				this._controlMsgAttr("confirmPwdMsgDiv",2);
+				return false;
+			}else if(newPassword != confirmPassword){
+				this._controlMsgText("confirmPwdMsg","两次输入的密码不匹配");
+				this._controlMsgAttr("confirmPwdMsgDiv",2);
+				return false;
+			}else{
+				this._controlMsgText("confirmPwdMsg","");
+				this._controlMsgAttr("confirmPwdMsgDiv",1);
+				return true;
+			}
+		},
+		//控制显示内容
+		_controlMsgText(id,msg){
+			var doc = document.getElementById(id+"");
+			doc.innerText=msg;
+		},
+		//控制显隐属性 1:隐藏 2：显示
+		_controlMsgAttr(id,flag){
+			var doc = document.getElementById(id+"");
+			if(flag == 1){
+				doc.setAttribute("style","display:none");
+			}else if(flag == 2){
+				doc.setAttribute("style","display");
+			}
+		},
 		//更新密码
 		_updatePassword:function(){
 			var _this = this;
-			var password = jQuery.trim($("#password").val());
-		    var confirmPassword =jQuery.trim($("#confirmPassword").val());
-		    if(password != confirmPassword){
-		    	alert("两次输入的密码不匹配"+password+"-"+confirmPassword);
-		    }else{
-				ajaxController.ajax({
+			var checkNewPwd = this._checkNewPassword();
+    		var checkConfirmPwd = this._checkConfirmPassword();
+    		var newPassword = $("#newPassword").val();
+    		if(!(checkNewPwd&&checkConfirmPwd)){
+    			return false;
+    		}
+			ajaxController.ajax({
 					type : "POST",
 					data : {"password":password},
 					url :_base+"/center/password/setNewPassword?k="+uuid,
 					processing: true,
 					message : "正在处理中，请稍候...",
 					success : function(data) {
-						var statusCode = data.statusCode;
-						var url = data.data;
-						if(statusCode == "1"){
+						var status = data.responseHeader.resultCode;
+						if(status == "000000"){
+							var url = data.data;
 							window.location.href = _base+url;
-						}else{
-							alert(data.statusInfo);
 						}
 					},
 					error : function(){
 						alert("网络连接超时，请重新修改登录密码");
 					}
-				});
-		    }
+			});
 		}		
     });
     

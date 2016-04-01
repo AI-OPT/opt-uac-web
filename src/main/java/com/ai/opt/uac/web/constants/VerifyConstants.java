@@ -65,10 +65,8 @@ public final class VerifyConstants {
 		
 		/** 图片验证码 错误ID*/
         public static final String REGISTER_PICTURE_ERROR = "100001";
-        /** 短信验证码错误ID */
-        public static final String REGISTER_SSM_ERROR = "100002";
-        /** 邮箱验证码错误ID */
-        public static final String REGISTER_EMAIL_ERROR = "100003";
+        /** 验证码错误ID */
+        public static final String REGISTER_VERIFY_ERROR = "100002";
         /** 用户名错误 */
         public static final String USERNAME_ERROR = "100004";
 	}
