@@ -197,14 +197,7 @@ public class RetakePasswordController {
 					header.setResultCode(ResultCode.SUCCESS_CODE);
 					responseData.setResponseHeader(header);
 					return responseData;
-				} else if (isSuccess.equals("0001")) {
-					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "短信验证码发送失败", "服务器连接超时");
-					ResponseHeader header = new ResponseHeader();
-					header.setIsSuccess(false);
-					header.setResultCode(ResultCode.ERROR_CODE);
-					responseData.setResponseHeader(header);
-					return responseData;
-				} else {
+				} else if (isSuccess.equals("0002")){
 					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "短信验证码发送失败", "重复发送");
 					ResponseHeader header = new ResponseHeader();
 					header.setIsSuccess(false);
@@ -212,6 +205,13 @@ public class RetakePasswordController {
 					header.setResultMessage("重复发送");
 					responseData.setResponseHeader(header);
 					return responseData;
+				}else{
+				    responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "短信验证码发送失败", "服务器连接超时");
+                    ResponseHeader header = new ResponseHeader();
+                    header.setIsSuccess(false);
+                    header.setResultCode(ResultCode.ERROR_CODE);
+                    responseData.setResponseHeader(header);
+                    return responseData;
 				}
 			} else if (RetakePassword.CHECK_TYPE_EMAIL.equals(checkType)) {
 				// 发送邮件验证码
@@ -267,11 +267,11 @@ public class RetakePasswordController {
 				return "0000";
 			} else {
 				// 失败
-				return "0002";
+				return "0001";
 			}
 		} else {
 			// 已经发送
-			return "0003";
+			return "0002";
 		}
 
 	}
