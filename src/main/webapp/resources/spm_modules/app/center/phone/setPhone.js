@@ -26,12 +26,51 @@ define('app/center/phone/setPhone', function (require, exports, module) {
     		"click [id='sendPhoneBtn']":"_sendPhone",
     		"click [id='submitBtn']":"_updatePhone"
         },
+        init: function(){
+        	_hideErroText();
+        },
     	//重写父类
     	setup: function () {
     		UpdatePhonePager.superclass.setup.call(this);
+    		this._hideErroText();
     	},
-    
+    	_checkIs: function(){
+    		var phone=$("#phone");
+    		if(phone==""){
+    			$('#showPhoMsg').text("请输入手机号码 ");
+    			$("#errorPhoMsg").attr("style","display:block");
+				return false;
+    		}else if( /^1\d{10}$/.test(phone){
+    			$("#errorPhoMsg").attr("style","display:none");
+    		}else{
+    			$('#showPhoMsg').text("手机号码格式错误 ");
+    			$("#errorPhoMsg").attr("style","display:block");
+				return false;
+    		}
+    	},
+    	_hideInfo: function(){
+	   		 $("#errorSmsMsg").attr("style","display:none");
+	   		 $("#errorPhoMsg").attr("style","display:none");
+    	},
+    	_hideErroText: function(){
+			var _this = this;
+			//初始化展示业务类型
+			_this._hideInfo();
+		},
     	_sendPhone:function(){
+    		alert("kkk");
+    		var step = 59;
+            $('#sendPhoneBtn').val('重新发送60');
+            var _res = setInterval(function(){
+                $("#sendPhoneBtn").attr("disabled", true);//设置disabled属性
+                $('#sendPhoneBtn').val('重新发送'+step);
+                step-=1;
+                if(step <= 0){
+                $("#sendPhoneBtn").removeAttr("disabled"); //移除disabled属性
+                $('#sendPhoneBtn').val('获取验证码');
+                clearInterval(_res);//清除setInterval
+                }
+            },1000);
 			var _this = this;
 			ajaxController.ajax({
 				type : "POST",
@@ -44,6 +83,12 @@ define('app/center/phone/setPhone', function (require, exports, module) {
 				processing: true,
 				message : "正在处理中，请稍候...",
 				success : function(data) {
+					if(data.responseHeader.resultCode=="9999"){
+		        		$('#showSmsMsg').text("1分钟后可重复发送 ");
+		    			$("#errorSmsMsg").attr("style","display:block");
+		    			$("#verifyCode").val("");
+						return false;
+		        	}
 				},
 				error : function(){
 					alert("网络连接超时!");

@@ -32,13 +32,22 @@ define('app/center/phone/confirmInfo', function (require, exports, module) {
         init: function(){
         	_initShowView();
         	_getImageRandomCode();
+        	_hideErroText();
         },
     	//重写父类
     	setup: function () {
     		ConfirmInfoPager.superclass.setup.call(this);
     		this._renderAccountInfo();
+    		this._hideErroText();
     	},
-    
+    	_hideInfo: function(){
+	   		 $("#errorMsg").attr("style","display:none");
+    	},
+	   	_hideErroText: function(){
+			var _this = this;
+			//初始化展示业务类型
+			_this._hideInfo();
+		},
     	//加载账户数据
     	_renderAccountInfo: function(){
 			var _this = this;
@@ -80,6 +89,19 @@ define('app/center/phone/confirmInfo', function (require, exports, module) {
 			$("#random_img").attr("src",_base+"/center/phone/getImageVerifyCode?timestamp="+timestamp);
 		},
 		_sendVerify:function(){
+			alert("lll");
+			var step = 59;
+            $('#sendVerify').val('重新发送60');
+            var _res = setInterval(function(){
+                $("#sendVerify").attr("disabled", true);//设置disabled属性
+                $('#sendVerify').val('重新发送'+step);
+                step-=1;
+                if(step <= 0){
+                $("#sendVerify").removeAttr("disabled"); //移除disabled属性
+                $('#sendVerify').val('获取验证码');
+                clearInterval(_res);//清除setInterval
+                }
+            },1000);
 			var _this = this;
 			ajaxController.ajax({
 				type : "POST",
@@ -93,6 +115,11 @@ define('app/center/phone/confirmInfo', function (require, exports, module) {
 				processing: true,
 				message : "正在处理中，请稍候...",
 				success : function(data) {
+					if(data.responseHeader.resultCode=="9999"){
+		        		$('#showMsg').text("1分钟后可重复发送 ");
+		    			$("#errorMsg").attr("style","display:block");
+						return false;
+		        	}
 				},
 				error : function(){
 					alert("网络连接超时!");

@@ -70,7 +70,13 @@
          <li class="user">
 	          <p class="word" id="verifyName">短信校验码</p>
 	          <p><input type="text" class="int-medium" id="verifyCode"></p>
-	          <p class="huoqu"><A id="sendVerify">获取验证码</A></p>
+	          <p class="huoqu">
+	          	<input id="sendVerify"  type="button" value="获取校验码" >
+	          </p>
+	          <span class="regsiter-note" id="errorMsg">
+		         	<i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
+		         	<span id="showMsg"></span>
+		   </span>
          </li>
          
          <li><input id="submitBtn" type="button" class="Submit-btn" value="提  交"></li>
