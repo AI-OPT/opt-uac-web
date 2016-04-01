@@ -55,8 +55,9 @@ public class BaseInfoController {
      */
     @RequestMapping("/getAccountInfo")
     @ResponseBody
-    public ModelAndView checkUserInfo(HttpServletRequest reques, SSOClientUser userClient) {
+    public ModelAndView checkUserInfo(HttpServletRequest request) {
         // 获取账户信息
+        SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
         IAccountManageSV iAccountManageSV = DubboConsumerFactory.getService("iAccountManageSV");
         ITenantManageSV iTenantManageSV = DubboConsumerFactory.getService("iTenantManageSV");
         IIndustryManageSV iIndustryManageSV=DubboConsumerFactory.getService("iIndustryManageSV");
