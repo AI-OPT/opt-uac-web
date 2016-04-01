@@ -10,7 +10,7 @@ public final class VerifyConstants {
 		public static final int VERIFY_SIZE = 6;
 		
 		/**手机验证码超时时间*/
-		public static final int VERIFY_OVERTIME = 600;
+		public static final int VERIFY_OVERTIME = 300;
 		
 		/** 短信注册模板ID */
         public static final String TEMPLATE_REGISTER_ID = "1";
@@ -53,6 +53,6 @@ public final class VerifyConstants {
 		/**图片验证码长度*/
 		public static final int VERIFY_SIZE = 4;
 		/**图片验证码超时时间*/
-		public static final int VERIFY_OVERTIME = 180;
+		public static final int VERIFY_OVERTIME = 600;
 	}
 }
