@@ -194,7 +194,7 @@ define('app/retakepassword/confirmInfo', function (require, exports, module) {
 						window.location.href = _base+url;
 					}else{
 						var msg = data.statusInfo;
-						//短息验证码
+						//验证码
 						if(status == "100002"){
 							_this._controlMsgText("ssmVerifyCodeMsg",msg);
 							_this._controlMsgAttr("ssmVerifyCodeMsgDiv",2);

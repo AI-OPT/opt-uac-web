@@ -399,10 +399,10 @@ public class RetakePasswordController {
 		ResponseHeader responseHeader = null;
 		if (verifyCodeCache == null) {
 			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "验证码已失效", null);
-			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_SSM_ERROR, "短信验证码已失效");
+			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_VERIFY_ERROR, "验证码已失效");
 		} else if (!verifyCodeCache.equals(verifyCode)) {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "短信验证码错误", null);
-			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_SSM_ERROR, "短信验证码错误");
+			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "验证码错误", null);
+			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_VERIFY_ERROR, "验证码错误");
 		} else {
 			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "手机校验码正确", null);
 			responseHeader = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "手机校验码正确");
@@ -425,11 +425,11 @@ public class RetakePasswordController {
 		ResponseData<String> responseData = null;
 		ResponseHeader responseHeader = null;
 		if (verifyCodeCache == null) {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "邮箱校验码已失效", null);
-			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_EMAIL_ERROR, "邮箱校验码已失效");
+			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "验证码已失效", null);
+			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_VERIFY_ERROR, "验证码已失效");
 		} else if (!verifyCodeCache.equals(verifyCode)) {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "邮箱校验码已错误", null);
-			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_EMAIL_ERROR, "邮箱校验码错误");
+			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "验证码错误", null);
+			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_VERIFY_ERROR, "验证码错误");
 		} else {
 			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "邮箱校验码正确", null);
 			responseHeader = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "邮箱校验码正确");
