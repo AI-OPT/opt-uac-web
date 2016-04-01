@@ -28,12 +28,13 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
         },
         init: function(){
         	_renderIndustryInfo();
+        	_hideErroText();
         },
     	//重写父类
     	setup: function () {
     		BaseInfoPager.superclass.setup.call(this);
     		this._renderIndustryInfo();
-    		//this._submit();
+    		this._hideErroText();
     		this._bindHandle();
     	},
     	_bindHandle: function(){
@@ -41,7 +42,7 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
     		$("#submitBtn").on("click",this._submit);
     		
     	},
-    	//加载账户数据
+    	//加载账户数据、业务类型
     	_renderIndustryInfo: function(){
 			var _this = this;
 			//初始化展示业务类型
@@ -49,7 +50,16 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 			_this._getIndustry();
 			
 		},
-		
+		_hideInfo: function(){
+	   		 $("#errorNickNameMsg").attr("style","display:none");
+	   		 $("#errorTenMsg").attr("style","display:none");
+	   		 $("#errorTypeMsg").attr("style","display:none");
+		},
+		_hideErroText: function(){
+			var _this = this;
+			//初始化展示业务类型
+			_this._hideInfo();
+   		},
 		_changPage:function(){
 			var email = $("#email").val();
 			
@@ -72,42 +82,42 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 			var industryType = $("#indutry").val();
 			var bk = $("#setnick").is(":visible");
 			var isindus = $("#allInfo").is(":visible");
-			alert(industryType);
-			alert(isindus);
+			$("#errorNickNameMsg").attr("style","display:none");
 			if(nickNmae==""&&bk){
-				alert("不能为空！");
+				$('#showNickNameMsg').text("请输入昵称");
+    			$("#errorNickNameMsg").attr("style","display:block");
 				$("#flag").val("0");
 				return false;
-				
 			}
 			if(nickNmae!=""&&(!bk)){
 				if(/^\S{4,40}/.test(nickNmae)){
 					$("#flag").val("1");
 				}else{
-					alert("4~40位字符，不能包含空格");
+					$('#showNickNameMsg').text("4~40位字符，不能包含空格");
+	    			$("#errorNickNameMsg").attr("style","display:block");
 					$("#flag").val("0");
 					return false;
-					
 				}
 			}
 			if(isindus){
+				$("#errorTenMsg").attr("style","display:none");
 				if(tenantName==""){
-					alert("企业名称不能为空");
+					$('#showTenMsg').text("请输入企业名称");
+	    			$("#errorTenMsg").attr("style","display:block");
 					$("#flag").val("0");
 					return false;
-					
 				}else if(industryType=="00"){
-					alert("业务类型为空");
+					$('#showTypeMsg').text("请选择企业类型");
+	    			$("#errorTypeMsg").attr("style","display:block");
 					$("#flag").val("0");
 					return false;
-					
 				}else if(/^\S{4,40}/.test(tenantName)){
 					$("#flag").val("1");
 				}else{
-					alert("4~40位字符，不能包含空格");
+					$('#showTenMsg').text("4~40位字符，不能包含空格");
+	    			$("#errorTenMsg").attr("style","display:block");
 					$("#flag").val("0");
 					return false;
-					
 				}
 				
 			}

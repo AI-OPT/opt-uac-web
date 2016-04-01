@@ -56,7 +56,13 @@
           <input type="hidden" value="${accountInfo.nickName}" id="nk">
           <a href="#"><i class="icon-edit"></i></a>
           </p>
-          <p class="ctn-b" style=" display:none;" id="setnick"><input type="text" id="nickName" class="int-medium" placeholder=""></p>
+          <p class="ctn-b" style=" display:none;" id="setnick">
+          	<input type="text" id="nickName" class="int-medium" placeholder="">
+          </p>
+          <span  id="errorNickNameMsg">
+		     <i class="icon-caret-left"></i>
+		     <img src="${_base}/theme/baas/images/error.png"><span id="showNickNameMsg"></span>
+		  </span>
           </li>
           
            <li class="user">
@@ -100,7 +106,13 @@
 	          <div id="allInfo">
 		          <li class="user">
 		          <p class="word">企业名称</p>
-		          <p><input type="text" class="int-medium" placeholder="" id="tenantName"></p>
+		          <p>
+		          	<input type="text" class="int-medium" placeholder="" id="tenantName">
+		          </p>
+		          <span  id="errorTenMsg">
+		         		<i class="icon-caret-left"></i>
+		         		<img src="${_base}/theme/baas/images/error.png"><span id="showTenMsg"></span>
+		         	</span>
 		          </li>
 		          
 		          <li class="user">
@@ -109,6 +121,10 @@
 		          	<select class="select-medium" id="indutry">
 		          	</select>
 		          </p>
+		          <span  id="errorTypeMsg">
+		         		<i class="icon-caret-left"></i>
+		         		<img src="${_base}/theme/baas/images/error.png"><span id="showTypeMsg"></span>
+		         	</span>
 		          </li>
 	   			</div>
 	   			<div id="oneInfo">
