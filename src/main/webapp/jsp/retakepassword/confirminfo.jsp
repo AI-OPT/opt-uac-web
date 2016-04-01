@@ -77,6 +77,10 @@
 	          <p><input type="text" class="int-medium" id="pictureVerifyCode"></p>
 	          <p><img id="random_img" src="${_base}/retakePassword/getImageVerifyCode"></p>
 	          <p><A id="changeImage">看不清?换一换</A></p>
+	          <span class="regsiter-note" id="pictureVerifyMsgDiv" style="display:none">
+			     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
+			     <span id="pictureVerifyMsg"></span>
+			  </span>
           </li>
           <li class="user">
 	          <p class="word" id="verifyName">短信验证码</p>
@@ -87,7 +91,11 @@
 	          <span class="regsiter-note" id="errorSmsMsg">
 		         	<i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
 		         	<span id="showSmsMsg"></span>
-		       </span>
+		      </span>
+		      <span class="regsiter-note" id="ssmVerifyCodeMsgDiv" style="display:none">
+			     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
+			     <span id="ssmVerifyCodeMsg"></span>
+			  </span>
           </li>
        	  <li><input id="submitBtn" type="button" class="Submit-btn" value="提  交"></li>
           </ul>

@@ -135,7 +135,7 @@ public class IConfigCenterClientTest {
      @Test
      public void addUrlConfig(){
     	 System.out.println("url config ... start");
-    	 String indexUrl = "http://localhost:8080/uac";
+    	 String indexUrl = "http://10.1.235.245:14115/uac";
     	 if (!client.exists(Constants.URLConstant.INDEX_URL_KEY)) {
              client.add(Constants.URLConstant.INDEX_URL_KEY, indexUrl);
          } else {

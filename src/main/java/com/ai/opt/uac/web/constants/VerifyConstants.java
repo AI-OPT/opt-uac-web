@@ -55,4 +55,21 @@ public final class VerifyConstants {
 		/**图片验证码超时时间*/
 		public static final int VERIFY_OVERTIME = 600;
 	}
+	
+	public final class ResultCodeConstants{
+		private ResultCodeConstants(){}
+		/*** 成功ID*/
+		public static final String SUCCESS_CODE = "000000";
+		/*** 失败ID*/
+		public static final String ERROR_CODE = "111111";
+		
+		/** 图片验证码 错误ID*/
+        public static final String REGISTER_PICTURE_ERROR = "100001";
+        /** 短信验证码错误ID */
+        public static final String REGISTER_SSM_ERROR = "100002";
+        /** 邮箱验证码错误ID */
+        public static final String REGISTER_EMAIL_ERROR = "100003";
+        /** 用户名错误 */
+        public static final String USERNAME_ERROR = "100004";
+	}
 }

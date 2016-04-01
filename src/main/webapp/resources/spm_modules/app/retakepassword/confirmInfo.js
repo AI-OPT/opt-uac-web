@@ -27,7 +27,9 @@ define('app/retakepassword/confirmInfo', function (require, exports, module) {
     		"click [id='submitBtn']":"_confirmInfo",
     		"click [id='sendVerify']":"_sendVerify",
     		"click [id='random_img']":"_getImageRandomCode",
-    		"click [id='changeImage']":"_getImageRandomCode"
+    		"click [id='changeImage']":"_getImageRandomCode",
+    		"blur [id='pictureVerifyCode']":"_checkPictureVerifyCode",
+    		"blur [id='verifyCode']":"_checkSSmVerifyCode"
         },
         init: function(){
         	_getImageRandomCode();
@@ -131,9 +133,54 @@ define('app/retakepassword/confirmInfo', function (require, exports, module) {
 				}
 			});
 		},
+		//检查手机验证码
+		_checkSSmVerifyCode: function(){
+			var verifyCode = $("#verifyCode").val();
+			if(verifyCode == "" || verifyCode == null || verifyCode == undefined){
+	    		this._controlMsgText("ssmVerifyCodeMsg","请输入短信验证码");
+				this._controlMsgAttr("ssmVerifyCodeMsgDiv",2);
+				return false;
+			}else{
+				this._controlMsgText("ssmVerifyCodeMsg","");
+				this._controlMsgAttr("ssmVerifyCodeMsgDiv",1);
+				return true;
+			}
+		},
+		//检查验证码
+		_checkPictureVerifyCode: function(){
+			var verifyCode = $("#pictureVerifyCode").val();
+			if(verifyCode == "" || verifyCode == null || verifyCode == undefined){
+				this._controlMsgText("pictureVerifyMsg","请输入图形验证码");
+				this._controlMsgAttr("pictureVerifyMsgDiv",2);
+				return false;
+			}else{
+				this._controlMsgText("pictureVerifyMsg","");
+				this._controlMsgAttr("pictureVerifyMsgDiv",1);
+				return true;
+			}
+		},
+		//控制显示内容
+		_controlMsgText(id,msg){
+			var doc = document.getElementById(id+"");
+			doc.innerText=msg;
+		},
+		//控制显隐属性 1:隐藏 2：显示
+		_controlMsgAttr(id,flag){
+			var doc = document.getElementById(id+"");
+			if(flag == 1){
+				doc.setAttribute("style","display:none");
+			}else if(flag == 2){
+				doc.setAttribute("style","display");
+			}
+		},
 		//检查身份信息
 		_confirmInfo:function(){
 			var _this = this;
+			var checkSSMVerifyCode = this._checkSSmVerifyCode();
+			var checkPoctureVerifyCode = this._checkPictureVerifyCode();
+			if(!(checkSSMVerifyCode&&checkPoctureVerifyCode)){
+    			return false;
+    		}
 			ajaxController.ajax({
 				type : "POST",
 				data : _this._getSafetyConfirmData(),
@@ -141,12 +188,28 @@ define('app/retakepassword/confirmInfo', function (require, exports, module) {
 				processing: true,
 				message : "正在处理中，请稍候...",
 				success : function(data) {
-					var statusCode = data.statusCode;
-					var url = data.data;
-					if(statusCode == "1"){
+					var status = data.responseHeader.resultCode;
+					if(status == "000000"){
+						var url = data.data;
 						window.location.href = _base+url;
 					}else{
-						alert(data.statusInfo);
+						var msg = data.statusInfo;
+						//短息验证码
+						if(status == "100002"){
+							_this._controlMsgText("ssmVerifyCodeMsg",msg);
+							_this._controlMsgAttr("ssmVerifyCodeMsgDiv",2);
+						}else{
+							_this._controlMsgText("ssmVerifyCodeMsg","");
+							_this._controlMsgAttr("ssmVerifyCodeMsgDiv",1);
+						}
+						//图片验证码
+						if(status == "100001"){
+							_this._controlMsgText("pictureVerifyMsg",msg);
+							_this._controlMsgAttr("pictureVerifyMsgDiv",2);
+						}else{
+							_this._controlMsgText("pictureVerifyMsg","");
+							_this._controlMsgAttr("pictureVerifyMsgDiv",1);
+						}
 					}
 				},
 				error : function(){
