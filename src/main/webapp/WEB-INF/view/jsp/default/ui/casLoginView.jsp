@@ -8,9 +8,10 @@
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <html lang="zh-cn">
 <%
-String _basePath = request.getContextPath();
-String _baasBase=_basePath+"/theme/baas";
+String _base = request.getContextPath();
+String _baasBase=_base+"/theme/baas";
 request.setAttribute("_baasBase", _baasBase);
+request.setAttribute("_base", _base);
 %>
 <head>
     <meta charset="utf-8">
@@ -134,7 +135,7 @@ request.setAttribute("_baasBase", _baasBase);
 		         <span><spring:message code="screen.welcome.label.password.accesskey" var="passwordAccessKey" /></span>
 		         <li class="Remb-password" style="display: none;"><span><input id="rememberMe" name="rememberMe" type="checkbox" tabindex="3"></span><span>记住账号</span></li>
 		         <li><input class="login-btn" value="登 录"  accesskey="l" type="button" tabindex="4" onclick="javascript:dologin();" ></li>
-		         <li class="Forget-password"><a href="身份验证-手机号.html">忘记密码？</a><a href="regsiter.html" class="right">立即注册</a></li>
+		         <li class="Forget-password"><a href="${_base}/retakePassword/userinfo">忘记密码？</a><a href="${_base}/reg/toRegister" class="right">立即注册</a></li>
 	         </ul>
 	         <input type="hidden" name="lt" value="${loginTicket}" />
 	    	 <input type="hidden" name="execution" value="${flowExecutionKey}" />
