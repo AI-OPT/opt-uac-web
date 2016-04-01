@@ -72,6 +72,12 @@ public final class Constants {
 
         /** 邮箱验证码缓存key */
         public static final String REGISTER_EMAIL_KEY = "register-bind-email";
+        /** 注册时邮件发送次数key*/
+        public static final String SEND_EMAIL_TIMES_KEY = "register-send-email-times";
+        /** 邮件重复发送时间*/
+        public static final int EMAIL_DUP_TIMES = 60;
+        /** 邮件发送次数失败*/
+        public static final String CACHE_EM_TIMES_ERROR_CODE = "9999";
         /** 短信验证码缓存key */
         public static final String REGISTER_PHONE_KEY = "register-verify-phone";
         /** 缓存命名空间 */
@@ -202,5 +208,6 @@ public final class Constants {
         public static final String CACHE_SMS_SUCCESS_CODE = "0000";
         
     }
+    
    
 }

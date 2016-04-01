@@ -19,15 +19,28 @@ define('app/register/register-email', function (require, exports, module) {
     	setup: function () {
     		RegisterEmaillPager.superclass.setup.call(this);
     		//初始化组件：上传服务数据模块
+    		this._hideErroText();
     		this._bindHandle();
     	},
+    	 init: function(){
+    		 _hideErroText();
+         },
     	_bindHandle: function(){
-    		$("#email").on("blur",this._validServiceEmail);
-    		//$("#getIdentify").on("click",this._validServiceEmail);
+    		//$("#email").on("blur",this._validServiceEmail);
+    		$("#getIdentify").on("click",this._validServiceEmail);
     		$("#getIdentify").on("click",this._getIdentify);
     		$("#BTN_PASS").on("click",this._passEmail);
     		$("#BTN_SUBMIT").on("click",this._validServiceEmail);
+    		$("#BTN_SUBMIT").on("click",this._checkIsVify);
     		$("#BTN_SUBMIT").on("click",this._bindEmail);
+    	},
+    	_hideErroText: function(){
+    		var _this = this;
+			//初始化展示业务类型
+			_this._hideInfo();
+    	},
+    	_hideInfo: function(){
+    		 $("#errorEmIdentifyMsg").attr("style","display:none");
     	},
     	_validServiceEmail: function(){
     		$("#errorEmIdentifyMsg").attr("style","display:none");
@@ -35,13 +48,7 @@ define('app/register/register-email', function (require, exports, module) {
     		if(emailCode!=""){
     			if(/^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/.test(emailCode)){
     				$("#errorEmIdentifyMsg").attr("style","display:none");
-    				var emailIdenty = $('#identifyCode').val();
-    				if(emailIdenty==""){
-    					$("#showErroeEmIdentify").text("邮箱验证码不能为空 ");
-	    				$("#errorEmIdentifyMsg").attr("style","display:block");
-	    				$("#flag").val("0");
-	    				return false;
-    				}
+    				$("#flag").val("1");
     			}else{
     				$("#showErroeEmIdentify").text("邮箱地址格式错误 ");
     				$("#errorEmIdentifyMsg").attr("style","display:block");
@@ -49,41 +56,73 @@ define('app/register/register-email', function (require, exports, module) {
     				return false;
     			}
     		}else{
-    			$("#flag").val("1");
+    			$("#showErroeEmIdentify").text("邮箱不能为空 ");
+				$("#errorEmIdentifyMsg").attr("style","display:block");
+				$("#flag").val("0");
+				return false;
+    			
     		}
     	},
-    	_getIdentify: function(){
-    		var emailCode = $('#email').val();
-	    	if(emailCode==""){
-	    		$("#showErroeEmIdentify").text("邮箱不能为空 ");
+    	_checkIsVify: function(){
+    		var emailIdenty = $('#identifyCode').val();
+			if(emailIdenty==""){
+				$("#showErroeEmIdentify").text("邮箱验证码不能为空 ");
 				$("#errorEmIdentifyMsg").attr("style","display:block");
+				$("#flag").val("0");
 				return false;
-	    	}
-    		var	param={
-					email:	$("#email").val(),
-					accountIdKey:$("#accountIdKey").val()
-				   };
-    		ajaxController.ajax({
-		        type: "post",
-		        processing: false,
-		        url: _base+"/reg/toSendEmail",
-		        dataType: "json",
-		        data: param,
-		        message: "正在加载数据..",
-		        success: function (data) {
-		        	if(data.responseHeader.resultCode=="1100"){
-		        		window.location.href=_base+"/reg/toRegister";
-		        	}
-		        },
-		        error: function(XMLHttpRequest, textStatus, errorThrown) {
-					 alert(XMLHttpRequest.status);
-					 alert(XMLHttpRequest.readyState);
-					 alert(textStatus);
-					   }
-		    }); 
+			}else{
+				$("#errorEmIdentifyMsg").attr("style","display:none");
+				$("#flag").val("1");
+			}
+    	},
+    	_getIdentify: function(){
+    		var flag = $("#flag").val();
+    		if(flag!="0"){
+    			var step = 59;
+                $('#getIdentify').val('重新发送60');
+                var _res = setInterval(function(){
+                    $("#getIdentify").attr("disabled", true);//设置disabled属性
+                    $('#getIdentify').val('重新发送'+step);
+                    step-=1;
+                    if(step <= 0){
+                    $("#getIdentify").removeAttr("disabled"); //移除disabled属性
+                    $('#getIdentify').val('获取验证码');
+                    clearInterval(_res);//清除setInterval
+                    }
+                },1000);
+    			var	param={
+    					email:	$("#email").val(),
+    					accountIdKey:$("#accountIdKey").val()
+    				   };
+        		ajaxController.ajax({
+    		        type: "post",
+    		        processing: false,
+    		        url: _base+"/reg/toSendEmail",
+    		        dataType: "json",
+    		        data: param,
+    		        message: "正在加载数据..",
+    		        success: function (data) {
+    		        	if(data.responseHeader.resultCode=="9999"){
+			        		$('#showErroeEmIdentify').text("1分钟后可重复发送 ");
+			    			$("#errorEmIdentifyMsg").attr("style","display:block");
+			    			$("#identifyCode").val("");
+							return false;
+			        	}else if(data.responseHeader.resultCode=="1100"){
+    		        		window.location.href=_base+"/reg/toRegister";
+    		        	}
+    		        },
+    		        error: function(XMLHttpRequest, textStatus, errorThrown) {
+    					 alert(XMLHttpRequest.status);
+    					 alert(XMLHttpRequest.readyState);
+    					 alert(textStatus);
+    					   }
+    		    }); 
+    		}
+    		
     	},
     	_passEmail: function(){
-    		window.location.href=_base+"/reg/toRegisterSuccess";
+    		var key = $("#accountIdKey").val()
+    		window.location.href=_base+"/reg/toRegisterSuccess?key="+key;
     	},
     	
     	_bindEmail: function(){

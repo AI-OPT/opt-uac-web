@@ -10,17 +10,13 @@
 <script type="text/javascript" src="${_base}/theme/baas/js/jquery-1.11.1.min.js" ></script>
 <script type="text/javascript" src="${_base}/theme/baas/js/bootstrap.js" ></script>
 <script type="text/javascript" src="${_base}/theme/baas/js/comp.js" ></script>
-<script type="text/javascript">     
-function countDown(secs,surl){     
- var jumpTo = document.getElementById('jumpTo');
- jumpTo.innerHTML=secs;  
- if(--secs>0){     
-     setTimeout("countDown("+secs+",'"+surl+"')",1000);     
-     }     
- else{       
-     location.href=surl;     
-     }     
- }     
+ <script type="text/javascript">
+(function () {
+	seajs.use('app/register/register-success', function (RegisterSucessPager) {
+		var pager = new RegisterSucessPager();
+		pager.render();
+	});
+})();
 </script>
 </head>
 
@@ -36,11 +32,13 @@ function countDown(secs,surl){
   
    <div class="regsiter-wrapper">
         <div class="regsiter-success-cnt">
-         <p class="clts">恭喜您，注册成功！</p>
+         <p class="clts">恭喜您，注册成功！
+         		<input type="hidden" name="accountIdKey" id="accountIdKey" value="${requestScope.accountIdKey}"/>
+         </p>
           <p>
           	<span id="jumpTo">5</span>s后会自动跳转到首页。
           </p>
-        <script type="text/javascript">countDown(5,'${_base}/index.jsp');</script>  
+        <script type="text/javascript"></script>  
         </div>
        
     

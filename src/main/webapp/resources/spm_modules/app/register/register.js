@@ -15,6 +15,11 @@ define('app/register/register', function (require, exports, module) {
     	//属性，使用时由类的构造函数传入
     	attrs: {
     	},
+    	//事件代理
+    	events: {
+    		//key的格式: 事件+空格+对象选择器;value:事件方法
+    		//"click [id='randomImg']":"_refrashVitentify",
+        },
     	 init: function(){
     		 _hideErroText();
          },
@@ -32,16 +37,15 @@ define('app/register/register', function (require, exports, module) {
     	},
     	//带下划线的方法，约定为内部私有方法
     	_bindHandle: function(){
-    		
+    		$("#randomImg").on("click",this._refrashVitentify);
     		$("#refresh").on("click",this._refrashVitentify);
     		$("#phone").on("blur",this._validServicePho);
     		$("#password").on("blur",this._validServicePaw);
     		$("#pictureVitenfy").on("blur",this._validServicePic);
-    		//$("#phoneVerifyCode").on("blur",this._validServiceSSM);
     		$("#BTN_REGISTER").on("click",this._validServicePho);
     		$("#BTN_REGISTER").on("click",this._validServicePaw);
     		$("#BTN_REGISTER").on("click",this._validServicePic);
-    		//$("#PHONE_IDENTIFY").on("click",this._smsTime);
+    		$("#PHONE_IDENTIFY").on("click",this._validServicePho);
     		$("#PHONE_IDENTIFY").on("click",this._getPhoneVitentify);
     		$("#BTN_REGISTER").on("click",this._validServiceSSM);
     		$("#BTN_REGISTER").on("click",this._sumbit);
@@ -53,15 +57,7 @@ define('app/register/register', function (require, exports, module) {
     	},
     	//获取短信验证码
     	_getPhoneVitentify: function(){
-    		var phone = $('#phone').val();
-    		if (phone==""){
-    			$('#showPhoneMsg').text("请输入手机号码");
-    			$("#errorPhoneMsg").attr("style","display:block");
-    			$('#errorFlag').val("0");
-				return false;
-			}
     		var flag = $('#errorFlag').val();
-    		
              if(flag!=0){
             	 var step = 59;
                  $('#PHONE_IDENTIFY').val('重新发送60');

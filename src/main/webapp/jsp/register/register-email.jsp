@@ -15,9 +15,7 @@
 		pager.render();
 	});
 })();
-$(document).ready(function() { 
-	 $("#errorEmIdentifyMsg").attr("style","display:none");
-	});
+
 </script>
 </head>
 
@@ -39,7 +37,11 @@ $(document).ready(function() {
           	<input type="text" class="int-medium" placeholder="" id="email" name="email">
           	<input type="hidden" id="flag">
           	<input type="hidden" name="accountIdKey" id="accountIdKey" value="${requestScope.accountIdKey}"/>
-          <span class="yzm"><p><A href="#" id="getIdentify">获取校验码</A></p></span>
+          <span class="yzm">
+	          <a >
+			     <input class="regsiter-getIdentify_btn"id="getIdentify"  type="button" value="获取验证码" >
+			  </a>
+          </span>
           
          </li>
           <li class="user">

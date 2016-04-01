@@ -23,10 +23,13 @@ import com.ai.net.xss.util.StringUtil;
 import com.ai.opt.base.vo.BaseResponse;
 import com.ai.opt.base.vo.ResponseHeader;
 import com.ai.opt.sdk.cache.factory.CacheClientFactory;
+import com.ai.opt.sdk.configcenter.factory.ConfigCenterFactory;
 import com.ai.opt.sdk.util.DubboConsumerFactory;
+import com.ai.opt.sdk.util.Md5Encoder;
 import com.ai.opt.sdk.util.RandomUtil;
 import com.ai.opt.sdk.util.UUIDUtil;
 import com.ai.opt.sdk.web.model.ResponseData;
+import com.ai.opt.sso.client.filter.SSOClientUtil;
 import com.ai.opt.uac.api.account.interfaces.IAccountManageSV;
 import com.ai.opt.uac.api.account.param.AccountQueryRequest;
 import com.ai.opt.uac.api.account.param.AccountQueryResponse;
@@ -35,6 +38,8 @@ import com.ai.opt.uac.api.register.param.PhoneRegisterRequest;
 import com.ai.opt.uac.api.register.param.PhoneRegisterResponse;
 import com.ai.opt.uac.api.security.interfaces.IAccountSecurityManageSV;
 import com.ai.opt.uac.api.security.param.AccountEmailRequest;
+import com.ai.opt.uac.api.sso.interfaces.ILoginSV;
+import com.ai.opt.uac.api.sso.param.UserLoginResponse;
 import com.ai.opt.uac.web.constants.Constants;
 import com.ai.opt.uac.web.constants.Constants.Register;
 import com.ai.opt.uac.web.constants.Constants.ResultCode;
@@ -42,10 +47,10 @@ import com.ai.opt.uac.web.constants.Constants.SMSUtil;
 import com.ai.opt.uac.web.constants.VerifyConstants.EmailVerifyConstants;
 import com.ai.opt.uac.web.constants.VerifyConstants.PhoneVerifyConstants;
 import com.ai.opt.uac.web.model.email.SendEmailRequest;
+import com.ai.opt.uac.web.model.login.LoginUser;
 import com.ai.opt.uac.web.model.register.GetSMDataReq;
 import com.ai.opt.uac.web.model.register.UpdateEmailReq;
 import com.ai.opt.uac.web.util.CacheUtil;
-import com.ai.opt.uac.web.util.Md5Util;
 import com.ai.opt.uac.web.util.VerifyUtil;
 import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
 import com.ai.runner.base.exception.CallerException;
@@ -73,8 +78,8 @@ public class RegisterController {
     }
 
     @RequestMapping("/toRegisterSuccess")
-    public ModelAndView registerSuccess(HttpServletRequest request) {
-
+    public ModelAndView registerSuccess(@RequestParam(value = "key", required = false) String key,HttpServletRequest request) {
+        request.setAttribute("accountIdKey", key);
         return new ModelAndView("jsp/register/register-success");
     }
 
@@ -86,10 +91,11 @@ public class RegisterController {
      */
     @RequestMapping("/register")
     @ResponseBody
-    public ResponseData<String> addAccount(PhoneRegisterRequest request, HttpSession session) {
+    public ResponseData<String> addAccount(PhoneRegisterRequest request, HttpSession session,HttpServletRequest req) {
         ResponseData<String> responseData = null;
         // MD5加密
-        request.setAccountPassword(Md5Util.stringMD5(request.getAccountPassword()));
+        String password = Md5Encoder.encodePassword(request.getAccountPassword());
+        request.setAccountPassword(password);
         try {
          
             ICacheClient iCacheClient = CacheClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
@@ -106,7 +112,7 @@ public class RegisterController {
                  return responseData;
             }
           // 校验验证码
-            if (!request.getPictureVerifyCode().equals(pictureCode)) {
+            if (pictureCode.compareToIgnoreCase(request.getPictureVerifyCode()) != 0) {
                 header.setResultCode(Register.REGISTER_PICTURE_ERROR);
                 header.setResultMessage("图形验证码错误");
                  responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS,
@@ -212,8 +218,7 @@ public class RegisterController {
             AccountEmailRequest req = new AccountEmailRequest();
             //从缓存获取账号ID
             String id = iCacheClient.get(request.getAccountIdKey());
-            //删除缓存账号ID
-            CacheUtil.deletCache(request.getAccountIdKey(), Register.CACHE_NAMESPACE);
+           
             if(StringUtil.isBlank(id)){
                 //跳转到注册页面
                 header.setResultCode(Register.UUID_INVIAL_ERROR);
@@ -268,45 +273,74 @@ public class RegisterController {
     @ResponseBody
     public ResponseData<String> sendEmail(UpdateEmailReq emailReq, HttpServletRequest request) {
         ResponseData<String> responseData = null;
-        ICacheClient  iCacheClient=  CacheClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
-        IAccountManageSV  iAccountManageSV=  DubboConsumerFactory
-		        .getService("iAccountManageSV");
-		AccountQueryRequest req = new AccountQueryRequest();
-		String email = emailReq.getEmail();
-		//获取账号key
-		String accountid = iCacheClient.get(emailReq.getAccountIdKey());
-		if(StringUtil.isBlank(accountid)){
-		    //跳转到注册页面
-		    ResponseHeader header = new ResponseHeader();
-            header.setIsSuccess(false);
-            header.setResultCode(Register.UUID_INVIAL_ERROR);
-            header.setResultMessage("uuid失效");
-            responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "uuid失效",
+        try {
+            ICacheClient  iCacheClient=  CacheClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
+            IAccountManageSV  iAccountManageSV=  DubboConsumerFactory
+                    .getService("iAccountManageSV");
+            AccountQueryRequest req = new AccountQueryRequest();
+            String email = emailReq.getEmail();
+            //获取账号key
+            String accountid = iCacheClient.get(emailReq.getAccountIdKey());
+            if(StringUtil.isBlank(accountid)){
+                //跳转到注册页面
+                ResponseHeader header = new ResponseHeader();
+                header.setIsSuccess(false);
+                header.setResultCode(Register.UUID_INVIAL_ERROR);
+                header.setResultMessage("uuid失效");
+                responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "uuid失效",
+                        null);
+                responseData.setResponseHeader(header);
+                return responseData;
+            }else{
+                
+                //获取短信发送次数
+                String emailtimes = "1";
+                String emailskey = Register.SEND_EMAIL_TIMES_KEY + emailReq.getEmail();
+                String times = iCacheClient.get(emailskey);
+                if(StringUtil.isBlank(times)){
+                    req.setAccountId(Long.valueOf(accountid));
+                    AccountQueryResponse response =  iAccountManageSV.queryBaseInfo(req);
+                    String nickName = Constants.Register.REGISTER_EMAIL_NICK+response.getNickName();
+                    String identifyCode = RandomUtil.randomNum(EmailVerifyConstants.VERIFY_SIZE);
+                    String[] tomails = new String[] { email };
+                    //超时时间
+                    String overTime = ObjectUtils.toString(EmailVerifyConstants.VERIFY_OVERTIME/60);
+                    String[] data = new String[] { nickName, identifyCode ,overTime};
+                    SendEmailRequest emailRequest = new SendEmailRequest();
+                    emailRequest.setSubject(EmailVerifyConstants.EMAIL_SUBJECT);
+                    emailRequest.setTemplateRUL(Register.TEMPLATE_EMAIL_URL);
+                    emailRequest.setTomails(tomails);
+                    emailRequest.setData(data);
+                    VerifyUtil.sendEmail(emailRequest);
+                    //存验证码到缓存
+                    String key = Register.REGISTER_EMAIL_KEY+request.getSession().getId();
+                    iCacheClient.setex(key, EmailVerifyConstants.VERIFY_OVERTIME, identifyCode);
+                    //存发送次数到缓存
+                    iCacheClient.setex(emailskey, Register.EMAIL_DUP_TIMES, emailtimes);
+                    
+                    ResponseHeader header = new ResponseHeader();
+                    header.setIsSuccess(true);
+                    header.setResultCode(ResultCode.SUCCESS_CODE);
+                    header.setResultMessage("验证码获取成功");
+                    responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "验证码获取成功",
+                            key);
+                    responseData.setResponseHeader(header);
+                }else{
+                    ResponseHeader header = new ResponseHeader();
+                    header.setIsSuccess(false);
+                    header.setResultCode(Register.CACHE_EM_TIMES_ERROR_CODE);
+                    header.setResultMessage("超过1分钟后，可重复发送");
+                    responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS,
+                            "超过1分钟后，可重复发送", null);
+                    responseData.setResponseHeader(header);
+                    return responseData;
+                }
+            }
+        } catch (Exception e) {
+            LOG.error("验证码获取失败！", e);
+            responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "验证码获取失败",
                     null);
-            responseData.setResponseHeader(header);
-            return responseData;
-		}else{
-    		req.setAccountId(Long.valueOf(accountid));
-    		AccountQueryResponse response =  iAccountManageSV.queryBaseInfo(req);
-    		String nickName = Constants.Register.REGISTER_EMAIL_NICK+response.getNickName();
-    		String identifyCode = RandomUtil.randomNum(EmailVerifyConstants.VERIFY_SIZE);
-    		String[] tomails = new String[] { email };
-            //超时时间
-    		String overTime = ObjectUtils.toString(EmailVerifyConstants.VERIFY_OVERTIME/60);
-    		String[] data = new String[] { nickName, identifyCode ,overTime};
-    		SendEmailRequest emailRequest = new SendEmailRequest();
-    		emailRequest.setSubject(EmailVerifyConstants.EMAIL_SUBJECT);
-    		emailRequest.setTemplateRUL(Register.TEMPLATE_EMAIL_URL);
-    		emailRequest.setTomails(tomails);
-    		emailRequest.setData(data);
-    		VerifyUtil.sendEmail(emailRequest);
-    		//存验证码到缓存
-    		String key = Register.REGISTER_EMAIL_KEY+request.getSession().getId();
-    		
-    		iCacheClient.setex(key, EmailVerifyConstants.VERIFY_OVERTIME, identifyCode);
-    		responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "验证码获取成功",
-    		        key);
-		}
+        }
         return responseData;
     }
 
@@ -395,4 +429,41 @@ public class RegisterController {
         }
         return responseData;
     }
+    
+    @RequestMapping("/login")
+    @ResponseBody
+    public ResponseData<String> autoLogin(@RequestParam(value = "accountIdKey", required = false) String accountIdKey,HttpServletRequest request,HttpServletResponse response){
+        ICacheClient iCacheClient = CacheClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
+        //获取accountkey
+        String accountId = iCacheClient.get(accountIdKey);
+        IAccountManageSV iAccountManageSV = DubboConsumerFactory.getService("iAccountManageSV");
+        AccountQueryRequest accountRequest = new AccountQueryRequest();
+        accountRequest.setAccountId(Long.valueOf(accountId));
+        AccountQueryResponse account = iAccountManageSV.queryBaseInfo(accountRequest);
+        ILoginSV iloginSV = DubboConsumerFactory.getService("iLoginSV");
+        UserLoginResponse logaccout = iloginSV.queryAccountByUserName(account.getPhone());
+       // String uuid = request.getParameter(Constants.UUID.KEY_NAME);
+      //删除缓存
+        CacheUtil.deletCache(accountIdKey, Register.CACHE_NAMESPACE);
+        String phone = account.getPhone();
+        String accountPassword = logaccout.getAccountPassword();
+        LoginUser loginUser = new LoginUser(phone,accountPassword);
+        String newuuid = UUIDUtil.genId32();
+        CacheUtil.setValue(newuuid, Constants.UUID.OVERTIME, loginUser, Constants.LoginConstant.CACHE_NAMESPACE);
+        // localhost:8080/uac/registerLogin?k=UUID&service=URL
+        String service_url = "";
+        if (StringUtil.isBlank(accountId)) {
+            // 跳转到登录页面
+            service_url = SSOClientUtil.getCasServerLoginUrlRuntime(request);
+        } else {
+            // 从配置中心读取跳转地址
+            service_url = ConfigCenterFactory.getConfigCenterClient().get(Constants.URLConstant.INDEX_URL_KEY);
+        }
+        String url = "/registerLogin?"+Constants.UUID.KEY_NAME+"="+newuuid+"&service="+service_url;
+        ResponseData<String> responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS,"成功，跳转",url);
+        ResponseHeader responseHeader=new ResponseHeader(true, Constants.RetakePassword.SUCCESS_CODE, null);
+        responseData.setResponseHeader(responseHeader);
+        return responseData;
+    } 
+   
 }
