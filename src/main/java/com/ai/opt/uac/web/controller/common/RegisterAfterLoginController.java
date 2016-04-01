@@ -41,6 +41,7 @@ public class RegisterAfterLoginController extends AbstractController {
 			String password = loginUser.getPassword();
 			password = Md5Encoder.encodePassword(SSOConstants.AIOPT_SALT_KEY + password);
 			bindTicketGrantingTicket(username, password, request, response);
+			CacheUtil.deletCache(uuid, Constants.LoginConstant.CACHE_NAMESPACE);
 		}
 		String viewName = getSignInView(request);
 		signinView.setViewName(viewName);
