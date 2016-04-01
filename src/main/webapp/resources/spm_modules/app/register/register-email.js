@@ -43,6 +43,7 @@ define('app/register/register-email', function (require, exports, module) {
     		 $("#errorEmIdentifyMsg").attr("style","display:none");
     	},
     	_validServiceEmail: function(){
+    		
     		$("#errorEmIdentifyMsg").attr("style","display:none");
     		var emailCode = $('#email').val();
     		if(emailCode!=""){
@@ -56,7 +57,7 @@ define('app/register/register-email', function (require, exports, module) {
     				return false;
     			}
     		}else{
-    			$("#showErroeEmIdentify").text("邮箱不能为空 ");
+    			$("#showErroeEmIdentify").text("请输入邮箱地址 ");
 				$("#errorEmIdentifyMsg").attr("style","display:block");
 				$("#flag").val("0");
 				return false;
@@ -66,7 +67,7 @@ define('app/register/register-email', function (require, exports, module) {
     	_checkIsVify: function(){
     		var emailIdenty = $('#identifyCode').val();
 			if(emailIdenty==""){
-				$("#showErroeEmIdentify").text("邮箱验证码不能为空 ");
+				$("#showErroeEmIdentify").text("请输入邮箱验证码 ");
 				$("#errorEmIdentifyMsg").attr("style","display:block");
 				$("#flag").val("0");
 				return false;
@@ -142,15 +143,15 @@ define('app/register/register-email', function (require, exports, module) {
     			        message: "正在加载数据..",
     			        success: function (data) {
     			        	if(data.responseHeader.resultCode=="000005"){
-    			        		$("#showErroeEmIdentify").text("邮箱验证码失效 ");
+    			        		$("#showErroeEmIdentify").text("邮箱验证码已失效 ");
     		    				$("#errorEmIdentifyMsg").attr("style","display:block");
     		    				return false;
     			        	}else if(data.responseHeader.resultCode=="000006"){
-    			        		$("#showErroeEmIdentify").html("邮箱验证码错误 ");
+    			        		$("#showErroeEmIdentify").html("验证码错误 ");
     		    				$("#errorEmIdentifyMsg").attr("style","display:block");
     		    				return false;
     			        	}else if(data.responseHeader.resultCode=="10004"){
-    			        		$("#showErroeEmIdentify").html("邮箱已存在 ");
+    			        		$("#showErroeEmIdentify").html("邮箱已被其他账户绑定 ");
     		    				$("#errorEmIdentifyMsg").attr("style","display:block");
     		    				return false;
     			        	}else if(data.responseHeader.resultCode=="1100"){

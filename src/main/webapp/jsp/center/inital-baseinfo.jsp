@@ -68,7 +68,7 @@
            <li class="user">
           <p class="word">手机号码</p>
           <p>${accountInfo.phone}</p>
-          <p><a href="账户安全-修改手机号.html">去修改</a></p>
+          <p><a href="${_base}/center/phone/confirminfo">去修改</a></p>
           </li>
           
            <li class="user">
@@ -82,7 +82,7 @@
           <div id="haveEmail">
 	          <p class="word">邮箱</p>
 	          <p id="email">${accountInfo.email}</p>
-	          <p><a href="账户安全-修改邮箱.html">去修改</a></p>
+	          <p><a href="${_base}/center/email/confirminfo">去修改</a></p>
           </div>
           </li>
 

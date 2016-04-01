@@ -62,9 +62,7 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
    		},
 		_changPage:function(){
 			var email = $("#email").val();
-			
 			var tenantName = $("#tenant").val();
-			alert(tenantName);
 			if(email==""){
 				$("#haveEmail").attr("style","display:none");
 			}else{
@@ -132,7 +130,6 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 				processing: true,
 				message : "正在处理中，请稍候...",
 				success : function(data) {
-					alert(data.length);
 					var indutrys = $("#indutry");
 					indutrys.empty();
 					var option1 = $("<option id='indusvoid'>").text("请选择").val("00");
@@ -148,7 +145,6 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 		
 		_submit:function(){
 			var flag = $("#flag").val();
-			alert(flag);
 			if(flag!="0"){
 				var _this = this;
 				var	param={

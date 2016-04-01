@@ -45,7 +45,7 @@
           
          </li>
           <li class="user">
-          <p class="word">邮箱校验码</p>
+          <p class="word">邮箱验证码</p>
           <p><input type="text" class="int-medium" placeholder="" id="identifyCode"></p>
          <span class="regsiter-note" id="errorEmIdentifyMsg">
          		<i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
