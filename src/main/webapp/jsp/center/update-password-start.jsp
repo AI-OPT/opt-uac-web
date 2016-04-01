@@ -2,9 +2,6 @@
 <html lang="zh-cn">
 <head>
 <%@ include file="/inc/inc.jsp"%>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width; initial-scale=0.8;  user-scalable=0;" />
     <title>无标题文档</title>
      <link href="${_base}/theme/baas/css/bootstrap.css" rel="stylesheet" type="text/css">
      <link href="${_base}/theme/baas/css/font-awesome.css" rel="stylesheet" type="text/css">
@@ -74,7 +71,9 @@
          <li class="user">
 	          <p class="word" id="verifyName">短信校验码</p>
 	          <p><input type="text" class="int-medium" id="verifyCode"></p>
-	          <p class="huoqu"><A id="sendVerify">获取验证码</A></p>
+	          <p class="huoqu">
+	          	<input id="sendVerify"  type="button" value="获取校验码" >
+	          </p>
 	          <span class="regsiter-note" id="verifyCodeMsgDiv" style="display:none">
 			     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
 			     <span id="verifyCodeMsg"></span>

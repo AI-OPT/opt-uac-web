@@ -200,6 +200,8 @@ public final class Constants {
         public static final String CACHE_KEY_SMS_UPDATE_EMAIL = "update-email-sms";
         /** 找回密码发送次数key*/
         public static final String CACHE_KEY_SMS_RETAKE_PASSWORD = "retake-password-sms";
+        /** 修改密码发送次数key*/
+        public static final String CACHE_KEY_SMS_UPDATE_PASSWORD = "update-password-sms";
         /** 短信发送次数失败*/
         public static final String CACHE_SMS_ERROR_CODE = "9999";
         /** 短信重复发送时间*/
