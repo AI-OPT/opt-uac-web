@@ -24,15 +24,66 @@ define('app/center/email/setEmail', function (require, exports, module) {
     	events: {
     		//key的格式: 事件+空格+对象选择器;value:事件方法
     		"click [id='sendEmailBtn']":"_sendEmail",
-    		"click [id='submitBtn']":"_updateEmail"
+    		"click [id='submitBtn']":"_updateEmail",
+    		"blur [id='email']":"_checkEmail",
+    		"blur [id='verifyCode']":"_checkVerifyCode"
         },
     	//重写父类
     	setup: function () {
     		UpdateEmailPager.superclass.setup.call(this);
     	},
-    
+    	//检查新密码格式
+		_checkEmail: function(){
+			var email = $("#email").val();
+			var msg = "";
+			if(email == "" || email == null || email == undefined){
+				msg = "请输入邮箱地址";
+			}else if(!/^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/.test(email)){
+				msg = "邮箱地址格式错误";
+			}
+			if(msg == ""){
+				this._controlMsgText("emailMsg","");
+				this._controlMsgAttr("emailMsgDiv",1);
+				return true;
+			}else{
+				this._controlMsgText("emailMsg",msg);
+				this._controlMsgAttr("emailMsgDiv",2);
+				return false;
+			}
+		},
+		//检查确认密码
+		_checkVerifyCode: function(){
+			var verifyCode = $("#verifyCode").val();
+			if(verifyCode == "" || verifyCode == null || verifyCode == undefined){
+				this._controlMsgText("verifyCodeMsg","请输入图片验证码");
+				this._controlMsgAttr("verifyCodeMsgDiv",2);
+				return false;
+			}else{
+				this._controlMsgText("verifyCodeMsg","");
+				this._controlMsgAttr("verifyCodeMsgDiv",1);
+				return true;
+			}
+		},
+		//控制显示内容
+		_controlMsgText(id,msg){
+			var doc = document.getElementById(id+"");
+			doc.innerText=msg;
+		},
+		//控制显隐属性 1:隐藏 2：显示
+		_controlMsgAttr(id,flag){
+			var doc = document.getElementById(id+"");
+			if(flag == 1){
+				doc.setAttribute("style","display:none");
+			}else if(flag == 2){
+				doc.setAttribute("style","display");
+			}
+		},
     	_sendEmail:function(){
 			var _this = this;
+			var isOk = this._checkEmail();
+			if(!isOk){
+				return false;
+			}
 			ajaxController.ajax({
 				type : "POST",
 				data : {
@@ -57,6 +108,11 @@ define('app/center/email/setEmail', function (require, exports, module) {
 		//更新邮箱
 		_updateEmail:function(){
 			var _this = this;
+			var checkEmail = this._checkEmail();
+			var checkVerify = this._checkVerifyCode();
+			if(!(checkEmail&&checkVerify)){
+				return false;
+			}
 			ajaxController.ajax({
 				type : "POST",
 				data : _this._getSafetyConfirmData(),
