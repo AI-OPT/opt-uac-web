@@ -61,12 +61,21 @@
          <li class="user">
           <p class="word">用户名</p>
           <p><input type="text" class="int-medium" id="userName"></p>
+          <span class="regsiter-note" id="userNameMsgDiv" style="display:none">
+		     <i class="icon-caret-left"></i>
+		     <img src="${_base}/theme/baas/images/error.png">
+		     <span id="userNameMsg"></span>
+		  </span>
          </li>
          <li class="user">
           <p class="word">图形验证码</p>
           <p><input type="text" class="int-medium" id="pictureVerifyCode"></p>
           <p><img id="random_img" src="${_base}/retakePassword/getUserImageVerifyCode"></p>
           <p><A id="changeImage">看不清?换一换</A></p>
+          <span class="regsiter-note" id="verifyCodeMsgDiv" style="display:none">
+		     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
+		     <span id="verifyCodeMsg"></span>
+		  </span>
          </li>
          <li><input id="submitBtn" type="button" class="Submit-btn" value="提  交"></li>
        

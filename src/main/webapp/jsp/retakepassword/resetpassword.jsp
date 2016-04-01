@@ -57,30 +57,36 @@
      <!--表单验证-->
     <div class="Retrieve-cnt">
           <ul>
-         <li class="user">
-          <p class="word">新密码</p>
-          <p><input type="password"class="int-medium" id="newPassword"><span class="regsiter-note"><i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/correct.png">密码必须由字母和数字、符号组成，不能低于6个字符</span><!--把提示信息放在input后面即可--></p>
-          <div class="Set-password">
-          <p class="low">
-          <span class="f00"></span>
-          <span>低</span>
-          </p>
-           <p class="in">
-          <span class="eb6100"></span>
-          <span>中</span>
-          </p>
-          <p class="gao">
-          <span class="green"></span>
-          <span>高</span>
-          </p>
-          
-          </div>
-         
+          <li class="user">
+	          <p class="word">新密码</p>
+	          <p><input type="password"class="int-medium" id="newPassword">
+	          <span class="regsiter-note" id="newPwdMsgDiv" style="display:none">
+			     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
+			     <span id="newPwdMsg"></span>
+			  </span><p>
+	          <div class="Set-password">
+		          <p class="low">
+		          <span class="f00"></span>
+		          <span>低</span>
+		          </p>
+		           <p class="in">
+		          <span class="eb6100"></span>
+		          <span>中</span>
+		          </p>
+		          <p class="gao">
+		          <span class="green"></span>
+		          <span>高</span>
+		          </p>
+          	</div>
           </li>
           
           <li class="user">
-          <p class="word">确认密码</p>
-          <p><input type="password" class="int-medium" id="confirmPassword"></p>
+	          <p class="word">确认密码</p>
+	          <p><input type="password" class="int-medium" id="confirmPassword">
+	          <span class="regsiter-note" id="confirmPwdMsgDiv" style="display:none">
+			     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
+			     <span id="confirmPwdMsg"></span>
+			  </span></p>
           </li>
        
          
