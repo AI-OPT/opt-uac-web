@@ -109,24 +109,6 @@ define('app/retakepassword/resetpassword', function (require, exports, module) {
 					if(status == "000000"){
 						var url = data.data;
 						window.location.href = _base+url;
-					}else{
-						var msg = data.statusInfo;
-						//用户名
-						if(status == "100004"){
-							_this._controlMsgText("userNameMsg",msg);
-							_this._controlMsgAttr("userNameMsgDiv",2);
-						}else{
-							_this._controlMsgText("userNameMsg","");
-							_this._controlMsgAttr("userNameMsgDiv",1);
-						}
-						//图片验证码
-						if(status == "100001"){
-							_this._controlMsgText("verifyCodeMsg",msg);
-							_this._controlMsgAttr("verifyCodeMsgDiv",2);
-						}else{
-							_this._controlMsgText("verifyCodeMsg","");
-							_this._controlMsgAttr("verifyCodeMsgDiv",1);
-						}
 					}
 				},
 				error : function(){

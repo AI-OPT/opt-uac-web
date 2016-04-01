@@ -57,12 +57,22 @@
           <ul>
          <li class="user">
           <p class="word">新密码</p>
-          <p><input type="password"class="int-medium" placeholder="" id="password"></p>
+          <p><input type="password"class="int-medium" placeholder="" id="password">
+             <span class="regsiter-note" id="newPwdMsgDiv" style="display:none">
+			     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
+			     <span id="newPwdMsg"></span>
+		     </span>
+		  </p>
           </li>
           
           <li class="user">
           <p class="word">确认密码</p>
-          <p><input type="password" class="int-medium" placeholder="" id="confirmPassword"></p>
+          <p><input type="password" class="int-medium" placeholder="" id="confirmPassword">
+          	  <span class="regsiter-note" id="confirmPwdMsgDiv" style="display:none">
+			     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
+			     <span id="confirmPwdMsg"></span>
+			  </span>
+          </p>
           </li>
        
          
