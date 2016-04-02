@@ -34,7 +34,7 @@ define('app/center/email/setEmail', function (require, exports, module) {
     	},
     	//检查新密码格式
 		_checkEmail: function(){
-			var email = $("#email").val();
+			var email = jQuery.trim($("#email").val());
 			var msg = "";
 			if(email == "" || email == null || email == undefined){
 				msg = "请输入邮箱地址";
@@ -51,11 +51,11 @@ define('app/center/email/setEmail', function (require, exports, module) {
 				return false;
 			}
 		},
-		//检查确认密码
+		//检查验证码
 		_checkVerifyCode: function(){
-			var verifyCode = $("#verifyCode").val();
+			var verifyCode = jQuery.trim($("#verifyCode").val());
 			if(verifyCode == "" || verifyCode == null || verifyCode == undefined){
-				this._controlMsgText("verifyCodeMsg","请输入图片验证码");
+				this._controlMsgText("verifyCodeMsg","请输入验证码");
 				this._controlMsgAttr("verifyCodeMsgDiv",2);
 				return false;
 			}else{
@@ -120,12 +120,19 @@ define('app/center/email/setEmail', function (require, exports, module) {
 				processing: true,
 				message : "正在处理中，请稍候...",
 				success : function(data) {
-					var statusCode = data.statusCode;
+					var statusCode = data.responseHeader.resultCode;
 					var url = data.data;
-					if(statusCode == "1"){
+					if(statusCode == "000000"){
 						window.location.href = _base+url;
-					}else{
-						alert(data.statusInfo);
+					}else {
+						var msg = data.statusInfo;
+						if(statusCode == "100002"){
+							_controlMsgText("verifyCodeMsg",msg);
+							_controlMsgAttr("verifyCodeMsgDiv",2);
+						}else{
+							_controlMsgText("verifyCodeMsg","");
+							_controlMsgAttr("verifyCodeMsgDiv",1);
+						}
 					}
 				},
 				error : function(){

@@ -67,20 +67,22 @@
           <p class="word">图形验证码</p>
           <p><input type="text" class="int-medium" placeholder="" id="pictureVerifyCode"></p>
           <p><img id="random_img" src="${_base}/center/email/getImageVerifyCode"></p>
-          <p><A id="changeImage">看不清?换一换</A></p>
+          <p><A id="changeImage">看不清?换一换</A>
           <span class="regsiter-note" id="pictureVerifyMsgDiv" style="display:none">
 			     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
 			     <span id="pictureVerifyMsg"></span>
 		  </span>
+		  </p>
          </li>
          <li class="user">
 	          <p class="word" id="verifyName">短信校验码</p>
 	          <p><input type="text" class="int-medium" id="verifyCode"></p>
-	          <p class="huoqu"><A id="sendVerify">获取验证码</A></p>
+	          <p class="huoqu"><A id="sendVerify">获取验证码</A>
 	          <span class="regsiter-note" id="verifyCodeMsgDiv" style="display:none">
 			     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
 			     <span id="verifyCodeMsg"></span>
 			  </span>
+			  </p>
          </li>
          
          <li><input id="submitBtn" type="button" class="Submit-btn" value="提  交"></li>

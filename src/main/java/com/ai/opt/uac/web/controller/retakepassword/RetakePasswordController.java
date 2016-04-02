@@ -197,7 +197,7 @@ public class RetakePasswordController {
 					header.setResultCode(ResultCode.SUCCESS_CODE);
 					responseData.setResponseHeader(header);
 					return responseData;
-				} else if (isSuccess.equals("0002")){
+				} else if (isSuccess.equals("0002")) {
 					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "短信验证码发送失败", "重复发送");
 					ResponseHeader header = new ResponseHeader();
 					header.setIsSuccess(false);
@@ -205,13 +205,13 @@ public class RetakePasswordController {
 					header.setResultMessage("重复发送");
 					responseData.setResponseHeader(header);
 					return responseData;
-				}else{
-				    responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "短信验证码发送失败", "服务器连接超时");
-                    ResponseHeader header = new ResponseHeader();
-                    header.setIsSuccess(false);
-                    header.setResultCode(ResultCode.ERROR_CODE);
-                    responseData.setResponseHeader(header);
-                    return responseData;
+				} else {
+					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "短信验证码发送失败", "服务器连接超时");
+					ResponseHeader header = new ResponseHeader();
+					header.setIsSuccess(false);
+					header.setResultCode(ResultCode.ERROR_CODE);
+					responseData.setResponseHeader(header);
+					return responseData;
 				}
 			} else if (RetakePassword.CHECK_TYPE_EMAIL.equals(checkType)) {
 				// 发送邮件验证码
@@ -319,41 +319,38 @@ public class RetakePasswordController {
 		String resultCode = pictureCheck.getResponseHeader().getResultCode();
 		// 如果失败就直接返回
 		if (!VerifyConstants.ResultCodeConstants.SUCCESS_CODE.equals(resultCode)) {
-			responseData = pictureCheck;
-		} else {
-			// 检查短信或邮箱验证码
-			if (RetakePassword.CHECK_TYPE_PHONE.equals(confirmType)) {
-				// 检查短信验证码
-				String phoneCacheKey = RetakePassword.CACHE_KEY_VERIFY_PHONE + sessionId;
-				String verifyCode = safetyConfirmData.getVerifyCode();
-				ResponseData<String> phoneCheck = checkPhoneVerifyCode(verifyCode, phoneCacheKey);
-				String phoneResultCode = phoneCheck.getResponseHeader().getResultCode();
-				if (!VerifyConstants.ResultCodeConstants.SUCCESS_CODE.equals(phoneResultCode)) {
-					responseData = phoneCheck;
-				}
+			return pictureCheck;
+		}
+		// 检查短信或邮箱验证码
+		if (RetakePassword.CHECK_TYPE_PHONE.equals(confirmType)) {
+			// 检查短信验证码
+			String phoneCacheKey = RetakePassword.CACHE_KEY_VERIFY_PHONE + sessionId;
+			String verifyCode = safetyConfirmData.getVerifyCode();
+			ResponseData<String> phoneCheck = checkPhoneVerifyCode(verifyCode, phoneCacheKey);
+			String phoneResultCode = phoneCheck.getResponseHeader().getResultCode();
+			if (!VerifyConstants.ResultCodeConstants.SUCCESS_CODE.equals(phoneResultCode)) {
+				return phoneCheck;
+			}
 
-			} else if (RetakePassword.CHECK_TYPE_EMAIL.equals(confirmType)) {
-				// 检查邮箱验证码
-				String emailCacheKey = RetakePassword.CACHE_KEY_VERIFY_EMAIL + sessionId;
-				String verifyCode = safetyConfirmData.getVerifyCode();
-				ResponseData<String> emailCheck = checkEmailVerifyCode(verifyCode, emailCacheKey);
-				String emailResultCode = emailCheck.getResponseHeader().getResultCode();
-				if (!VerifyConstants.ResultCodeConstants.SUCCESS_CODE.equals(emailResultCode)) {
-					responseData = emailCheck;
-				}
+		} else if (RetakePassword.CHECK_TYPE_EMAIL.equals(confirmType)) {
+			// 检查邮箱验证码
+			String emailCacheKey = RetakePassword.CACHE_KEY_VERIFY_EMAIL + sessionId;
+			String verifyCode = safetyConfirmData.getVerifyCode();
+			ResponseData<String> emailCheck = checkEmailVerifyCode(verifyCode, emailCacheKey);
+			String emailResultCode = emailCheck.getResponseHeader().getResultCode();
+			if (!VerifyConstants.ResultCodeConstants.SUCCESS_CODE.equals(emailResultCode)) {
+				return emailCheck;
 			}
 		}
-		if (responseData == null) {
-			// 设置新缓存
-			String uuid = (String) request.getParameter(Constants.UUID.KEY_NAME);
-			SSOClientUser userClient = (SSOClientUser) CacheUtil.getValue(uuid, Constants.RetakePassword.CACHE_NAMESPACE, SSOClientUser.class);
-			String newuuid = UUIDUtil.genId32();
-			CacheUtil.setValue(newuuid, Constants.UUID.OVERTIME, userClient, Constants.RetakePassword.CACHE_NAMESPACE);
-			CacheUtil.deletCache(uuid, Constants.RetakePassword.CACHE_NAMESPACE);
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", "/retakePassword/resetPassword?" + Constants.UUID.KEY_NAME + "=" + newuuid);
-			ResponseHeader responseHeader = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "正确");
-			responseData.setResponseHeader(responseHeader);
-		}
+		// 设置新缓存
+		String uuid = (String) request.getParameter(Constants.UUID.KEY_NAME);
+		SSOClientUser userClient = (SSOClientUser) CacheUtil.getValue(uuid, Constants.RetakePassword.CACHE_NAMESPACE, SSOClientUser.class);
+		String newuuid = UUIDUtil.genId32();
+		CacheUtil.setValue(newuuid, Constants.UUID.OVERTIME, userClient, Constants.RetakePassword.CACHE_NAMESPACE);
+		CacheUtil.deletCache(uuid, Constants.RetakePassword.CACHE_NAMESPACE);
+		responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", "/retakePassword/resetPassword?" + Constants.UUID.KEY_NAME + "=" + newuuid);
+		ResponseHeader responseHeader = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "正确");
+		responseData.setResponseHeader(responseHeader);
 		return responseData;
 	}
 
@@ -471,9 +468,9 @@ public class RetakePasswordController {
 		String uuid = request.getParameter(Constants.UUID.KEY_NAME);
 		SSOClientUser userClient = (SSOClientUser) CacheUtil.getValue(uuid, Constants.RetakePassword.CACHE_NAMESPACE, SSOClientUser.class);
 		if (userClient == null) {
-			responseData =  new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "认证身份失效", "/retakePassword/userinfo");
+			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "认证身份失效", "/retakePassword/userinfo");
 			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "认证身份失效");
-		}else{
+		} else {
 			IAccountSecurityManageSV accountManageSV = DubboConsumerFactory.getService("iAccountSecurityManageSV");
 			AccountPasswordRequest passwordRequest = new AccountPasswordRequest();
 			passwordRequest.setAccountId(userClient.getAccountId());

@@ -60,6 +60,10 @@ define('app/retakepassword/resetpassword', function (require, exports, module) {
 		},
 		//检查确认密码
 		_checkConfirmPassword: function(){
+			var isOk = this._checkNewPassword();
+			if(!isOk){
+				return false;
+			}
 			var confirmPassword = $("#confirmPassword").val();
 			var newPassword = $("#newPassword").val();
 			if(confirmPassword == "" || confirmPassword == null || confirmPassword == undefined){

@@ -193,35 +193,32 @@ public class UpdateEmialController {
 		ResponseData<String> pictureCheck = checkPictureVerifyCode(safetyConfirmData, cacheClient, sessionId);
 		String resultCode = pictureCheck.getResponseHeader().getResultCode();
 		if (!VerifyConstants.ResultCodeConstants.SUCCESS_CODE.equals(resultCode)) {
-			responseData = pictureCheck;
-		} else {
-			// 检查短信或邮箱验证码
-			if (UpdateEmail.CHECK_TYPE_PHONE.equals(confirmType)) {
-				// 检查短信验证码
-				ResponseData<String> phoneCheck = checkPhoneVerifyCode(safetyConfirmData, cacheClient, sessionId);
-				String phoneResultCode = phoneCheck.getResponseHeader().getResultCode();
-				if (!VerifyConstants.ResultCodeConstants.SUCCESS_CODE.equals(phoneResultCode)) {
-					responseData = phoneCheck;
-				}
+			return pictureCheck;
+		}
+		// 检查短信或邮箱验证码
+		if (UpdateEmail.CHECK_TYPE_PHONE.equals(confirmType)) {
+			// 检查短信验证码
+			ResponseData<String> phoneCheck = checkPhoneVerifyCode(safetyConfirmData, cacheClient, sessionId);
+			String phoneResultCode = phoneCheck.getResponseHeader().getResultCode();
+			if (!VerifyConstants.ResultCodeConstants.SUCCESS_CODE.equals(phoneResultCode)) {
+				return phoneCheck;
+			}
 
-			} else if (UpdateEmail.CHECK_TYPE_EMAIL.equals(confirmType)) {
-				// 检查邮箱验证码
-				ResponseData<String> emailCheck = checkEmailVerifyCode(safetyConfirmData, cacheClient, sessionId);
-				String emailResultCode = emailCheck.getResponseHeader().getResultCode();
-				if (!VerifyConstants.ResultCodeConstants.SUCCESS_CODE.equals(emailResultCode)) {
-					responseData = emailCheck;
-				}
+		} else if (UpdateEmail.CHECK_TYPE_EMAIL.equals(confirmType)) {
+			// 检查邮箱验证码
+			ResponseData<String> emailCheck = checkEmailVerifyCode(safetyConfirmData, cacheClient, sessionId);
+			String emailResultCode = emailCheck.getResponseHeader().getResultCode();
+			if (!VerifyConstants.ResultCodeConstants.SUCCESS_CODE.equals(emailResultCode)) {
+				return emailCheck;
 			}
 		}
-		if (responseData == null) {
-			// 用户信息放入缓存
-			String uuid = UUIDUtil.genId32();
-			SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
-			CacheUtil.setValue(uuid, Constants.UUID.OVERTIME, userClient, Constants.UpdateEmail.CACHE_NAMESPACE);
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", "/center/email/setEmail?" + Constants.UUID.KEY_NAME + "=" + uuid);
-			ResponseHeader responseHeader = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "正确");
-			responseData.setResponseHeader(responseHeader);
-		}
+		// 用户信息放入缓存
+		String uuid = UUIDUtil.genId32();
+		SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
+		CacheUtil.setValue(uuid, Constants.UUID.OVERTIME, userClient, Constants.UpdateEmail.CACHE_NAMESPACE);
+		responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", "/center/email/setEmail?" + Constants.UUID.KEY_NAME + "=" + uuid);
+		ResponseHeader responseHeader = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "正确");
+		responseData.setResponseHeader(responseHeader);
 		return responseData;
 	}
 
@@ -388,6 +385,7 @@ public class UpdateEmialController {
 		if (userClient == null) {
 			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "身份认证失效", "/center/email/confirminfo");
 			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "认证身份失效");
+			responseData.setResponseHeader(responseHeader);
 		} else {
 			// 检查验证码
 			ICacheClient cacheClient = CacheClientFactory.getCacheClient(UpdateEmail.CACHE_NAMESPACE);
@@ -395,28 +393,30 @@ public class UpdateEmialController {
 			String emailResultCode = checkVerifyCode.getResponseHeader().getResultCode();
 			if (!VerifyConstants.ResultCodeConstants.SUCCESS_CODE.equals(emailResultCode)) {
 				responseData = checkVerifyCode;
-			}
-			// 更新邮箱
-			IAccountSecurityManageSV accountSecurityManageSV = DubboConsumerFactory.getService("iAccountSecurityManageSV");
-			AccountEmailRequest accountEmailRequest = new AccountEmailRequest();
-			accountEmailRequest.setAccountId(userClient.getAccountId());
-			accountEmailRequest.setEmail(email);
-			accountEmailRequest.setUpdateAccountId(userClient.getAccountId());
-			BaseResponse resultData = accountSecurityManageSV.setEmailData(accountEmailRequest);
-			if (ResultCode.SUCCESS_CODE.equals(resultData.getResponseHeader().getResultCode())) {
-				String newuuid = UUIDUtil.genId32();
-				userClient.setEmail(email);// 更改为新邮箱
-				CacheUtil.setValue(newuuid, Constants.UUID.OVERTIME, userClient, Constants.UpdateEmail.CACHE_NAMESPACE);
-				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "修改邮箱成功", "/center/email/success?" + Constants.UUID.KEY_NAME + "=" + newuuid);
-				responseHeader = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "修改邮箱成功");
-				CacheUtil.deletCache(uuid, Constants.UpdateEmail.CACHE_NAMESPACE);
 			} else {
-				String resultMessage = resultData.getResponseHeader().getResultMessage();
-				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, resultMessage, null);
-				responseHeader = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "修改邮箱失败");
+				// 更新邮箱
+				IAccountSecurityManageSV accountSecurityManageSV = DubboConsumerFactory.getService("iAccountSecurityManageSV");
+				AccountEmailRequest accountEmailRequest = new AccountEmailRequest();
+				accountEmailRequest.setAccountId(userClient.getAccountId());
+				accountEmailRequest.setEmail(email);
+				accountEmailRequest.setUpdateAccountId(userClient.getAccountId());
+				BaseResponse resultData = accountSecurityManageSV.setEmailData(accountEmailRequest);
+				if (ResultCode.SUCCESS_CODE.equals(resultData.getResponseHeader().getResultCode())) {
+					String newuuid = UUIDUtil.genId32();
+					userClient.setEmail(email);// 更改为新邮箱
+					CacheUtil.setValue(newuuid, Constants.UUID.OVERTIME, userClient, Constants.UpdateEmail.CACHE_NAMESPACE);
+					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "修改邮箱成功", "/center/email/success?" + Constants.UUID.KEY_NAME + "=" + newuuid);
+					responseHeader = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "修改邮箱成功");
+					responseData.setResponseHeader(responseHeader);
+					CacheUtil.deletCache(uuid, Constants.UpdateEmail.CACHE_NAMESPACE);
+				} else {
+					String resultMessage = resultData.getResponseHeader().getResultMessage();
+					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, resultMessage, null);
+					responseHeader = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "修改邮箱失败");
+					responseData.setResponseHeader(responseHeader);
+				}
 			}
 		}
-		responseData.setResponseHeader(responseHeader);
 		return responseData;
 	}
 

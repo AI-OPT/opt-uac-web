@@ -86,7 +86,8 @@
 	          <span class="regsiter-note" id="confirmPwdMsgDiv" style="display:none">
 			     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
 			     <span id="confirmPwdMsg"></span>
-			  </span></p>
+			  </span>
+			  </p>
           </li>
        
          

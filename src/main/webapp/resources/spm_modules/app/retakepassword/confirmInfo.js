@@ -135,7 +135,7 @@ define('app/retakepassword/confirmInfo', function (require, exports, module) {
 		},
 		//检查手机验证码
 		_checkSSmVerifyCode: function(){
-			var verifyCode = $("#verifyCode").val();
+			var verifyCode = jQuery.trim($("#verifyCode").val());
 			if(verifyCode == "" || verifyCode == null || verifyCode == undefined){
 	    		this._controlMsgText("ssmVerifyCodeMsg","请输入短信验证码");
 				this._controlMsgAttr("ssmVerifyCodeMsgDiv",2);
@@ -148,7 +148,7 @@ define('app/retakepassword/confirmInfo', function (require, exports, module) {
 		},
 		//检查验证码
 		_checkPictureVerifyCode: function(){
-			var verifyCode = $("#pictureVerifyCode").val();
+			var verifyCode = jQuery.trim($("#pictureVerifyCode").val());
 			if(verifyCode == "" || verifyCode == null || verifyCode == undefined){
 				this._controlMsgText("pictureVerifyMsg","请输入图形验证码");
 				this._controlMsgAttr("pictureVerifyMsgDiv",2);
