@@ -17,9 +17,11 @@ import com.ai.opt.sdk.mail.EmailFactory;
 import com.ai.opt.sdk.mail.EmailTemplateUtil;
 import com.ai.opt.sdk.util.DubboConsumerFactory;
 import com.ai.opt.sdk.util.RandomUtil;
+import com.ai.opt.sdk.web.model.ResponseData;
 import com.ai.opt.uac.api.seq.interfaces.ICreateSeqSV;
 import com.ai.opt.uac.api.seq.param.PhoneMsgSeqResponse;
 import com.ai.opt.uac.web.constants.Constants;
+import com.ai.opt.uac.web.constants.VerifyConstants;
 import com.ai.opt.uac.web.constants.VerifyConstants.PictureVerifyConstants;
 import com.ai.opt.uac.web.model.email.SendEmailRequest;
 import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
@@ -127,5 +129,76 @@ public class VerifyUtil {
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * 检查图片验证码
+	 * @param verifyCode
+	 * @param cacheVerifyCode
+	 * @return
+	 */
+	public static ResponseData<String> checkPictureVerifyCode(String verifyCode, String cacheVerifyCode) {
+		ResponseData<String> responseData = null;
+		ResponseHeader responseHeader = null;
+		if (cacheVerifyCode == null) {
+			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "图形验证码已失效", null);
+			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_PICTURE_ERROR, "图形验证码已失效");
+		} else if (cacheVerifyCode.compareToIgnoreCase(verifyCode) != 0) {
+			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "图形验证码错误", null);
+			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_PICTURE_ERROR, "图形验证码错误");
+		} else {
+			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "图形验证码正确", null);
+			responseHeader = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "图形验证码正确");
+		}
+		responseData.setResponseHeader(responseHeader);
+		return responseData;
+	}
+	
+	/**
+	 * 检查邮箱验证码
+	 * @param verifyCode
+	 * @param cacheVerifyCode
+	 * @return
+	 */
+	public static ResponseData<String> checkPhoneVerifyCode(String verifyCode, String cacheVerifyCode) {
+		ResponseData<String> responseData = null;
+		ResponseHeader responseHeader = null;
+		if (cacheVerifyCode == null) {
+			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "验证码已失效", null);
+			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_VERIFY_ERROR, "短信验证码已失效");
+		} else if (!cacheVerifyCode.equals(verifyCode)) {
+			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "短信验证码错误", null);
+			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_VERIFY_ERROR, "短信验证码错误");
+		} else {
+			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "手机校验码正确", null);
+			responseHeader = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "手机校验码正确");
+		}
+		responseData.setResponseHeader(responseHeader);
+		return responseData;
+	}
+
+	/**
+	 * 检查邮箱验证码
+	 * 
+	 * @param safetyConfirmData
+	 * @param cacheClient
+	 * @param sessionId
+	 * @return
+	 */
+	public static ResponseData<String> checkEmailVerifyCode(String verifyCode, String cacheVerifyCode) {
+		ResponseData<String> responseData = null;
+		ResponseHeader responseHeader = null;
+		if (cacheVerifyCode == null) {
+			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "邮箱校验码已失效", null);
+			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_VERIFY_ERROR, "邮箱校验码已失效");
+		} else if (!cacheVerifyCode.equals(verifyCode)) {
+			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "邮箱校验码已错误", null);
+			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_VERIFY_ERROR, "邮箱校验码错误");
+		} else {
+			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "邮箱校验码正确", null);
+			responseHeader = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "邮箱校验码正确");
+		}
+		responseData.setResponseHeader(responseHeader);
+		return responseData;
 	}
 }

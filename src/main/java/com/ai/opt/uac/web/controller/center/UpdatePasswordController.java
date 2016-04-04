@@ -265,7 +265,9 @@ public class UpdatePasswordController {
 		ICacheClient cacheClient = CacheClientFactory.getCacheClient(UpdatePassword.CACHE_NAMESPACE);
 		String sessionId = request.getSession().getId();
 		// 检查图片验证码
-		ResponseData<String> pictureCheck = checkPictureVerifyCode(safetyConfirmData, cacheClient, sessionId);
+		String pictureVerifyCodeCache = cacheClient.get(UpdatePassword.CACHE_KEY_VERIFY_PICTURE + sessionId);
+		String pictureVerifyCode = safetyConfirmData.getPictureVerifyCode();
+		ResponseData<String> pictureCheck = VerifyUtil.checkPictureVerifyCode(pictureVerifyCode, pictureVerifyCodeCache);
 		String resultCode = pictureCheck.getResponseHeader().getResultCode();
 		if (!VerifyConstants.ResultCodeConstants.SUCCESS_CODE.equals(resultCode)) {
 			return pictureCheck;
@@ -273,14 +275,18 @@ public class UpdatePasswordController {
 		// 检查短信或邮箱验证码
 		if (RetakePassword.CHECK_TYPE_PHONE.equals(confirmType)) {
 			// 检查短信验证码
-			ResponseData<String> phoneCheck = checkPhoneVerifyCode(safetyConfirmData, cacheClient, sessionId);
+			String verifyCodeCache = cacheClient.get(UpdatePassword.CACHE_KEY_VERIFY_PHONE + sessionId);
+			String verifyCode = safetyConfirmData.getVerifyCode();
+			ResponseData<String> phoneCheck = VerifyUtil.checkPhoneVerifyCode(verifyCode, verifyCodeCache);
 			String phoneResultCode = phoneCheck.getResponseHeader().getResultCode();
 			if (!VerifyConstants.ResultCodeConstants.SUCCESS_CODE.equals(phoneResultCode)) {
 				return phoneCheck;
 			}
 		} else if (RetakePassword.CHECK_TYPE_EMAIL.equals(confirmType)) {
 			// 检查邮箱验证码
-			ResponseData<String> emailCheck = checkEmailVerifyCode(safetyConfirmData, cacheClient, sessionId);
+			String verifyCodeCache = cacheClient.get(UpdatePassword.CACHE_KEY_VERIFY_EMAIL + sessionId);
+			String verifyCode = safetyConfirmData.getVerifyCode();
+			ResponseData<String> emailCheck = VerifyUtil.checkEmailVerifyCode(verifyCode, verifyCodeCache);
 			String emailResultCode = emailCheck.getResponseHeader().getResultCode();
 			if (!VerifyConstants.ResultCodeConstants.SUCCESS_CODE.equals(emailResultCode)) {
 				return emailCheck;
@@ -292,89 +298,6 @@ public class UpdatePasswordController {
 		CacheUtil.setValue(uuid, Constants.UUID.OVERTIME, userClient, Constants.UpdatePassword.CACHE_NAMESPACE);
 		responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", "/center/password/setPassword?" + Constants.UUID.KEY_NAME + "=" + uuid);
 		ResponseHeader responseHeader = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "正确");
-		responseData.setResponseHeader(responseHeader);
-		return responseData;
-	}
-
-	/**
-	 * 检查图片验证码
-	 * 
-	 * @param safetyConfirmData
-	 * @param cacheClient
-	 * @param sessionId
-	 * @return
-	 */
-	private ResponseData<String> checkPictureVerifyCode(SafetyConfirmData safetyConfirmData, ICacheClient cacheClient, String sessionId) {
-		String pictureVerifyCodeCache = cacheClient.get(UpdatePassword.CACHE_KEY_VERIFY_PICTURE + sessionId);
-		String pictureVerifyCode = safetyConfirmData.getPictureVerifyCode();
-		ResponseData<String> responseData = null;
-		ResponseHeader responseHeader = null;
-		if (pictureVerifyCodeCache == null) {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "图形验证码已失效", null);
-			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_PICTURE_ERROR, "图形验证码已失效");
-		} else if (pictureVerifyCodeCache.compareToIgnoreCase(pictureVerifyCode) != 0) {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "图形验证码错误", null);
-			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_PICTURE_ERROR, "图形验证码错误");
-		} else {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "图形验证码正确", null);
-			responseHeader = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "图形验证码正确");
-		}
-		responseData.setResponseHeader(responseHeader);
-		return responseData;
-	}
-
-	/**
-	 * 检查短信验证码
-	 * 
-	 * @param safetyConfirmData
-	 * @param cacheClient
-	 * @param sessionId
-	 * @return
-	 */
-	private ResponseData<String> checkPhoneVerifyCode(SafetyConfirmData safetyConfirmData, ICacheClient cacheClient, String sessionId) {
-		String cacheKey = UpdatePassword.CACHE_KEY_VERIFY_PHONE + sessionId;
-		String verifyCodeCache = cacheClient.get(cacheKey);
-		String verifyCode = safetyConfirmData.getVerifyCode();
-		ResponseData<String> responseData = null;
-		ResponseHeader responseHeader = null;
-		if (verifyCodeCache == null) {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "验证码已失效", null);
-			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_VERIFY_ERROR, "短信验证码已失效");
-		} else if (!verifyCodeCache.equals(verifyCode)) {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "短信验证码错误", null);
-			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_VERIFY_ERROR, "短信验证码错误");
-		} else {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "手机校验码正确", null);
-			responseHeader = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "手机校验码正确");
-		}
-		responseData.setResponseHeader(responseHeader);
-		return responseData;
-	}
-
-	/**
-	 * 检查邮箱验证码
-	 * 
-	 * @param safetyConfirmData
-	 * @param cacheClient
-	 * @param sessionId
-	 * @return
-	 */
-	private ResponseData<String> checkEmailVerifyCode(SafetyConfirmData safetyConfirmData, ICacheClient cacheClient, String sessionId) {
-		String cacheKey = UpdatePassword.CACHE_KEY_VERIFY_EMAIL + sessionId;
-		String verifyCodeCache = cacheClient.get(cacheKey);
-		String verifyCode = safetyConfirmData.getVerifyCode();
-		ResponseData<String> responseData = null;
-		ResponseHeader responseHeader = null;
-		if (verifyCodeCache == null) {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "邮箱校验码已失效", null);
-			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_VERIFY_ERROR, "邮箱校验码已失效");
-		} else if (!verifyCodeCache.equals(verifyCode)) {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "邮箱校验码已错误", null);
-			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_VERIFY_ERROR, "邮箱校验码错误");
-		} else {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "邮箱校验码正确", null);
-			responseHeader = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "邮箱校验码正确");
-		}
 		responseData.setResponseHeader(responseHeader);
 		return responseData;
 	}

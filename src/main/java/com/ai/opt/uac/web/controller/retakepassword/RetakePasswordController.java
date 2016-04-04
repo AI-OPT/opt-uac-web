@@ -97,7 +97,9 @@ public class RetakePasswordController {
 		ResponseData<String> responseData = null;
 		String cacheKey = Constants.RetakePassword.CACHE_KEY_VERIFY_PICTURE_USER + request.getSession().getId();
 		// 检查图片验证码
-		ResponseData<String> pictureCheck = checkPictureVerifyCode(pictureVerifyCode, cacheKey);
+		ICacheClient cacheClient = CacheClientFactory.getCacheClient(RetakePassword.CACHE_NAMESPACE);
+		String pictureVerifyCodeCache = cacheClient.get(cacheKey);
+		ResponseData<String> pictureCheck = VerifyUtil.checkPictureVerifyCode(pictureVerifyCode, pictureVerifyCodeCache);
 		String resultCode = pictureCheck.getResponseHeader().getResultCode();
 		if (!VerifyConstants.ResultCodeConstants.SUCCESS_CODE.equals(resultCode)) {
 			responseData = pictureCheck;
@@ -313,9 +315,11 @@ public class RetakePasswordController {
 		String confirmType = safetyConfirmData.getConfirmType();
 		String sessionId = request.getSession().getId();
 		// 检查图片验证码
-		String cacheKey = RetakePassword.CACHE_KEY_VERIFY_PICTURE + sessionId;
+		String pictureCacheKey = RetakePassword.CACHE_KEY_VERIFY_PICTURE + sessionId;
 		String pictureVerifyCode = safetyConfirmData.getPictureVerifyCode();
-		ResponseData<String> pictureCheck = checkPictureVerifyCode(pictureVerifyCode, cacheKey);
+		ICacheClient cacheClient = CacheClientFactory.getCacheClient(RetakePassword.CACHE_NAMESPACE);
+		String pictureVerifyCodeCache = cacheClient.get(pictureCacheKey);
+		ResponseData<String> pictureCheck = VerifyUtil.checkPictureVerifyCode(pictureVerifyCode, pictureVerifyCodeCache);
 		String resultCode = pictureCheck.getResponseHeader().getResultCode();
 		// 如果失败就直接返回
 		if (!VerifyConstants.ResultCodeConstants.SUCCESS_CODE.equals(resultCode)) {
@@ -326,7 +330,8 @@ public class RetakePasswordController {
 			// 检查短信验证码
 			String phoneCacheKey = RetakePassword.CACHE_KEY_VERIFY_PHONE + sessionId;
 			String verifyCode = safetyConfirmData.getVerifyCode();
-			ResponseData<String> phoneCheck = checkPhoneVerifyCode(verifyCode, phoneCacheKey);
+			String verifyCodeCache = cacheClient.get(phoneCacheKey);
+			ResponseData<String> phoneCheck = VerifyUtil.checkPhoneVerifyCode(verifyCode, verifyCodeCache);
 			String phoneResultCode = phoneCheck.getResponseHeader().getResultCode();
 			if (!VerifyConstants.ResultCodeConstants.SUCCESS_CODE.equals(phoneResultCode)) {
 				return phoneCheck;
@@ -336,7 +341,8 @@ public class RetakePasswordController {
 			// 检查邮箱验证码
 			String emailCacheKey = RetakePassword.CACHE_KEY_VERIFY_EMAIL + sessionId;
 			String verifyCode = safetyConfirmData.getVerifyCode();
-			ResponseData<String> emailCheck = checkEmailVerifyCode(verifyCode, emailCacheKey);
+			String verifyCodeCache = cacheClient.get(emailCacheKey);
+			ResponseData<String> emailCheck = VerifyUtil.checkEmailVerifyCode(verifyCode, verifyCodeCache);
 			String emailResultCode = emailCheck.getResponseHeader().getResultCode();
 			if (!VerifyConstants.ResultCodeConstants.SUCCESS_CODE.equals(emailResultCode)) {
 				return emailCheck;
@@ -350,87 +356,6 @@ public class RetakePasswordController {
 		CacheUtil.deletCache(uuid, Constants.RetakePassword.CACHE_NAMESPACE);
 		responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", "/retakePassword/resetPassword?" + Constants.UUID.KEY_NAME + "=" + newuuid);
 		ResponseHeader responseHeader = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "正确");
-		responseData.setResponseHeader(responseHeader);
-		return responseData;
-	}
-
-	/**
-	 * 检查图片验证码
-	 * 
-	 * @param safetyConfirmData
-	 * @param cacheClient
-	 * @param sessionId
-	 * @return
-	 */
-	private ResponseData<String> checkPictureVerifyCode(String pictureVerifyCode, String cacheKey) {
-		ICacheClient cacheClient = CacheClientFactory.getCacheClient(RetakePassword.CACHE_NAMESPACE);
-		String pictureVerifyCodeCache = cacheClient.get(cacheKey);
-		ResponseData<String> responseData = null;
-		ResponseHeader responseHeader = null;
-		if (pictureVerifyCodeCache == null) {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "图形验证码已失效", null);
-			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_PICTURE_ERROR, "图形验证码已失效");
-		} else if (pictureVerifyCodeCache.compareToIgnoreCase(pictureVerifyCode) != 0) {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "图形验证码错误", null);
-			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_PICTURE_ERROR, "图形验证码错误");
-		} else {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "图形验证码正确", null);
-			responseHeader = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "图形验证码正确");
-		}
-		responseData.setResponseHeader(responseHeader);
-		return responseData;
-	}
-
-	/**
-	 * 检查邮箱验证码
-	 * 
-	 * @param safetyConfirmData
-	 * @param cacheClient
-	 * @param sessionId
-	 * @return
-	 */
-	private ResponseData<String> checkPhoneVerifyCode(String verifyCode, String cacheKey) {
-		ICacheClient cacheClient = CacheClientFactory.getCacheClient(RetakePassword.CACHE_NAMESPACE);
-		String verifyCodeCache = cacheClient.get(cacheKey);
-		ResponseData<String> responseData = null;
-		ResponseHeader responseHeader = null;
-		if (verifyCodeCache == null) {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "验证码已失效", null);
-			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_VERIFY_ERROR, "验证码已失效");
-		} else if (!verifyCodeCache.equals(verifyCode)) {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "验证码错误", null);
-			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_VERIFY_ERROR, "验证码错误");
-		} else {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "手机校验码正确", null);
-			responseHeader = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "手机校验码正确");
-		}
-		responseData.setResponseHeader(responseHeader);
-		return responseData;
-	}
-
-	/**
-	 * 检查邮箱验证码
-	 * 
-	 * @param safetyConfirmData
-	 * @param cacheClient
-	 * @param sessionId
-	 * @return
-	 */
-	private ResponseData<String> checkEmailVerifyCode(String verifyCode, String cacheKey) {
-		ICacheClient cacheClient = CacheClientFactory.getCacheClient(RetakePassword.CACHE_NAMESPACE);
-		String verifyCodeCache = cacheClient.get(cacheKey);
-		ResponseData<String> responseData = null;
-		ResponseHeader responseHeader = null;
-		if (verifyCodeCache == null) {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "验证码已失效", null);
-			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_VERIFY_ERROR, "验证码已失效");
-		} else if (!verifyCodeCache.equals(verifyCode)) {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "验证码错误", null);
-			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_VERIFY_ERROR, "验证码错误");
-		} else {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "邮箱校验码正确", null);
-			responseHeader = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "邮箱校验码正确");
-		}
 		responseData.setResponseHeader(responseHeader);
 		return responseData;
 	}
