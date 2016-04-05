@@ -32,6 +32,8 @@ import com.ai.opt.sso.client.filter.SSOClientConstants;
 import com.ai.opt.sso.client.filter.SSOClientUser;
 import com.ai.opt.uac.api.security.interfaces.IAccountSecurityManageSV;
 import com.ai.opt.uac.api.security.param.AccountPasswordRequest;
+import com.ai.opt.uac.api.sso.interfaces.ILoginSV;
+import com.ai.opt.uac.api.sso.param.UserLoginResponse;
 import com.ai.opt.uac.web.constants.Constants;
 import com.ai.opt.uac.web.constants.Constants.ResultCode;
 import com.ai.opt.uac.web.constants.Constants.UpdatePassword;
@@ -342,11 +344,21 @@ public class UpdatePasswordController {
 			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "身份认证失效", "/center/password/confirminfo");
 			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.USER_INFO_NULL, "认证身份失效");
 		} else {
+			ILoginSV iLoginSV = DubboConsumerFactory.getService("iLoginSV");
+			UserLoginResponse userLoginResponse = iLoginSV.queryAccountByUserName(userClient.getPhone());
+			String accountPassword = userLoginResponse.getAccountPassword();
+			String encodePassword = Md5Encoder.encodePassword(password);
+			if(encodePassword.equals(accountPassword)){
+				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "新密码不能与旧密码相同，请重新输入", null);
+				responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.PASSWORD_ERROR, "新密码不能与旧密码相同，请重新输入");
+				responseData.setResponseHeader(responseHeader);
+				return responseData;
+			}
 			// 更新密码
 			IAccountSecurityManageSV accountSecurityManageSV = DubboConsumerFactory.getService("iAccountSecurityManageSV");
 			AccountPasswordRequest accountPasswordRequest = new AccountPasswordRequest();
 			accountPasswordRequest.setAccountId(userClient.getAccountId());
-			accountPasswordRequest.setAccountPassword(Md5Encoder.encodePassword(password));
+			accountPasswordRequest.setAccountPassword(encodePassword);
 			accountPasswordRequest.setUpdateAccountId(userClient.getAccountId());
 			BaseResponse resultData = accountSecurityManageSV.setPasswordData(accountPasswordRequest);
 			if (ResultCode.SUCCESS_CODE.equals(resultData.getResponseHeader().getResultCode())) {

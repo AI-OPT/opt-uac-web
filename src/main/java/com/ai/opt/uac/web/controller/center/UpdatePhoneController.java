@@ -322,6 +322,38 @@ public class UpdatePhoneController {
 		model.put("uuid", uuid);
 		return new ModelAndView("jsp/center/update-phone-new", model);
 	}
+	
+	/**
+	 * 检查修改手机与原手机不同
+	 * @param request
+	 * @param phone
+	 * @return
+	 */
+	@RequestMapping("/checkPhoneDiffOld")
+	@ResponseBody
+	public ResponseData<String> checkPhoneDiffOld(HttpServletRequest request, String phone){
+		ResponseData<String> responseData = null;
+		ResponseHeader responseHeader = null;
+		String uuid = request.getParameter(Constants.UUID.KEY_NAME);
+		SSOClientUser userClient = (SSOClientUser) CacheUtil.getValue(uuid, Constants.UpdateEmail.CACHE_NAMESPACE, SSOClientUser.class);
+		if (userClient == null) {
+			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "身份认证失效", "/center/phone/confirminfo");
+			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.USER_INFO_NULL, "认证身份失效");
+			responseData.setResponseHeader(responseHeader);
+			return responseData;
+		}
+		String oldPhone = userClient.getPhone();
+		if (phone.equals(oldPhone)) {
+			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "新手机号码不能与旧手机号码相同，请重新输入", null);
+			responseHeader = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.PHONE_ERROR, "新手机号码不能与旧手机号码相同，请重新输入");
+			responseData.setResponseHeader(responseHeader);
+			return responseData;
+		}
+		responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", null);
+		responseHeader = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "正确");
+		responseData.setResponseHeader(responseHeader);
+		return responseData; 
+	}
 
 	/**
 	 * 发送短信验证码(修改新手机时验证)
@@ -431,6 +463,13 @@ public class UpdatePhoneController {
 			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.USER_INFO_NULL, "认证身份失效");
 			responseData.setResponseHeader(responseHeader);
 		} else {
+			String oldPhone = userClient.getPhone();
+			if (phone.equals(oldPhone)) {
+				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "新手机号码不能与旧手机号码相同，请重新输入", null);
+				responseHeader = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.PHONE_ERROR, "新手机号码不能与旧手机号码相同，请重新输入");
+				responseData.setResponseHeader(responseHeader);
+				return responseData;
+			}
 			// 检查验证码
 			ICacheClient cacheClient = CacheClientFactory.getCacheClient(UpdatePhone.CACHE_NAMESPACE);
 			String cacheKey = UpdatePhone.CACHE_KEY_VERIFY_SETPHONE + request.getSession().getId();

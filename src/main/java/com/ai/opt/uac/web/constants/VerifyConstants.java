@@ -76,6 +76,8 @@ public final class VerifyConstants {
         public static final String REGISTER_PICTURE_ERROR = "100001";
         /** 验证码错误ID */
         public static final String REGISTER_VERIFY_ERROR = "100002";
+        /** 密码错误 */
+        public static final String PASSWORD_ERROR = "100003";
         /** 用户名错误 */
         public static final String USERNAME_ERROR = "100004";
         /** 手机号错误 */

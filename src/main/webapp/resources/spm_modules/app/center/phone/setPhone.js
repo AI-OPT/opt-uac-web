@@ -50,6 +50,53 @@ define('app/center/phone/setPhone', function (require, exports, module) {
 				return false;
 			}
     	},
+    	//检查新邮箱与原邮箱不同
+		_checkPhoneDiffOld: function(){
+			var _this = this;
+			var isOk;
+			ajaxController.ajax({
+				type : "POST",
+				data : {
+					"phone": function(){
+						return $("#phone").val()
+					}
+				},
+				url :_base+"/center/phone/checkPhoneDiffOld?k="+uuid,
+				async: false,
+				processing: true,
+				message : "正在处理中，请稍候...",
+				success : function(data) {
+					var resultCode = data.responseHeader.resultCode;
+					if(resultCode == "100000"){
+						isOk = false;
+						var url = data.data;
+						window.location.href = _base+url;
+					}else{
+						isOk = true;
+						if(resultCode=="100002"){
+							_this._controlMsgText("verifyCodeMsg",data.statusInfo);
+							_this._controlMsgAttr("verifyCodeMsgDiv",2);
+							isOk = false;
+				        }else{
+				        	_this._controlMsgText("verifyCodeMsg","");
+				        	_this._controlMsgAttr("verifyCodeMsgDiv",1);
+				        } 
+						if(resultCode=="100005"){
+				        	_this._controlMsgText("phoneMsg",data.statusInfo);
+							_this._controlMsgAttr("phoneMsgDiv",2);
+							isOk = false;
+				        }else{
+				        	_this._controlMsgText("phoneMsg","");
+				        	_this._controlMsgAttr("phoneMsgDiv",1);
+				        }
+					}
+				},
+				error : function(){
+					alert("网络连接超时!");
+				}
+			});
+			return isOk;
+		},
     	//检查验证码
 		_checkVerifyCode: function(){
 			var verifyCode = jQuery.trim($("#verifyCode").val());
@@ -79,6 +126,10 @@ define('app/center/phone/setPhone', function (require, exports, module) {
     	_sendPhone:function(){
     		var isOk = this._checkPhone();
     		if(!isOk){
+    			return false;
+    		}
+    		var isDiffOk = this._checkPhoneDiffOld();
+    		if(!isDiffOk){
     			return false;
     		}
     		var step = 59;
@@ -132,6 +183,10 @@ define('app/center/phone/setPhone', function (require, exports, module) {
 			if(!(checkPhone&&checkVerify)){
 				return false;
 			}
+			var isDiffOk = this._checkPhoneDiffOld();
+    		if(!isDiffOk){
+    			return false;
+    		}
 			ajaxController.ajax({
 				type : "POST",
 				data : _this._getSafetyConfirmData(),
