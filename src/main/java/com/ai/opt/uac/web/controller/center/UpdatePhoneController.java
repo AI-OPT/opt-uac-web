@@ -166,7 +166,7 @@ public class UpdatePhoneController {
 		String phoneVerifyCode = RandomUtil.randomNum(PhoneVerifyConstants.VERIFY_SIZE);
 		// 查询是否发送过短信
 		String smstimes = "1";
-		String smskey = SMSUtil.CACHE_KEY_SMS_UPDATE_PHONE + userClient.getPhone();
+		String smskey = UpdatePhone.CACHE_KEY_CONFIRM_SEND_PHONE_NUM + userClient.getPhone();
 		ICacheClient cacheClient = CacheClientFactory.getCacheClient(UpdatePhone.CACHE_NAMESPACE);
 		String times = cacheClient.get(smskey);
 		if (StringUtil.isBlank(times)) {
@@ -211,7 +211,7 @@ public class UpdatePhoneController {
 
 		// 查询是否发送过短信
 		String smstimes = "1";
-		String smskey = SMSUtil.CACHE_KEY_SMS_UPDATE_PHONE + userClient.getPhone();
+		String smskey = UpdatePhone.CACHE_KEY_CONFIRM_SEND_EMAIL_NUM + userClient.getPhone();
 		ICacheClient cacheClient = CacheClientFactory.getCacheClient(UpdatePhone.CACHE_NAMESPACE);
 		String times = cacheClient.get(smskey);
 		if (StringUtil.isBlank(times)) {

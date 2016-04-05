@@ -173,7 +173,7 @@ public class UpdatePasswordController {
 		String phoneVerifyCode = RandomUtil.randomNum(PhoneVerifyConstants.VERIFY_SIZE);
 		// 查询是否发送过短信
 		String smstimes = "1";
-		String smskey = SMSUtil.CACHE_KEY_SMS_UPDATE_PASSWORD + userClient.getPhone();
+		String smskey = UpdatePassword.CACHE_KEY_SEND_PHONE_NUM + userClient.getPhone();
 		ICacheClient cacheClient = CacheClientFactory.getCacheClient(UpdatePassword.CACHE_NAMESPACE);
 		String times = cacheClient.get(smskey);
 		if (StringUtil.isBlank(times)) {
@@ -217,7 +217,7 @@ public class UpdatePasswordController {
 	private String sendEmailVerifyCode(String sessionId, SSOClientUser userClient) {
 		// 查询是否发送过邮件
 		String smstimes = "1";
-		String smskey = SMSUtil.CACHE_KEY_SMS_UPDATE_PASSWORD + userClient.getPhone();
+		String smskey = UpdatePassword.CACHE_KEY_SEND_EMAIL_NUM + userClient.getPhone();
 		ICacheClient cacheClient = CacheClientFactory.getCacheClient(UpdatePassword.CACHE_NAMESPACE);
 		String times = cacheClient.get(smskey);
 		if (StringUtil.isBlank(times)) {

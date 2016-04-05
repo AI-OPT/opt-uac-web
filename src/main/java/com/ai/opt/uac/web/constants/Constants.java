@@ -64,6 +64,10 @@ public final class Constants {
 		public static final String CACHE_KEY_VERIFY_PICTURE = "retake-password-verify-picture";
 		/** 图片验证码缓存key(填写用户页)*/
 		public static final String CACHE_KEY_VERIFY_PICTURE_USER = "retake-password-verify-picture-user";
+		/** 找回密码发送邮箱次数key*/
+        public static final String CACHE_KEY_SEND_EMAIL_NUM = "retake-password-send-email-num";
+        /** 找回密码发送手机次数key*/
+        public static final String CACHE_KEY_SEND_PHONE_NUM = "retake-password-send-phone-num";
 		
 		public static final String FAIL_CODE = "0";
 		
@@ -142,6 +146,10 @@ public final class Constants {
 		public static final String CACHE_KEY_VERIFY_PHONE = "update-password-verify-phone";
 		/** 图片验证码缓存key*/
 		public static final String CACHE_KEY_VERIFY_PICTURE = "update-password-verify-picture";
+		/** 身份认证发送邮箱次数key*/
+        public static final String CACHE_KEY_SEND_EMAIL_NUM = "update-password-send-email-num";
+        /** 身份认证发送手机次数key*/
+        public static final String CACHE_KEY_SEND_PHONE_NUM = "update-password-send-phone-num";
 	}
     
     public static final class UpdatePhone{
@@ -166,6 +174,12 @@ public final class Constants {
 		public static final String CACHE_KEY_VERIFY_SETPHONE = "update-phone-verify-setphone";
 		/** 图片验证码缓存key*/
 		public static final String CACHE_KEY_VERIFY_PICTURE = "update-phone-verify-picture";
+		/** 身份认证发送邮箱次数key*/
+        public static final String CACHE_KEY_CONFIRM_SEND_EMAIL_NUM = "update-phone-confirm-send-email-num";
+        /** 身份认证发送手机次数key*/
+        public static final String CACHE_KEY_CONFIRM_SEND_PHONE_NUM = "update-phone-confirm-send-phone-num";
+        /** 修改手机发送手机次数key*/
+        public static final String CACHE_KEY_UPDATE_SEND_PHONE_NUM = "update-phone-update-send-phone-num";
 	}
     
     public static final class UpdateEmail{
@@ -193,19 +207,17 @@ public final class Constants {
 		public static final String CACHE_KEY_VERIFY_PHONE = "update-email-verify-phone";
 		/** 图片验证码缓存key*/
 		public static final String CACHE_KEY_VERIFY_PICTURE = "update-email-verify-picture";
+		/** 身份认证发送邮箱次数key*/
+        public static final String CACHE_KEY_CONFIRM_SEND_EMAIL_NUM = "update-email-confirm-send-email-num";
+        /** 身份认证发送手机次数key*/
+        public static final String CACHE_KEY_CONFIRM_SEND_PHONE_NUM = "update-email-confirm-send-phone-num";
+        /** 修改邮箱发送手机次数key*/
+        public static final String CACHE_KEY_UPDATE_SEND_PHONE_NUM = "update-email-update-send-phone-num";
 	}
     public static final class SMSUtil{
         private SMSUtil(){}
         /** 注册时手机发送次数key*/
         public static final String CACHE_KEY_SMS_REGISTER = "register-sms";
-        /** 修改手机发送次数key*/
-        public static final String CACHE_KEY_SMS_UPDATE_PHONE = "update-phone-sms";
-        /** 修改邮箱发送次数key*/
-        public static final String CACHE_KEY_SMS_UPDATE_EMAIL = "update-email-sms";
-        /** 找回密码发送次数key*/
-        public static final String CACHE_KEY_SMS_RETAKE_PASSWORD = "retake-password-sms";
-        /** 修改密码发送次数key*/
-        public static final String CACHE_KEY_SMS_UPDATE_PASSWORD = "update-password-sms";
         /** 短信发送次数失败*/
         public static final String CACHE_SMS_ERROR_CODE = "9999";
         /** 短信重复发送时间*/

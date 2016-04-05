@@ -121,11 +121,12 @@ define('app/retakepassword/confirmInfo', function (require, exports, module) {
 				processing: true,
 				message : "正在处理中，请稍候...",
 				success : function(data) {
-					if(data.responseHeader.resultCode=="9999"){
-		        		$('#showSmsMsg').text("1分钟后可重复发送 ");
-		    			$("#errorSmsMsg").attr("style","display:block");
-		    			$("#phoneVerifyCode").val("");
-						return false;
+					if(data.responseHeader.resultCode=="100002"){
+						this._controlMsgText("ssmVerifyCodeMsg",data.statusInfo);
+						this._controlMsgAttr("ssmVerifyCodeMsgDiv",2);
+		        	}else{
+		        		this._controlMsgText("ssmVerifyCodeMsg","");
+						this._controlMsgAttr("ssmVerifyCodeMsgDiv",1);
 		        	}
 				},
 				error : function(){
@@ -133,11 +134,11 @@ define('app/retakepassword/confirmInfo', function (require, exports, module) {
 				}
 			});
 		},
-		//检查手机验证码
+		//检查验证码
 		_checkSSmVerifyCode: function(){
 			var verifyCode = jQuery.trim($("#verifyCode").val());
 			if(verifyCode == "" || verifyCode == null || verifyCode == undefined){
-	    		this._controlMsgText("ssmVerifyCodeMsg","请输入短信验证码");
+	    		this._controlMsgText("ssmVerifyCodeMsg","请输入验证码");
 				this._controlMsgAttr("ssmVerifyCodeMsgDiv",2);
 				return false;
 			}else{
@@ -177,8 +178,8 @@ define('app/retakepassword/confirmInfo', function (require, exports, module) {
 		_confirmInfo:function(){
 			var _this = this;
 			var checkSSMVerifyCode = this._checkSSmVerifyCode();
-			var checkPoctureVerifyCode = this._checkPictureVerifyCode();
-			if(!(checkSSMVerifyCode&&checkPoctureVerifyCode)){
+			var checkPictureVerifyCode = this._checkPictureVerifyCode();
+			if(!(checkSSMVerifyCode&&checkPictureVerifyCode)){
     			return false;
     		}
 			ajaxController.ajax({
