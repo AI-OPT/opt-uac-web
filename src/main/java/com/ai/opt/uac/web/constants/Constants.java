@@ -53,6 +53,9 @@ public final class Constants {
 		/**邮箱模板路径*/
 		public static final String TEMPLATE_EMAIL_URL = "email/template/uac-retakepassword-mail.xml";
 		
+		/**邮件主题*/
+		public static final String EMAIL_SUBJECT="找回密码";
+		
 		/** 缓存命名空间*/
 		public static final String CACHE_NAMESPACE = "com.ai.opt.uac.retakepassword.cache";
 		
@@ -137,6 +140,9 @@ public final class Constants {
 		/**邮箱模板路径*/
 		public static final String TEMPLATE_EMAIL_URL = "email/template/uac-updatepassword-mail.xml";
 		
+		/**邮件主题*/
+		public static final String EMAIL_SUBJECT="修改登录密码";
+		
 		/** 缓存命名空间*/
 		public static final String CACHE_NAMESPACE = "com.ai.opt.uac.updatepassword.cache";
 		
@@ -162,6 +168,9 @@ public final class Constants {
 		
 		/**邮箱模板路径*/
 		public static final String TEMPLATE_EMAIL_URL = "email/template/uac-updatephone-mail.xml";
+		
+		/**邮件主题*/
+		public static final String EMAIL_SUBJECT="修改手机号码";
 		
 		/** 缓存命名空间*/
 		public static final String CACHE_NAMESPACE = "com.ai.opt.uac.updatephone.cache";
@@ -196,6 +205,9 @@ public final class Constants {
 		/**邮箱模板路径*/
 		public static final String TEMPLATE_SETEMAIL_URL = "email/template/uac-setemail-mail.xml";
 		
+		/**邮件主题*/
+		public static final String EMAIL_SUBJECT="修改邮箱地址";
+		
 		/** 缓存命名空间*/
 		public static final String CACHE_NAMESPACE = "com.ai.opt.uac.updateemail.cache";
 		
@@ -222,7 +234,8 @@ public final class Constants {
 		public static final String CHECK_TYPE_PHONE = "1";
 		/**邮件验证方式*/
 		public static final String CHECK_TYPE_EMAIL = "2";
-		
+		/**邮件主题*/
+		public static final String EMAIL_SUBJECT="绑定邮箱地址";
 		/**邮箱模板路径*/
 		public static final String TEMPLATE_EMAIL_URL = "email/template/uac-bandemail-mail.xml";
 		

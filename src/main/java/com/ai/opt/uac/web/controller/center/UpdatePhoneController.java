@@ -228,6 +228,7 @@ public class UpdatePhoneController {
 			SendEmailRequest emailRequest = new SendEmailRequest();
 			emailRequest.setTomails(new String[] { email });
 			emailRequest.setTemplateRUL(UpdatePhone.TEMPLATE_EMAIL_URL);
+			emailRequest.setSubject(UpdatePhone.EMAIL_SUBJECT);
 			// 验证码
 			String verifyCode = RandomUtil.randomNum(EmailVerifyConstants.VERIFY_SIZE);
 			// 将验证码放入缓存

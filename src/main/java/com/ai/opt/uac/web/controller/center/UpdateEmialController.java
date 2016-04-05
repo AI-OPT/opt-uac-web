@@ -225,6 +225,7 @@ public class UpdateEmialController {
 			SendEmailRequest emailRequest = new SendEmailRequest();
 			emailRequest.setTomails(new String[] { email });
 			emailRequest.setTemplateRUL(UpdateEmail.TEMPLATE_EMAIL_URL);
+			emailRequest.setSubject(UpdateEmail.EMAIL_SUBJECT);
 			// 验证码
 			String verifyCode = RandomUtil.randomNum(EmailVerifyConstants.VERIFY_SIZE);
 			// 将验证码放入缓存
@@ -379,6 +380,7 @@ public class UpdateEmialController {
 			SendEmailRequest emailRequest = new SendEmailRequest();
 			emailRequest.setTomails(new String[] { email });
 			emailRequest.setTemplateRUL(UpdateEmail.TEMPLATE_SETEMAIL_URL);
+			emailRequest.setSubject(UpdateEmail.EMAIL_SUBJECT);
 			// 验证码
 			String verifyCode = RandomUtil.randomNum(EmailVerifyConstants.VERIFY_SIZE);
 			// 将验证码放入缓存
