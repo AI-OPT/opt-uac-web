@@ -98,7 +98,7 @@ public class UpdateEmialController {
 				// 发送手机验证码
 				String isSuccess = sendPhoneVerifyCode(sessionId, userClient);
 				if ("0000".equals(isSuccess)) {
-					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "短信验证码发送成功", "短信验证码发送成功");
+					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "短信验证码发送成功", null);
 					ResponseHeader header = new ResponseHeader();
 					header.setIsSuccess(true);
 					header.setResultCode(ResultCodeConstants.SUCCESS_CODE);
@@ -106,7 +106,7 @@ public class UpdateEmialController {
 					return responseData;
 				} else if ("0002".equals(isSuccess)) {
 					String errorMsg = PhoneVerifyConstants.SEND_VERIFY_MAX_TIME / 60 + "分钟内不可重复发送";
-					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, errorMsg, errorMsg);
+					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, errorMsg, null);
 					ResponseHeader header = new ResponseHeader();
 					header.setIsSuccess(false);
 					header.setResultCode(ResultCodeConstants.REGISTER_VERIFY_ERROR);
@@ -114,7 +114,7 @@ public class UpdateEmialController {
 					responseData.setResponseHeader(header);
 					return responseData;
 				} else {
-					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "短信验证码发送失败", "服务器连接超时");
+					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "短信验证码发送失败", null);
 					ResponseHeader header = new ResponseHeader();
 					header.setIsSuccess(false);
 					header.setResultCode(ResultCodeConstants.ERROR_CODE);
@@ -127,13 +127,13 @@ public class UpdateEmialController {
 				String isSuccess = sendEmailVerifyCode(sessionId, userClient);
 
 				if ("0000".equals(isSuccess)) {
-					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "短信验证码发送成功", "短信验证码发送成功");
+					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "短信验证码发送成功", null);
 					ResponseHeader header = new ResponseHeader(true, ResultCodeConstants.SUCCESS_CODE, "短信验证码发送成功");
 					responseData.setResponseHeader(header);
 					return responseData;
 				} else if ("0002".equals(isSuccess)) {
 					String errorMsg = EmailVerifyConstants.SEND_VERIFY_MAX_TIME / 60 + "分钟内不可重复发送";
-					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, errorMsg, errorMsg);
+					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, errorMsg, null);
 					ResponseHeader header = new ResponseHeader();
 					header.setIsSuccess(false);
 					header.setResultCode(ResultCodeConstants.REGISTER_VERIFY_ERROR);
@@ -141,7 +141,7 @@ public class UpdateEmialController {
 					responseData.setResponseHeader(header);
 					return responseData;
 				} else {
-					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "短信验证码发送失败", "服务器连接超时");
+					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "短信验证码发送失败", null);
 					ResponseHeader header = new ResponseHeader();
 					header.setIsSuccess(false);
 					header.setResultCode(ResultCodeConstants.ERROR_CODE);
@@ -149,14 +149,14 @@ public class UpdateEmialController {
 					return responseData;
 				}
 			} else {
-				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "验证码发送失败", "验证方式不正确");
+				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "验证码发送失败", null);
 				ResponseHeader responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.ERROR_CODE, "验证码发送失败");
 				responseData.setResponseHeader(responseHeader);
 				return responseData;
 			}
 		} else {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "验证码发送失败", "该账号不存在");
-			ResponseHeader responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.ERROR_CODE, "验证码发送失败");
+			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "认证信息失效", "/center/email/confirminfo");
+			ResponseHeader responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.USER_INFO_NULL, "认证信息失效");
 			responseData.setResponseHeader(responseHeader);
 			return responseData;
 		}
@@ -336,7 +336,7 @@ public class UpdateEmialController {
 		SSOClientUser userClient = (SSOClientUser) CacheUtil.getValue(uuid, Constants.UpdateEmail.CACHE_NAMESPACE, SSOClientUser.class);
 		if (userClient == null) {
 			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "身份认证失效", "/center/email/confirminfo");
-			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "认证身份失效");
+			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.USER_INFO_NULL, "认证身份失效");
 			responseData.setResponseHeader(responseHeader);
 			return responseData;
 		} else {
@@ -419,7 +419,7 @@ public class UpdateEmialController {
 		SSOClientUser userClient = (SSOClientUser) CacheUtil.getValue(uuid, Constants.UpdateEmail.CACHE_NAMESPACE, SSOClientUser.class);
 		if (userClient == null) {
 			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "身份认证失效", "/center/email/confirminfo");
-			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "认证身份失效");
+			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.USER_INFO_NULL, "认证身份失效");
 			responseData.setResponseHeader(responseHeader);
 		} else {
 			// 检查验证码

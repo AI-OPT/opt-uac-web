@@ -69,6 +69,9 @@ public final class VerifyConstants {
 		/*** 失败ID*/
 		public static final String ERROR_CODE = "111111";
 		
+		/*** 用户信息没有 失效*/
+		public static final String USER_INFO_NULL = "100000";
+		
 		/** 图片验证码 错误ID*/
         public static final String REGISTER_PICTURE_ERROR = "100001";
         /** 验证码错误ID */

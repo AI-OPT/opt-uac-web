@@ -121,12 +121,18 @@ define('app/retakepassword/confirmInfo', function (require, exports, module) {
 				processing: true,
 				message : "正在处理中，请稍候...",
 				success : function(data) {
-					if(data.responseHeader.resultCode=="100002"){
-						this._controlMsgText("ssmVerifyCodeMsg",data.statusInfo);
-						this._controlMsgAttr("ssmVerifyCodeMsgDiv",2);
-		        	}else{
-		        		this._controlMsgText("ssmVerifyCodeMsg","");
-						this._controlMsgAttr("ssmVerifyCodeMsgDiv",1);
+					var resultCode = data.responseHeader.resultCode;
+					if(resultCode=="100000"){
+						var url = data.data;
+						window.location.href = _base+url;
+		        	}else {
+		        		if(resultCode == "100002"){
+			        		this._controlMsgText("ssmVerifyCodeMsg",data.statusInfo);
+							this._controlMsgAttr("ssmVerifyCodeMsgDiv",2);
+			        	}else{
+			        		this._controlMsgText("ssmVerifyCodeMsg","");
+							this._controlMsgAttr("ssmVerifyCodeMsgDiv",1);
+			        	}
 		        	}
 				},
 				error : function(){

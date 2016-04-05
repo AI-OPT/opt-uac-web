@@ -110,7 +110,7 @@ define('app/retakepassword/resetpassword', function (require, exports, module) {
 				message : "正在处理中，请稍候...",
 				success : function(data) {
 					var status = data.responseHeader.resultCode;
-					if(status == "000000"){
+					if(status == "000000" || status == "100000"){
 						var url = data.data;
 						window.location.href = _base+url;
 					}
