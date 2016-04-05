@@ -84,6 +84,18 @@ define('app/center/email/setEmail', function (require, exports, module) {
 			if(!isOk){
 				return false;
 			}
+			var step = 59;
+            $('#sendPhoneBtn').val('重新发送60');
+            var _res = setInterval(function(){
+                $("#sendPhoneBtn").attr("disabled", true);//设置disabled属性
+                $('#sendPhoneBtn').val('重新发送'+step);
+                step-=1;
+                if(step <= 0){
+                $("#sendPhoneBtn").removeAttr("disabled"); //移除disabled属性
+                $('#sendPhoneBtn').val('获取验证码');
+                clearInterval(_res);//清除setInterval
+                }
+            },1000);
 			ajaxController.ajax({
 				type : "POST",
 				data : {
@@ -95,10 +107,13 @@ define('app/center/email/setEmail', function (require, exports, module) {
 				processing: true,
 				message : "正在处理中，请稍候...",
 				success : function(data) {
-					var url = data.data;
-					if(url!=null || url!=undefined){
-						window.location.href = _base+url;
-					}
+					if(data.responseHeader.resultCode=="100002"){
+						this._controlMsgText("verifyCodeMsg",data.statusInfo);
+						this._controlMsgAttr("verifyCodeMsgDiv",2);
+		        	}else{
+		        		this._controlMsgText("verifyCodeMsg","");
+						this._controlMsgAttr("verifyCodeMsgDiv",1);
+		        	}
 				},
 				error : function(){
 					alert("网络连接超时!");

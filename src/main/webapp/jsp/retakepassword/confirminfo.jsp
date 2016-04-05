@@ -87,16 +87,11 @@
 	          <p class="word" id="verifyName">短信验证码</p>
 	          <p><input type="text" class="int-medium" id="verifyCode"></p>
 	          <p class="huoqu">
-	          	<input id="sendVerify"  type="button" value="获取验证码" >
-	          
-	          <span class="regsiter-note" id="errorSmsMsg">
-		         	<i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
-		         	<span id="showSmsMsg"></span>
-		      </span>
-		      <span class="regsiter-note" id="ssmVerifyCodeMsgDiv" style="display:none">
-			     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
-			     <span id="ssmVerifyCodeMsg"></span>
-			  </span>
+	          	  <input id="sendVerify"  type="button" value="获取验证码" >
+			      <span class="regsiter-note" id="ssmVerifyCodeMsgDiv" style="display:none">
+				     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
+				     <span id="ssmVerifyCodeMsg"></span>
+				  </span>
 			  </p>
           </li>
        	  <li><input id="submitBtn" type="button" class="Submit-btn" value="提  交"></li>

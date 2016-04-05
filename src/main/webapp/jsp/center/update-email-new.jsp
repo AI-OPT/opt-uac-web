@@ -67,7 +67,8 @@
           <li class="user">
           <p class="word">邮箱校验码</p>
           <p><input class="int-medium" id="verifyCode"></p>
-          <p class="huoqu"><A id="sendEmailBtn">获取校验码</A>
+          <p class="huoqu">
+          	<input id="sendEmailBtn"  type="button" value="获取校验码" >
           	<span class="regsiter-note" id="verifyCodeMsgDiv" style="display:none">
 			     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
 			     <span id="verifyCodeMsg"></span>

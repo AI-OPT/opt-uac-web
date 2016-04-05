@@ -28,6 +28,9 @@ public final class VerifyConstants {
         public static final String TEMPLATE_RETAKE_SETPHONE_ID = "7";
         
         public static final String SERVICE_TYPE = "1";
+        
+        /** 邮箱可重复发送时间*/
+        public static final int SEND_VERIFY_MAX_TIME = 60;
 		
 	}
 	
@@ -45,6 +48,9 @@ public final class VerifyConstants {
 		
 		/**邮箱模板路径*/
 		public static final String TEMPLATE_URL = "email/template/uac-retakepassword-mail.xml";
+		
+		/** 邮箱可重复发送时间*/
+        public static final int SEND_VERIFY_MAX_TIME = 60;
 	}
 	
 	public final class PictureVerifyConstants{

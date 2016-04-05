@@ -107,13 +107,13 @@ define('app/center/password/confirmInfo', function (require, exports, module) {
 				processing: true,
 				message : "正在处理中，请稍候...",
 				success : function(data) {
-					if(data.responseHeader.resultCode=="9999"){
-		        		$('#verifyCodeMsg').text("1分钟后可重复发送 ");
-		    			$("#verifyCodeMsgDiv").attr("style","display:block");
-		    			 $('#verifyCode').val("");
-						return false;
+					if(data.responseHeader.resultCode=="100002"){
+						this._controlMsgText("verifyCodeMsg",data.statusInfo);
+						this._controlMsgAttr("verifyCodeMsgDiv",2);
+		        	}else{
+		        		this._controlMsgText("verifyCodeMsg","");
+						this._controlMsgAttr("verifyCodeMsgDiv",1);
 		        	}
-					
 				},
 				error : function(){
 					alert("网络连接超时!");

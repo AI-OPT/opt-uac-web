@@ -34,12 +34,11 @@ import com.ai.opt.uac.api.security.interfaces.IAccountSecurityManageSV;
 import com.ai.opt.uac.api.security.param.AccountPasswordRequest;
 import com.ai.opt.uac.web.constants.Constants;
 import com.ai.opt.uac.web.constants.Constants.ResultCode;
-import com.ai.opt.uac.web.constants.Constants.RetakePassword;
-import com.ai.opt.uac.web.constants.Constants.SMSUtil;
 import com.ai.opt.uac.web.constants.Constants.UpdatePassword;
 import com.ai.opt.uac.web.constants.VerifyConstants;
 import com.ai.opt.uac.web.constants.VerifyConstants.EmailVerifyConstants;
 import com.ai.opt.uac.web.constants.VerifyConstants.PhoneVerifyConstants;
+import com.ai.opt.uac.web.constants.VerifyConstants.ResultCodeConstants;
 import com.ai.opt.uac.web.model.email.SendEmailRequest;
 import com.ai.opt.uac.web.model.retakepassword.AccountData;
 import com.ai.opt.uac.web.model.retakepassword.SafetyConfirmData;
@@ -101,52 +100,54 @@ public class UpdatePasswordController {
 			if (UpdatePassword.CHECK_TYPE_PHONE.equals(checkType)) {
 				// 发送手机验证码
 				String isSuccess = sendPhoneVerifyCode(sessionId, userClient);
-				if (isSuccess.equals("0000")) {
+				if ("0000".equals(isSuccess)) {
 					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "短信验证码发送成功", "短信验证码发送成功");
 					ResponseHeader header = new ResponseHeader();
 					header.setIsSuccess(true);
-					header.setResultCode(ResultCode.SUCCESS_CODE);
+					header.setResultCode(ResultCodeConstants.SUCCESS_CODE);
 					responseData.setResponseHeader(header);
 					return responseData;
-				} else if (isSuccess.equals("0002")) {
-					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "短信验证码发送失败", "重复发送");
+				} else if ("0002".equals(isSuccess)) {
+					String errorMsg = PhoneVerifyConstants.SEND_VERIFY_MAX_TIME/60+"分钟内不可重复发送";
+					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, errorMsg, errorMsg);
 					ResponseHeader header = new ResponseHeader();
 					header.setIsSuccess(false);
-					header.setResultCode(SMSUtil.CACHE_SMS_ERROR_CODE);
-					header.setResultMessage("重复发送");
+					header.setResultCode(ResultCodeConstants.REGISTER_VERIFY_ERROR);
+					header.setResultMessage(errorMsg);
 					responseData.setResponseHeader(header);
 					return responseData;
 				} else {
 					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "短信验证码发送失败", "服务器连接超时");
 					ResponseHeader header = new ResponseHeader();
 					header.setIsSuccess(false);
-					header.setResultCode(ResultCode.ERROR_CODE);
+					header.setResultCode(ResultCodeConstants.ERROR_CODE);
 					responseData.setResponseHeader(header);
 					return responseData;
 				}
 			} else if (UpdatePassword.CHECK_TYPE_EMAIL.equals(checkType)) {
 				// 发送邮件验证码
 				String isSuccess = sendEmailVerifyCode(sessionId, userClient);
-				if (isSuccess.equals("0000")) {
-					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "短信验证码发送成功", "短信验证码发送成功");
+				if ("0000".equals(isSuccess)) {
+					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "邮箱验证码发送成功", "邮箱验证码发送成功");
 					ResponseHeader header = new ResponseHeader();
 					header.setIsSuccess(true);
-					header.setResultCode(ResultCode.SUCCESS_CODE);
+					header.setResultCode(ResultCodeConstants.SUCCESS_CODE);
 					responseData.setResponseHeader(header);
 					return responseData;
-				} else if (isSuccess.equals("0002")) {
-					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "短信验证码发送失败", "重复发送");
+				} else if ("0002".equals(isSuccess)) {
+					String errorMsg = EmailVerifyConstants.SEND_VERIFY_MAX_TIME/60+"分钟内不可重复发送";
+					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, errorMsg, errorMsg);
 					ResponseHeader header = new ResponseHeader();
 					header.setIsSuccess(false);
-					header.setResultCode(SMSUtil.CACHE_SMS_ERROR_CODE);
-					header.setResultMessage("重复发送");
+					header.setResultCode(ResultCodeConstants.REGISTER_VERIFY_ERROR);
+					header.setResultMessage(errorMsg);
 					responseData.setResponseHeader(header);
 					return responseData;
 				} else {
-					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "短信验证码发送失败", "服务器连接超时");
+					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "邮箱验证码发送失败", "服务器连接超时");
 					ResponseHeader header = new ResponseHeader();
 					header.setIsSuccess(false);
-					header.setResultCode(ResultCode.ERROR_CODE);
+					header.setResultCode(ResultCodeConstants.ERROR_CODE);
 					responseData.setResponseHeader(header);
 					return responseData;
 				}
@@ -154,13 +155,15 @@ public class UpdatePasswordController {
 			} else {
 				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "验证码发送失败,验证方式不正确", null);
 				responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.ERROR_CODE, "验证码发送失败");
+				responseData.setResponseHeader(responseHeader);
+				return responseData;
 			}
 		} else {
 			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "验证码发送失败", null);
 			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.ERROR_CODE, "验证码发送失败");
+			responseData.setResponseHeader(responseHeader);
+			return responseData;
 		}
-		responseData.setResponseHeader(responseHeader);
-		return responseData;
 	}
 
 	/**
@@ -173,7 +176,7 @@ public class UpdatePasswordController {
 		String phoneVerifyCode = RandomUtil.randomNum(PhoneVerifyConstants.VERIFY_SIZE);
 		// 查询是否发送过短信
 		String smstimes = "1";
-		String smskey = SMSUtil.CACHE_KEY_SMS_UPDATE_PASSWORD + userClient.getPhone();
+		String smskey = UpdatePassword.CACHE_KEY_SEND_PHONE_NUM + userClient.getPhone();
 		ICacheClient cacheClient = CacheClientFactory.getCacheClient(UpdatePassword.CACHE_NAMESPACE);
 		String times = cacheClient.get(smskey);
 		if (StringUtil.isBlank(times)) {
@@ -181,7 +184,7 @@ public class UpdatePasswordController {
 			String cacheKey = UpdatePassword.CACHE_KEY_VERIFY_PHONE + sessionId;
 			cacheClient.setex(cacheKey, PhoneVerifyConstants.VERIFY_OVERTIME, phoneVerifyCode);
 			// 将发送次数放入缓存
-			cacheClient.setex(smskey, SMSUtil.SMS_VERIFY_TIMES, smstimes);
+			cacheClient.setex(smskey, PhoneVerifyConstants.SEND_VERIFY_MAX_TIME, smstimes);
 			// 设置短息信息
 			List<SMData> dataList = new LinkedList<SMData>();
 			SMData smData = new SMData();
@@ -217,7 +220,7 @@ public class UpdatePasswordController {
 	private String sendEmailVerifyCode(String sessionId, SSOClientUser userClient) {
 		// 查询是否发送过邮件
 		String smstimes = "1";
-		String smskey = SMSUtil.CACHE_KEY_SMS_UPDATE_PASSWORD + userClient.getPhone();
+		String smskey = UpdatePassword.CACHE_KEY_SEND_EMAIL_NUM + userClient.getPhone();
 		ICacheClient cacheClient = CacheClientFactory.getCacheClient(UpdatePassword.CACHE_NAMESPACE);
 		String times = cacheClient.get(smskey);
 		if (StringUtil.isBlank(times)) {
@@ -233,7 +236,7 @@ public class UpdatePasswordController {
 			String cacheKey = UpdatePassword.CACHE_KEY_VERIFY_EMAIL + sessionId;
 			cacheClient.setex(cacheKey, EmailVerifyConstants.VERIFY_OVERTIME, verifyCode);
 			// 将发送次数放入缓存
-			cacheClient.setex(smskey, SMSUtil.SMS_VERIFY_TIMES, smstimes);
+			cacheClient.setex(smskey, EmailVerifyConstants.SEND_VERIFY_MAX_TIME, smstimes);
 			// 超时时间
 			String overTime = ObjectUtils.toString(EmailVerifyConstants.VERIFY_OVERTIME / 60);
 			emailRequest.setData(new String[] { nickName, verifyCode, overTime });
@@ -273,7 +276,7 @@ public class UpdatePasswordController {
 			return pictureCheck;
 		}
 		// 检查短信或邮箱验证码
-		if (RetakePassword.CHECK_TYPE_PHONE.equals(confirmType)) {
+		if (UpdatePassword.CHECK_TYPE_PHONE.equals(confirmType)) {
 			// 检查短信验证码
 			String verifyCodeCache = cacheClient.get(UpdatePassword.CACHE_KEY_VERIFY_PHONE + sessionId);
 			String verifyCode = safetyConfirmData.getVerifyCode();
@@ -282,7 +285,7 @@ public class UpdatePasswordController {
 			if (!VerifyConstants.ResultCodeConstants.SUCCESS_CODE.equals(phoneResultCode)) {
 				return phoneCheck;
 			}
-		} else if (RetakePassword.CHECK_TYPE_EMAIL.equals(confirmType)) {
+		} else if (UpdatePassword.CHECK_TYPE_EMAIL.equals(confirmType)) {
 			// 检查邮箱验证码
 			String verifyCodeCache = cacheClient.get(UpdatePassword.CACHE_KEY_VERIFY_EMAIL + sessionId);
 			String verifyCode = safetyConfirmData.getVerifyCode();
@@ -338,7 +341,7 @@ public class UpdatePasswordController {
 			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "身份认证失效", "/center/password/confirminfo");
 			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "认证身份失效");
 		} else {
-			// 更新邮箱
+			// 更新密码
 			IAccountSecurityManageSV accountSecurityManageSV = DubboConsumerFactory.getService("iAccountSecurityManageSV");
 			AccountPasswordRequest accountPasswordRequest = new AccountPasswordRequest();
 			accountPasswordRequest.setAccountId(userClient.getAccountId());
@@ -347,7 +350,7 @@ public class UpdatePasswordController {
 			BaseResponse resultData = accountSecurityManageSV.setPasswordData(accountPasswordRequest);
 			if (ResultCode.SUCCESS_CODE.equals(resultData.getResponseHeader().getResultCode())) {
 				String newuuid = UUIDUtil.genId32();
-				CacheUtil.setValue(newuuid, Constants.UUID.OVERTIME, userClient, Constants.UpdateEmail.CACHE_NAMESPACE);
+				CacheUtil.setValue(newuuid, Constants.UUID.OVERTIME, userClient, Constants.UpdatePassword.CACHE_NAMESPACE);
 				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "修改密码成功", "/center/password/success?" + Constants.UUID.KEY_NAME + "=" + newuuid);
 				responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "修改密码成功");
 				CacheUtil.deletCache(uuid, Constants.UpdatePassword.CACHE_NAMESPACE);
