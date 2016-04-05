@@ -53,10 +53,17 @@ define('app/center/bandemail/confirmInfo', function (require, exports, module) {
 	   		$("#updateEmail").addClass("current");
 			$("#confirmType").val("1");
 			$("#confirmTypeName").html("已验证手机");
-			$("#changeConfirmType").html("通过已验证邮箱验证");
 			$("#verifyName").html("短信校验码");
 			$("#email").attr("style","display:none");
 			$("#phone").removeAttr("style");
+			var email = $("#email").val();
+			if(email != "" && email != null && email != undefined){
+				$("#changeConfirmType").removeAttr("disabled");
+				$("#changeConfirmType").html("通过已验证邮箱验证");
+			}else{
+				$("#changeConfirmType").attr("disabled", true);
+				$("#changeConfirmType").html("");
+			}
 		},
 		//身份认证方式改变触发事件
 		_changeShowViewByType:function(){
