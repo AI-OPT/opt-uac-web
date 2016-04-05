@@ -54,6 +54,8 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 	   		 $("#errorNickNameMsg").attr("style","display:none");
 	   		 $("#errorTenMsg").attr("style","display:none");
 	   		 $("#errorTypeMsg").attr("style","display:none");
+	   		 //左侧菜单显示样式
+	   		$("#baseInfo").addClass("current");
 		},
 		_hideErroText: function(){
 			var _this = this;
@@ -161,7 +163,7 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 					processing: true,
 					message : "正在处理中，请稍候...",
 					success : function(data) {
-						window.location.href="../center/baseInfo/getAccountInfo"
+						window.location.href=_base+"/center/baseInfo/getAccountInfo"
 						location.reload();
 					},
 					error: function(XMLHttpRequest, textStatus, errorThrown) {

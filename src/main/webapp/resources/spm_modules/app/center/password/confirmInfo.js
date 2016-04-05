@@ -49,6 +49,8 @@ define('app/center/password/confirmInfo', function (require, exports, module) {
 		},
 		//初始化展示页面
 		_initShowView:function(){
+			 //左侧菜单显示样式
+	   		$("#updatePassword").addClass("current");
 			$("#confirmType").val("1");
 			$("#confirmTypeName").html("已验证手机");
 			$("#changeConfirmType").html("通过已验证邮箱验证");

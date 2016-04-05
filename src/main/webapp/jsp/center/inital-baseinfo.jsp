@@ -17,7 +17,9 @@
 		var pager = new BaseInfoPager();
 		pager.render();
 	});
+	
 })(); 
+
 </script>
 </head>
 

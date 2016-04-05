@@ -28,9 +28,24 @@ define('app/center/email/setEmail', function (require, exports, module) {
     		"blur [id='email']":"_checkEmail",
     		"blur [id='verifyCode']":"_checkVerifyCode"
         },
+        init: function(){
+        	_showClass();
+        	
+        },
     	//重写父类
     	setup: function () {
     		UpdateEmailPager.superclass.setup.call(this);
+    		this._renderClass();
+    	},
+    	//加载账户数据
+    	_renderClass: function(){
+			var _this = this;
+			//初始化展示页面
+			_this._showClass();
+		},
+    	_showClass: function(){
+    		 //左侧菜单显示样式
+	   		$("#setEmail").addClass("current");
     	},
     	//检查新密码格式
 		_checkEmail: function(){
