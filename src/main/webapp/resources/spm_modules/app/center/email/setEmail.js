@@ -66,6 +66,53 @@ define('app/center/email/setEmail', function (require, exports, module) {
 				return false;
 			}
 		},
+		//检查新邮箱与原邮箱不同
+		_checkEmailDiffOld: function(){
+			var _this = this;
+			var isOk;
+			ajaxController.ajax({
+				type : "POST",
+				data : {
+					"email": function(){
+						return $("#email").val()
+					}
+				},
+				url :_base+"/center/email/checkEmailDiffOld?k="+uuid,
+				async: false,
+				processing: true,
+				message : "正在处理中，请稍候...",
+				success : function(data) {
+					var resultCode = data.responseHeader.resultCode;
+					if(resultCode == "100000"){
+						isOk = false;
+						var url = data.data;
+						window.location.href = _base+url;
+					}else{
+						isOk = true;
+						if(resultCode=="100002"){
+							_this._controlMsgText("verifyCodeMsg",data.statusInfo);
+							_this._controlMsgAttr("verifyCodeMsgDiv",2);
+							isOk = false;
+				        }else{
+				        	_this._controlMsgText("verifyCodeMsg","");
+				        	_this._controlMsgAttr("verifyCodeMsgDiv",1);
+				        } 
+						if(resultCode=="100006"){
+				        	_this._controlMsgText("emailMsg",data.statusInfo);
+							_this._controlMsgAttr("emailMsgDiv",2);
+							isOk = false;
+				        }else{
+				        	_this._controlMsgText("emailMsg","");
+				        	_this._controlMsgAttr("emailMsgDiv",1);
+				        }
+					}
+				},
+				error : function(){
+					alert("网络连接超时!");
+				}
+			});
+			return isOk;
+		},
 		//检查验证码
 		_checkVerifyCode: function(){
 			var verifyCode = jQuery.trim($("#verifyCode").val());
@@ -99,6 +146,10 @@ define('app/center/email/setEmail', function (require, exports, module) {
 			if(!isOk){
 				return false;
 			}
+			var isDiffOk = this._checkEmailDiffOld();
+			if(!isDiffOk){
+				return false;
+			}else{
 			var step = 59;
             $('#sendPhoneBtn').val('重新发送60');
             var _res = setInterval(function(){
@@ -140,6 +191,7 @@ define('app/center/email/setEmail', function (require, exports, module) {
 					alert("网络连接超时!");
 				}
 			});
+			}
 		},
 		//更新邮箱
 		_updateEmail:function(){
@@ -147,6 +199,10 @@ define('app/center/email/setEmail', function (require, exports, module) {
 			var checkEmail = this._checkEmail();
 			var checkVerify = this._checkVerifyCode();
 			if(!(checkEmail&&checkVerify)){
+				return false;
+			}
+			var isDiffOk = this._checkEmailDiffOld();
+			if(!isDiffOk){
 				return false;
 			}
 			ajaxController.ajax({
@@ -165,12 +221,16 @@ define('app/center/email/setEmail', function (require, exports, module) {
 						if(statusCode == "100002"){
 							_this._controlMsgText("verifyCodeMsg",msg);
 							_this._controlMsgAttr("verifyCodeMsgDiv",2);
-						}if(statusCode == "100006"){
-							_this._controlMsgText("emailMsg",msg);
-							_this._controlMsgAttr("emailMsgDiv",2);
 						}else{
 							_this._controlMsgText("verifyCodeMsg","");
 							_this._controlMsgAttr("verifyCodeMsgDiv",1);
+						}
+						if(statusCode == "100006"){
+							_this._controlMsgText("emailMsg",msg);
+							_this._controlMsgAttr("emailMsgDiv",2);
+						}else{
+							_this._controlMsgText("emailMsg","");
+							_this._controlMsgAttr("emailMsgDiv",1);
 						}
 					}
 				},

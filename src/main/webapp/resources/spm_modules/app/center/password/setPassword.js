@@ -65,7 +65,7 @@ define('app/center/password/setPassword', function (require, exports, module) {
 				return false;
 			}
 			var confirmPassword = $("#confirmPassword").val();
-			var newPassword = $("#newPassword").val();
+			var newPassword = $("#password").val();
 			if(confirmPassword == "" || confirmPassword == null || confirmPassword == undefined){
 				this._controlMsgText("confirmPwdMsg","请输入确认密码");
 				this._controlMsgAttr("confirmPwdMsgDiv",2);
@@ -99,7 +99,7 @@ define('app/center/password/setPassword', function (require, exports, module) {
 			var _this = this;
 			var checkNewPwd = this._checkNewPassword();
     		var checkConfirmPwd = this._checkConfirmPassword();
-    		var newPassword = $("#newPassword").val();
+    		var password = $("#password").val();
     		if(!(checkNewPwd&&checkConfirmPwd)){
     			return false;
     		}
@@ -114,6 +114,15 @@ define('app/center/password/setPassword', function (require, exports, module) {
 						if(status == "000000" || status == "100000"){
 							var url = data.data;
 							window.location.href = _base+url;
+						}else {
+							var msg = data.statusInfo;
+							if(status == "100003"){
+								_this._controlMsgText("newPwdMsg",msg);
+								_this._controlMsgAttr("newPwdMsgDiv",2);
+							}else{
+								_this._controlMsgText("newPwdMsg","");
+								_this._controlMsgAttr("newPwdMsgDiv",1);
+							}
 						}
 					},
 					error : function(){

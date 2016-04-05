@@ -64,20 +64,6 @@
 			     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
 			     <span id="newPwdMsg"></span>
 			  </span><p>
-	          <div class="Set-password">
-		          <p class="low">
-		          <span class="f00"></span>
-		          <span>低</span>
-		          </p>
-		           <p class="in">
-		          <span class="eb6100"></span>
-		          <span>中</span>
-		          </p>
-		          <p class="gao">
-		          <span class="green"></span>
-		          <span>高</span>
-		          </p>
-          	</div>
           </li>
           
           <li class="user">
