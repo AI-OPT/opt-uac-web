@@ -23,7 +23,70 @@
 		el: '#togglePassword'
 	});
 }); 
-
+//判断输入密码的类型  
+function CharMode(iN){  
+if (iN>=48 && iN <=57) //数字  
+return 1;  
+if (iN>=65 && iN <=90) //大写  
+return 2;  
+if (iN>=97 && iN <=122) //小写  
+return 4;  
+else  
+return 8;   
+}  
+//bitTotal函数  
+//计算密码模式  
+function bitTotal(num){  
+modes=0;  
+for (i=0;i<4;i++){  
+if (num & 1) modes++;  
+num>>>=1;  
+}  
+return modes;  
+}  
+//返回强度级别  
+function checkStrong(sPW){  
+if (sPW.length<=8)  
+return 0; //密码太短  
+Modes=0;  
+for (i=0;i<sPW.length;i++){  
+//密码模式  
+Modes|=CharMode(sPW.charCodeAt(i));  
+}  
+return bitTotal(Modes);  
+}  
+ 
+//显示颜色  
+function pwStrength(pwd){  
+O_color="#eeeeee";  
+L_color="#FF0000";  
+M_color="#FF9900";  
+H_color="#33CC00";  
+if (pwd==null||pwd==''){  
+Lcolor=Mcolor=Hcolor=O_color;  
+}  
+else{  
+S_level=checkStrong(pwd);  
+switch(S_level) {  
+case 0:  
+Lcolor=Mcolor=Hcolor=O_color;  
+case 1:  
+Lcolor=L_color;  
+Mcolor=Hcolor=O_color;  
+break;  
+case 2:  
+Lcolor=Mcolor=M_color;  
+Hcolor=O_color;  
+break;  
+default:  
+Lcolor=Mcolor=Hcolor=H_color;  
+}  
+}  
+document.getElementById("strength_L").style.background=Lcolor;  
+document.getElementById("strength_M").style.background=Mcolor;  
+document.getElementById("strength_H").style.background=Hcolor;  
+return;  
+}  
 </script>
 </head>
 
@@ -52,14 +115,28 @@
 		         </li>
 		         
 		         <li class="password">
-		         	<input type="password" name="password" id="password"class="int-xxlarge" placeholder="密码" >
+		         	<input type="password" name="password" id="password"class="int-xxlarge" placeholder="密码" onKeyUp=pwStrength(this.value) onBlur=pwStrength(this.value)>
 		         	<i class="icon-eye-open" id="togglePassword"></i>
 		         	<span class="regsiter-note" id="errorPawMsg">
 		         		<i class="icon-caret-left"></i>
 		         		<img src="${_base}/theme/baas/images/error.png"><span id="showPawMsg"></span>
 		         	</span>
+		         	<div class="regsiter-set-password">
+				          <p class="low" id="strength_L">
+					          <span class="f00" id=""></span>
+					          <span>低</span>
+				          </p>
+				           <p class="in" id="strength_M">
+					          <span class="eb6100"></span>
+					          <span>中</span>
+				          </p>
+				          <p class="gao" id="strength_H">
+					          <span class="green"></span>
+					          <span>高</span>
+				          </p>
+	          			</div>	
 		         </li>
-		         
+		         	
 		         <li class="identifying">
 		         	<input type="text" class="int-xlarge-identifying" placeholder="验证码" id="pictureVitenfy">
 		         	<span ><A href="#"><img src="${_base}/reg/getImageVerifyCode" id="randomImg"></A></span>

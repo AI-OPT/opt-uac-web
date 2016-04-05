@@ -153,6 +153,7 @@ define('app/register/register-email', function (require, exports, module) {
     			        	}else if(data.responseHeader.resultCode=="10004"){
     			        		$("#showErroeEmIdentify").html("邮箱已被其他账户绑定 ");
     		    				$("#errorEmIdentifyMsg").attr("style","display:block");
+    		    				$('#identifyCode').val("");
     		    				return false;
     			        	}else if(data.responseHeader.resultCode=="1100"){
     			        		window.location.href=_base+"/reg/toRegister";
