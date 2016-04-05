@@ -89,9 +89,16 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 				$("#flag").val("0");
 				return false;
 			}
-			if(nickNmae!=""&&(!bk)){
-				if(/^\S{4,40}/.test(nickNmae)){
-					$("#flag").val("1");
+			if(nickNmae!=""&&(bk)){
+				if(/^\S*$/.test(nickNmae)){
+					if(/^\S{4,40}/.test(nickNmae)){
+						$("#flag").val("1");
+					}else{
+						$('#showNickNameMsg').text("4~40位字符，不能包含空格");
+		    			$("#errorNickNameMsg").attr("style","display:block");
+						$("#flag").val("0");
+						return false;
+					}
 				}else{
 					$('#showNickNameMsg').text("4~40位字符，不能包含空格");
 	    			$("#errorNickNameMsg").attr("style","display:block");
@@ -107,8 +114,15 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 	    			$("#errorTenMsg").attr("style","display:block");
 					$("#flag").val("0");
 					return false;
-				}else if(/^\S{4,40}/.test(tenantName)){
-					$("#flag").val("1");
+				}else if(/^\S*$/.test(tenantName)){
+					 if(/^\S{4,40}/.test(tenantName)){
+							$("#flag").val("1");
+						}else{
+							$('#showTenMsg').text("4~40位字符，不能包含空格");
+			    			$("#errorTenMsg").attr("style","display:block");
+							$("#flag").val("0");
+							return false;
+						}
 				}else{
 					$('#showTenMsg').text("4~40位字符，不能包含空格");
 	    			$("#errorTenMsg").attr("style","display:block");
