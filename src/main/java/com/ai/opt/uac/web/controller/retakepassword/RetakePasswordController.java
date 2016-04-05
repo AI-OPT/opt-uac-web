@@ -200,11 +200,12 @@ public class RetakePasswordController {
 					responseData.setResponseHeader(header);
 					return responseData;
 				} else if ("0002".equals(isSuccess)) {
-					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "短信验证码发送失败", "重复发送");
+					String errorMsg = PhoneVerifyConstants.SEND_VERIFY_MAX_TIME/60+"分钟内不可重复发送";
+					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, errorMsg, errorMsg);
 					ResponseHeader header = new ResponseHeader();
 					header.setIsSuccess(false);
 					header.setResultCode(ResultCodeConstants.REGISTER_VERIFY_ERROR);
-					header.setResultMessage("重复发送");
+					header.setResultMessage(errorMsg);
 					responseData.setResponseHeader(header);
 					return responseData;
 				} else {
@@ -244,11 +245,16 @@ public class RetakePasswordController {
 				}
 			} else {
 				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "验证码发送失败", "验证方式不正确");
+				ResponseHeader responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.ERROR_CODE, "验证码发送失败");
+				responseData.setResponseHeader(responseHeader);
+				return responseData;
 			}
 		} else {
 			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "验证码发送失败", "该账号不存在");
+			ResponseHeader responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.ERROR_CODE, "验证码发送失败");
+			responseData.setResponseHeader(responseHeader);
+			return responseData;
 		}
-		return responseData;
 	}
 
 	/**

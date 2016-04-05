@@ -105,11 +105,12 @@ define('app/center/phone/setPhone', function (require, exports, module) {
 				processing: true,
 				message : "正在处理中，请稍候...",
 				success : function(data) {
-					if(data.responseHeader.resultCode=="9999"){
-		        		$('#showSmsMsg').text("1分钟后可重复发送 ");
-		    			$("#errorSmsMsg").attr("style","display:block");
-		    			$("#verifyCode").val("");
-						return false;
+					if(data.responseHeader.resultCode=="100002"){
+						this._controlMsgText("verifyCodeMsg",data.statusInfo);
+						this._controlMsgAttr("verifyCodeMsgDiv",2);
+		        	}else{
+		        		this._controlMsgText("verifyCodeMsg","");
+						this._controlMsgAttr("verifyCodeMsgDiv",1);
 		        	}
 				},
 				error : function(){

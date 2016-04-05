@@ -212,7 +212,7 @@ public final class Constants {
         /** 身份认证发送手机次数key*/
         public static final String CACHE_KEY_CONFIRM_SEND_PHONE_NUM = "update-email-confirm-send-phone-num";
         /** 修改邮箱发送手机次数key*/
-        public static final String CACHE_KEY_UPDATE_SEND_PHONE_NUM = "update-email-update-send-phone-num";
+        public static final String CACHE_KEY_UPDATE_SEND_EMAIL_NUM = "update-email-update-send-phone-num";
 	}
     public static final class SMSUtil{
         private SMSUtil(){}
