@@ -5,9 +5,9 @@
     <div class="user-cnt">
      <p><img src="${_baasBase }/images/login_user.png"><span>你好，古珍珍</span><i class="icon-angle-down"></i></p>
      <ul style="display:none;">
-      <li><a href="#">个人中心</a></li>
-      <li><a href="#">修改密码</a></li>
-      <li><a href="#">退出</a></li>
+      <li><a href="${_base}/center/baseInfo/getAccountInfo">个人中心</a></li>
+      <li><a href="${_base}/center/password/confirminfo">修改密码</a></li>
+      <li><a href="${_base}/logout">退出</a></li>
      </ul>
     </div>
    </div>
