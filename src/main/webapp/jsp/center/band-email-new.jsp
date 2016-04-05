@@ -51,22 +51,33 @@
 </div>
  </div><!--步骤结束-->
          
-     <!--表单验证-->
+    <!--表单验证-->
     <div class="Retrieve-cnt">
-            <ul>
-		  <li class="user">
-          <p class="word">邮箱地址</p>
-          <p><input type="text" class="int-medium" placeholder=""></p>
-          <p class="huoqu"><a href="#">获取邮箱校验码</a></p>
-         </li>
+         <ul>
          <li class="user">
+          <p class="word">邮箱地址</p>
+          <p><input class="int-medium" id="email">
+          	<span class="regsiter-note" id="emailMsgDiv" style="display:none">
+			     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
+			     <span id="emailMsg"></span>
+		     </span>
+          </p>
+          </li>
+          
+          <li class="user">
           <p class="word">邮箱校验码</p>
-          <p><input type="text" class="int-medium" placeholder=""><span class="regsiter-note"><i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/correct.png">密码必须由字母和数字/符号组成，不能低于6个字符</span></p>
-         </li>
-         
-         
-         <li><input type="button" class="Submit-btn" value="提 交" onclick="location.href='邮箱绑定-完成.html';"></li>
+          <p><input class="int-medium" id="verifyCode"></p>
+          <p class="huoqu">
+          	<input id="sendEmailBtn"  type="button" value="获取校验码" >
+          	<span class="regsiter-note" id="verifyCodeMsgDiv" style="display:none">
+			     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
+			     <span id="verifyCodeMsg"></span>
+		     </span>
+          </p>
+          </li>
        
+         
+         <li><input id="submitBtn" type="button" class="Submit-btn" value="提  交"></li>
           </ul>
         </div>
     
@@ -74,5 +85,16 @@
    
   </div>
   <%@ include file="/inc/foot.jsp"%>
+  <script type="text/javascript">
+   		var uuid = "${uuid}";
+		(function() {
+			seajs.use([ 'app/center/bandemail/setEmail' ], function(BandEmailPager) {
+				var pager = new BandEmailPager({
+					element : document.body
+				});
+				pager.render();
+			});
+		})(); 
+  </script>
 </body>
 </html>

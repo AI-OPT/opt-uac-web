@@ -447,8 +447,8 @@ public class UpdateEmialController {
 					responseData.setResponseHeader(responseHeader);
 					CacheUtil.deletCache(uuid, Constants.UpdateEmail.CACHE_NAMESPACE);
 				} else if (ResultCode.EMAIL_NOTONE_ERROR.equals(resultData.getResponseHeader().getResultCode())) {
-					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "该邮箱已经被注册，请使用其它邮箱", null);
-					responseHeader = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "该邮箱已经被注册，请使用其它邮箱");
+					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "该邮箱已经被注册，请使用其它邮箱", null);
+					responseHeader = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.EMAIL_ERROR, "该邮箱已经被注册，请使用其它邮箱");
 					responseData.setResponseHeader(responseHeader);
 				} else {
 					String resultMessage = resultData.getResponseHeader().getResultMessage();

@@ -102,12 +102,12 @@ define('app/center/email/setEmail', function (require, exports, module) {
 			var step = 59;
             $('#sendPhoneBtn').val('重新发送60');
             var _res = setInterval(function(){
-                $("#sendPhoneBtn").attr("disabled", true);//设置disabled属性
-                $('#sendPhoneBtn').val('重新发送'+step);
+                $("#sendEmailBtn").attr("disabled", true);//设置disabled属性
+                $('#sendEmailBtn').val('重新发送'+step);
                 step-=1;
                 if(step <= 0){
-                $("#sendPhoneBtn").removeAttr("disabled"); //移除disabled属性
-                $('#sendPhoneBtn').val('获取验证码');
+                $("#sendEmailBtn").removeAttr("disabled"); //移除disabled属性
+                $('#sendEmailBtn').val('获取验证码');
                 clearInterval(_res);//清除setInterval
                 }
             },1000);
@@ -165,6 +165,9 @@ define('app/center/email/setEmail', function (require, exports, module) {
 						if(statusCode == "100002"){
 							_this._controlMsgText("verifyCodeMsg",msg);
 							_this._controlMsgAttr("verifyCodeMsgDiv",2);
+						}if(statusCode == "100006"){
+							_this._controlMsgText("emailMsg",msg);
+							_this._controlMsgAttr("emailMsgDiv",2);
 						}else{
 							_this._controlMsgText("verifyCodeMsg","");
 							_this._controlMsgAttr("verifyCodeMsgDiv",1);

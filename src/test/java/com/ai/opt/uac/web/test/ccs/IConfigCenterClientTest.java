@@ -36,11 +36,12 @@ public class IConfigCenterClientTest {
         // 缓存空间
         String cachesnsConfig = "{\"com.ai.opt.uac.sso.unicache\":\"" + uacRedisHost
                 + "\",\"com.ai.opt.uac.register.cache\":\"" + uacRedisHost
-                + "\",\"com.ai.opt.uac.retakepassword.cache\":\"" + uacRedisHost
-                + "\",\"com.ai.opt.uac.updateemail.cache\":\"" + uacRedisHost
-                + "\",\"com.ai.opt.uac.updatephone.cache\":\"" + uacRedisHost
-                + "\",\"com.ai.opt.uac.updatepassword.cache\":\"" + uacRedisHost
+                + "\",\""+Constants.RetakePassword.CACHE_NAMESPACE+"\":\"" + uacRedisHost
+                + "\",\""+Constants.UpdateEmail.CACHE_NAMESPACE+"\":\"" + uacRedisHost
+                + "\",\""+Constants.UpdatePhone.CACHE_NAMESPACE+"\":\"" + uacRedisHost
+                + "\",\""+Constants.UpdatePassword.CACHE_NAMESPACE+"\":\"" + uacRedisHost
                 + "\",\""+Constants.LoginConstant.CACHE_NAMESPACE+"\":\"" + uacRedisHost
+                + "\",\""+Constants.BandEmail.CACHE_NAMESPACE+"\":\"" + uacRedisHost
                 + "\",\"com.ai.opt.uni.session.sessionclient.uacweb\":\"" + uacRedisHost + "\"}";
         
         StringBuilder bu=new StringBuilder();

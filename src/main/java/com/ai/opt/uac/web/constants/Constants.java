@@ -214,6 +214,40 @@ public final class Constants {
         /** 修改邮箱发送手机次数key*/
         public static final String CACHE_KEY_UPDATE_SEND_EMAIL_NUM = "update-email-update-send-phone-num";
 	}
+    
+    public static final class BandEmail{
+		private BandEmail(){}
+		
+		/**手机验证方式*/
+		public static final String CHECK_TYPE_PHONE = "1";
+		/**邮件验证方式*/
+		public static final String CHECK_TYPE_EMAIL = "2";
+		
+		/**邮箱模板路径*/
+		public static final String TEMPLATE_EMAIL_URL = "email/template/uac-bandemail-mail.xml";
+		
+		/**邮箱模板路径*/
+		public static final String TEMPLATE_SETEMAIL_URL = "email/template/uac-setemail-mail.xml";
+		
+		/** 缓存命名空间*/
+		public static final String CACHE_NAMESPACE = "com.ai.opt.uac.bandemail.cache";
+		
+		/** 邮箱验证码缓存key*/
+		public static final String CACHE_KEY_VERIFY_EMAIL = "band-email-verify-email";
+		/** 设置新邮箱验证码缓存key*/
+		public static final String CACHE_KEY_VERIFY_SETEMAIL = "band-setemail-verify-email";
+		/** 手机验证码缓存key*/
+		public static final String CACHE_KEY_VERIFY_PHONE = "band-email-verify-phone";
+		/** 图片验证码缓存key*/
+		public static final String CACHE_KEY_VERIFY_PICTURE = "band-email-verify-picture";
+		/** 身份认证发送邮箱次数key*/
+        public static final String CACHE_KEY_CONFIRM_SEND_EMAIL_NUM = "band-email-confirm-send-email-num";
+        /** 身份认证发送手机次数key*/
+        public static final String CACHE_KEY_CONFIRM_SEND_PHONE_NUM = "band-email-confirm-send-phone-num";
+        /** 修改邮箱发送手机次数key*/
+        public static final String CACHE_KEY_UPDATE_SEND_EMAIL_NUM = "band-email-update-send-phone-num";
+	}
+    
     public static final class SMSUtil{
         private SMSUtil(){}
         /** 注册时手机发送次数key*/
