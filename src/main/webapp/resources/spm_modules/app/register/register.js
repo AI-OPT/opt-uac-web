@@ -224,7 +224,7 @@ define('app/register/register', function (require, exports, module) {
     			        	}else if(data.responseHeader.resultCode=="10003"){
     			        		$('#showPhoneMsg').text("手机号码已注册");
     							$("#errorPhoneMsg").attr("style","display:block");
-    							
+    							$('#phoneVerifyCode').val("");
     							return false;
     			        	}else if(data.responseHeader.resultCode=="000000"){
     			        		$("#errorSmsMsg").attr("style","display:none");

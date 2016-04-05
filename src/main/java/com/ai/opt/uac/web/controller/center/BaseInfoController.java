@@ -121,6 +121,7 @@ public class BaseInfoController {
             //修改客户端存储的昵称、tenantID
             userClient.setNickName(data.getNickName());
             userClient.setTenantId(re.getTenantId());
+            request.getSession().setAttribute(SSOClientConstants.USER_SESSION_KEY, userClient);
             responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "成功",
                         null);
         } catch (Exception e) {
