@@ -24,41 +24,63 @@ define('app/center/phone/setPhone', function (require, exports, module) {
     	events: {
     		//key的格式: 事件+空格+对象选择器;value:事件方法
     		"click [id='sendPhoneBtn']":"_sendPhone",
-    		"click [id='submitBtn']":"_updatePhone"
-        },
-        init: function(){
-        	_hideErroText();
+    		"click [id='submitBtn']":"_updatePhone",
+    		"blur [id='phone']":"_checkPhone",
+    		"blur [id='verifyCode']":"_checkVerifyCode"
         },
     	//重写父类
     	setup: function () {
     		UpdatePhonePager.superclass.setup.call(this);
-    		this._hideErroText();
     	},
-    	_checkIs: function(){
-    		var phone=$("#phone");
-    		if(phone==""){
-    			$('#showPhoMsg').text("请输入手机号码 ");
-    			$("#errorPhoMsg").attr("style","display:block");
-				return false;
-    		}else if( /^1\d{10}$/.test(phone){
-    			$("#errorPhoMsg").attr("style","display:none");
-    		}else{
-    			$('#showPhoMsg').text("手机号码格式错误 ");
-    			$("#errorPhoMsg").attr("style","display:block");
-				return false;
+    	_checkPhone: function(){
+    		var phone=jQuery.trim($("#phone").val());
+    		var msg = "";
+    		if(phone==""|| phone == null || phone == undefined){
+    			msg ="请输入手机号码 ";
+    		}else if(!/^1\d{10}$/.test(phone)){
+    			msg = "手机号码格式错误";
     		}
+    		if(msg == ""){
+				this._controlMsgText("phoneMsg","");
+				this._controlMsgAttr("phoneMsgDiv",1);
+				return true;
+			}else{
+				this._controlMsgText("phoneMsg",msg);
+				this._controlMsgAttr("phoneMsgDiv",2);
+				return false;
+			}
     	},
-    	_hideInfo: function(){
-	   		 $("#errorSmsMsg").attr("style","display:none");
-	   		 $("#errorPhoMsg").attr("style","display:none");
-    	},
-    	_hideErroText: function(){
-			var _this = this;
-			//初始化展示业务类型
-			_this._hideInfo();
+    	//检查验证码
+		_checkVerifyCode: function(){
+			var verifyCode = jQuery.trim($("#verifyCode").val());
+			if(verifyCode == "" || verifyCode == null || verifyCode == undefined){
+				this._controlMsgText("verifyCodeMsg","请输入验证码");
+				this._controlMsgAttr("verifyCodeMsgDiv",2);
+				return false;
+			}else{
+				this._controlMsgText("verifyCodeMsg","");
+				this._controlMsgAttr("verifyCodeMsgDiv",1);
+				return true;
+			}
+		},
+		_controlMsgText(id,msg){
+			var doc = document.getElementById(id+"");
+			doc.innerText=msg;
+		},
+		//控制显隐属性 1:隐藏 2：显示
+		_controlMsgAttr(id,flag){
+			var doc = document.getElementById(id+"");
+			if(flag == 1){
+				doc.setAttribute("style","display:none");
+			}else if(flag == 2){
+				doc.setAttribute("style","display");
+			}
 		},
     	_sendPhone:function(){
-    		alert("kkk");
+    		var isOk = this._checkPhone();
+    		if(!isOk){
+    			return false;
+    		}
     		var step = 59;
             $('#sendPhoneBtn').val('重新发送60');
             var _res = setInterval(function(){
@@ -98,6 +120,11 @@ define('app/center/phone/setPhone', function (require, exports, module) {
 		//更新手机
 		_updatePhone:function(){
 			var _this = this;
+			var checkPhone = this._checkPhone();
+			var checkVerify = this._checkVerifyCode();
+			if(!(checkPhone&&checkVerify)){
+				return false;
+			}
 			ajaxController.ajax({
 				type : "POST",
 				data : _this._getSafetyConfirmData(),
@@ -105,12 +132,19 @@ define('app/center/phone/setPhone', function (require, exports, module) {
 				processing: true,
 				message : "正在处理中，请稍候...",
 				success : function(data) {
-					var statusCode = data.statusCode;
+					var statusCode = data.responseHeader.resultCode;
 					var url = data.data;
-					if(statusCode == "1"){
+					if(statusCode == "000000"){
 						window.location.href = _base+url;
-					}else{
-						alert(data.statusInfo);
+					}else {
+						var msg = data.statusInfo;
+						if(statusCode == "100002"){
+							_controlMsgText("verifyCodeMsg",msg);
+							_controlMsgAttr("verifyCodeMsgDiv",2);
+						}else{
+							_controlMsgText("verifyCodeMsg","");
+							_controlMsgAttr("verifyCodeMsgDiv",1);
+						}
 					}
 				},
 				error : function(){

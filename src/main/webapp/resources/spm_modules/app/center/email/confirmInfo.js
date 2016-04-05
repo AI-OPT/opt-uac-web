@@ -27,7 +27,9 @@ define('app/center/email/confirmInfo', function (require, exports, module) {
     		"click [id='sendVerify']":"_sendVerify",
     		"click [id='random_img']":"_getImageRandomCode",
     		"click [id='changeImage']":"_getImageRandomCode",
-    		"click [id='changeConfirmType']":"_changeShowViewByType"
+    		"click [id='changeConfirmType']":"_changeShowViewByType",
+    		"blur [id='pictureVerifyCode']":"_checkPictureVerifyCode",
+    		"blur [id='verifyCode']":"_checkVerifyCode"
         },
         init: function(){
         	_initShowView();
@@ -99,9 +101,54 @@ define('app/center/email/confirmInfo', function (require, exports, module) {
 				}
 			});
 		},
+		//检查验证码
+		_checkVerifyCode: function(){
+			var verifyCode = jQuery.trim($("#verifyCode").val());
+			if(verifyCode == "" || verifyCode == null || verifyCode == undefined){
+	    		this._controlMsgText("verifyCodeMsg","请输入验证码");
+				this._controlMsgAttr("verifyCodeMsgDiv",2);
+				return false;
+			}else{
+				this._controlMsgText("verifyCodeMsg","");
+				this._controlMsgAttr("verifyCodeMsgDiv",1);
+				return true;
+			}
+		},
+		//检查验证码
+		_checkPictureVerifyCode: function(){
+			var verifyCode = jQuery.trim($("#pictureVerifyCode").val());
+			if(verifyCode == "" || verifyCode == null || verifyCode == undefined){
+				this._controlMsgText("pictureVerifyMsg","请输入图形验证码");
+				this._controlMsgAttr("pictureVerifyMsgDiv",2);
+				return false;
+			}else{
+				this._controlMsgText("pictureVerifyMsg","");
+				this._controlMsgAttr("pictureVerifyMsgDiv",1);
+				return true;
+			}
+		},
+		//控制显示内容
+		_controlMsgText(id,msg){
+			var doc = document.getElementById(id+"");
+			doc.innerText=msg;
+		},
+		//控制显隐属性 1:隐藏 2：显示
+		_controlMsgAttr(id,flag){
+			var doc = document.getElementById(id+"");
+			if(flag == 1){
+				doc.setAttribute("style","display:none");
+			}else if(flag == 2){
+				doc.setAttribute("style","display");
+			}
+		},
 		//检查身份信息
 		_confirmInfo:function(){
 			var _this = this;
+			var checkVerifyCode = this._checkVerifyCode();
+			var checkPoctureVerifyCode = this._checkPictureVerifyCode();
+			if(!(checkVerifyCode&&checkPoctureVerifyCode)){
+    			return false;
+    		}
 			ajaxController.ajax({
 				type : "POST",
 				data : _this._getSafetyConfirmData(),
@@ -109,12 +156,28 @@ define('app/center/email/confirmInfo', function (require, exports, module) {
 				processing: true,
 				message : "正在处理中，请稍候...",
 				success : function(data) {
-					var statusCode = data.statusCode;
-					var url = data.data;
-					if(statusCode == "1"){
+					var status = data.responseHeader.resultCode;
+					if(status == "000000"){
+						var url = data.data;
 						window.location.href = _base+url;
 					}else{
-						alert(data.statusInfo);
+						var msg = data.statusInfo;
+						//验证码
+						if(status == "100002"){
+							_this._controlMsgText("verifyCodeMsg",msg);
+							_this._controlMsgAttr("verifyCodeMsgDiv",2);
+						}else{
+							_this._controlMsgText("verifyCodeMsg","");
+							_this._controlMsgAttr("verifyCodeMsgDiv",1);
+						}
+						//图片验证码
+						if(status == "100001"){
+							_this._controlMsgText("pictureVerifyMsg",msg);
+							_this._controlMsgAttr("pictureVerifyMsgDiv",2);
+						}else{
+							_this._controlMsgText("pictureVerifyMsg","");
+							_this._controlMsgAttr("pictureVerifyMsgDiv",1);
+						}
 					}
 				},
 				error : function(){

@@ -56,13 +56,23 @@
          <ul>
          <li class="user">
           <p class="word">邮箱地址</p>
-          <p><input class="int-medium" id="email"></p>
+          <p><input class="int-medium" id="email">
+          	<span class="regsiter-note" id="emailMsgDiv" style="display:none">
+			     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
+			     <span id="emailMsg"></span>
+		     </span>
+          </p>
           </li>
           
           <li class="user">
           <p class="word">邮箱校验码</p>
           <p><input class="int-medium" id="verifyCode"></p>
-          <p class="huoqu"><A id="sendEmailBtn">获取校验码</A></p>
+          <p class="huoqu"><A id="sendEmailBtn">获取校验码</A>
+          	<span class="regsiter-note" id="verifyCodeMsgDiv" style="display:none">
+			     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
+			     <span id="verifyCodeMsg"></span>
+		     </span>
+          </p>
           </li>
        
          

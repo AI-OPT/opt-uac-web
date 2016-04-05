@@ -50,7 +50,7 @@ define('app/retakepassword/userInfo', function (require, exports, module) {
 		},
 		//检查用户名格式
 		_checkUserName: function(){
-			var userName = $("#userName").val();
+			var userName = jQuery.trim($("#userName").val());
 			if(userName == "" || userName == null || userName == undefined){
 	    		this._controlMsgText("userNameMsg","请输入用户名");
 				this._controlMsgAttr("userNameMsgDiv",2);
@@ -63,7 +63,7 @@ define('app/retakepassword/userInfo', function (require, exports, module) {
 		},
 		//检查验证码
 		_checkVerifyCode: function(){
-			var verifyCode = $("#pictureVerifyCode").val();
+			var verifyCode = jQuery.trim($("#pictureVerifyCode").val());
 			if(verifyCode == "" || verifyCode == null || verifyCode == undefined){
 				this._controlMsgText("verifyCodeMsg","请输入图形验证码");
 				this._controlMsgAttr("verifyCodeMsgDiv",2);

@@ -10,6 +10,10 @@ public final class Constants {
     	
     	public static final String SUCCESS_CODE = "000000";
     	public static final String ERROR_CODE = "999999";
+    	public static final String PARAM_NULL_ERROR = "10001";
+        public static final String PARAM_VALUE_ERROR = "10002";
+        public static final String PHONE_NOTONE_ERROR = "10003";
+        public static final String EMAIL_NOTONE_ERROR = "10004";
 	}
 	
 	public static final class UUID{
