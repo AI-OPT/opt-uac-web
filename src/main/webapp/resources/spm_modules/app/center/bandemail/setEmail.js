@@ -1,4 +1,4 @@
-define('app/center/phone/setPhone', function (require, exports, module) {
+define('app/center/bandemail/setEmail', function (require, exports, module) {
     'use strict';
     var $=require('jquery'),
     Widget = require('arale-widget/1.2.0/widget'),
@@ -16,41 +16,57 @@ define('app/center/phone/setPhone', function (require, exports, module) {
     var ajaxController = new AjaxController();
     
     //定义页面组件类
-    var UpdatePhonePager = Widget.extend({
+    var BandEmailPager = Widget.extend({
     	//属性，使用时由类的构造函数传入
     	attrs: {
     	},
     	//事件代理
     	events: {
     		//key的格式: 事件+空格+对象选择器;value:事件方法
-    		"click [id='sendPhoneBtn']":"_sendPhone",
-    		"click [id='submitBtn']":"_updatePhone",
-    		"blur [id='phone']":"_checkPhone",
+    		"click [id='sendEmailBtn']":"_sendEmail",
+    		"click [id='submitBtn']":"_updateEmail",
+    		"blur [id='email']":"_checkEmail",
     		"blur [id='verifyCode']":"_checkVerifyCode"
+        },
+        init: function(){
+        	_showClass();
+        	
         },
     	//重写父类
     	setup: function () {
-    		UpdatePhonePager.superclass.setup.call(this);
+    		BandEmailPager.superclass.setup.call(this);
+    		this._renderClass();
     	},
-    	_checkPhone: function(){
-    		var phone=jQuery.trim($("#phone").val());
-    		var msg = "";
-    		if(phone==""|| phone == null || phone == undefined){
-    			msg ="请输入手机号码 ";
-    		}else if(!/^1\d{10}$/.test(phone)){
-    			msg = "手机号码格式错误";
-    		}
-    		if(msg == ""){
-				this._controlMsgText("phoneMsg","");
-				this._controlMsgAttr("phoneMsgDiv",1);
+    	//加载账户数据
+    	_renderClass: function(){
+			var _this = this;
+			//初始化展示页面
+			_this._showClass();
+		},
+    	_showClass: function(){
+    		 //左侧菜单显示样式
+	   		$("#setEmail").addClass("current");
+    	},
+    	//检查新密码格式
+		_checkEmail: function(){
+			var email = jQuery.trim($("#email").val());
+			var msg = "";
+			if(email == "" || email == null || email == undefined){
+				msg = "请输入邮箱地址";
+			}else if(!/^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/.test(email)){
+				msg = "邮箱地址格式错误";
+			}
+			if(msg == ""){
+				this._controlMsgText("emailMsg","");
+				this._controlMsgAttr("emailMsgDiv",1);
 				return true;
 			}else{
-				this._controlMsgText("phoneMsg",msg);
-				this._controlMsgAttr("phoneMsgDiv",2);
+				this._controlMsgText("emailMsg",msg);
+				this._controlMsgAttr("emailMsgDiv",2);
 				return false;
 			}
-    	},
-    	//检查验证码
+		},
+		//检查验证码
 		_checkVerifyCode: function(){
 			var verifyCode = jQuery.trim($("#verifyCode").val());
 			if(verifyCode == "" || verifyCode == null || verifyCode == undefined){
@@ -63,6 +79,7 @@ define('app/center/phone/setPhone', function (require, exports, module) {
 				return true;
 			}
 		},
+		//控制显示内容
 		_controlMsgText(id,msg){
 			var doc = document.getElementById(id+"");
 			doc.innerText=msg;
@@ -76,32 +93,32 @@ define('app/center/phone/setPhone', function (require, exports, module) {
 				doc.setAttribute("style","display");
 			}
 		},
-    	_sendPhone:function(){
-    		var isOk = this._checkPhone();
-    		if(!isOk){
-    			return false;
-    		}
-    		var step = 59;
+    	_sendEmail:function(){
+			var _this = this;
+			var isOk = this._checkEmail();
+			if(!isOk){
+				return false;
+			}
+			var step = 59;
             $('#sendPhoneBtn').val('重新发送60');
             var _res = setInterval(function(){
-                $("#sendPhoneBtn").attr("disabled", true);//设置disabled属性
-                $('#sendPhoneBtn').val('重新发送'+step);
+                $("#sendEmailBtn").attr("disabled", true);//设置disabled属性
+                $('#sendEmailBtn').val('重新发送'+step);
                 step-=1;
                 if(step <= 0){
-                $("#sendPhoneBtn").removeAttr("disabled"); //移除disabled属性
-                $('#sendPhoneBtn').val('获取验证码');
+                $("#sendEmailBtn").removeAttr("disabled"); //移除disabled属性
+                $('#sendEmailBtn').val('获取验证码');
                 clearInterval(_res);//清除setInterval
                 }
             },1000);
-			var _this = this;
 			ajaxController.ajax({
 				type : "POST",
 				data : {
-					"phone": function(){
-						return $("#phone").val()
+					"email": function(){
+						return $("#email").val()
 					}
 				},
-				url :_base+"/center/phone/sendPhoneVerify?k="+uuid,
+				url :_base+"/center/bandEmail/sendEmailVerify?k="+uuid,
 				processing: true,
 				message : "正在处理中，请稍候...",
 				success : function(data) {
@@ -115,7 +132,7 @@ define('app/center/phone/setPhone', function (require, exports, module) {
 							_this._controlMsgAttr("verifyCodeMsgDiv",2);
 			        	}else{
 			        		_this._controlMsgText("verifyCodeMsg","");
-							_this._controlMsgAttr("verifyCodeMsgDiv",1);
+			        		_this._controlMsgAttr("verifyCodeMsgDiv",1);
 			        	}
 					}
 				},
@@ -124,18 +141,18 @@ define('app/center/phone/setPhone', function (require, exports, module) {
 				}
 			});
 		},
-		//更新手机
-		_updatePhone:function(){
+		//更新邮箱
+		_updateEmail:function(){
 			var _this = this;
-			var checkPhone = this._checkPhone();
+			var checkEmail = this._checkEmail();
 			var checkVerify = this._checkVerifyCode();
-			if(!(checkPhone&&checkVerify)){
+			if(!(checkEmail&&checkVerify)){
 				return false;
 			}
 			ajaxController.ajax({
 				type : "POST",
 				data : _this._getSafetyConfirmData(),
-				url :_base+"/center/phone/setNewPhone?k="+uuid,
+				url :_base+"/center/bandEmail/setNewEmail?k="+uuid,
 				processing: true,
 				message : "正在处理中，请稍候...",
 				success : function(data) {
@@ -148,9 +165,9 @@ define('app/center/phone/setPhone', function (require, exports, module) {
 						if(statusCode == "100002"){
 							_this._controlMsgText("verifyCodeMsg",msg);
 							_this._controlMsgAttr("verifyCodeMsgDiv",2);
-						}if(statusCode == "100005"){
-							_this._controlMsgText("phoneMsg",msg);
-							_this._controlMsgAttr("phoneMsgDiv",2);
+						}if(statusCode == "100006"){
+							_this._controlMsgText("emailMsg",msg);
+							_this._controlMsgAttr("emailMsgDiv",2);
 						}else{
 							_this._controlMsgText("verifyCodeMsg","");
 							_this._controlMsgAttr("verifyCodeMsgDiv",1);
@@ -165,8 +182,8 @@ define('app/center/phone/setPhone', function (require, exports, module) {
 		//获取界面填写验证信息
 		_getSafetyConfirmData:function(){
 			return{
-				"phone":function () {
-			        return jQuery.trim($("#phone").val())
+				"email":function () {
+			        return jQuery.trim($("#email").val())
 			    },
 				"verifyCode":function () {
 			        return jQuery.trim($("#verifyCode").val())
@@ -177,5 +194,5 @@ define('app/center/phone/setPhone', function (require, exports, module) {
     });
     
     
-    module.exports = UpdatePhonePager
+    module.exports = BandEmailPager
 });

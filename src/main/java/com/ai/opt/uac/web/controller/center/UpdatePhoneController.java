@@ -228,6 +228,7 @@ public class UpdatePhoneController {
 			SendEmailRequest emailRequest = new SendEmailRequest();
 			emailRequest.setTomails(new String[] { email });
 			emailRequest.setTemplateRUL(UpdatePhone.TEMPLATE_EMAIL_URL);
+			emailRequest.setSubject(UpdatePhone.EMAIL_SUBJECT);
 			// 验证码
 			String verifyCode = RandomUtil.randomNum(EmailVerifyConstants.VERIFY_SIZE);
 			// 将验证码放入缓存
@@ -455,8 +456,8 @@ public class UpdatePhoneController {
 					responseData.setResponseHeader(responseHeader);
 					CacheUtil.deletCache(uuid, Constants.UpdatePhone.CACHE_NAMESPACE);
 				} else if (ResultCode.PHONE_NOTONE_ERROR.equals(resultData.getResponseHeader().getResultCode())) {
-					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "该手机号码已经被注册，请使用其它手机号码", null);
-					responseHeader = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "该手机号码已经被注册，请使用其它手机号码");
+					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "该手机号码已经被注册，请使用其它手机号码", null);
+					responseHeader = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.PHONE_ERROR, "该手机号码已经被注册，请使用其它手机号码");
 					responseData.setResponseHeader(responseHeader);
 				} else {
 					String resultMessage = resultData.getResponseHeader().getResultMessage();

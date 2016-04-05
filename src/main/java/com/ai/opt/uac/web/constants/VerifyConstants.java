@@ -69,7 +69,7 @@ public final class VerifyConstants {
 		/*** 失败ID*/
 		public static final String ERROR_CODE = "111111";
 		
-		/*** 用户信息没有 失效*/
+		/*** 用户信息没有(失效)*/
 		public static final String USER_INFO_NULL = "100000";
 		
 		/** 图片验证码 错误ID*/
@@ -78,5 +78,9 @@ public final class VerifyConstants {
         public static final String REGISTER_VERIFY_ERROR = "100002";
         /** 用户名错误 */
         public static final String USERNAME_ERROR = "100004";
+        /** 手机号错误 */
+        public static final String PHONE_ERROR = "100005";
+        /** 邮箱号错误 */
+        public static final String EMAIL_ERROR = "100006";
 	}
 }

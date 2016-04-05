@@ -230,6 +230,7 @@ public class UpdatePasswordController {
 			SendEmailRequest emailRequest = new SendEmailRequest();
 			emailRequest.setTomails(new String[] { email });
 			emailRequest.setTemplateRUL(UpdatePassword.TEMPLATE_EMAIL_URL);
+			emailRequest.setSubject(UpdatePassword.EMAIL_SUBJECT);
 			// 验证码
 			String verifyCode = RandomUtil.randomNum(EmailVerifyConstants.VERIFY_SIZE);
 			// 将验证码放入缓存

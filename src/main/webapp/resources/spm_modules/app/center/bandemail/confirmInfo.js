@@ -1,4 +1,4 @@
-define('app/center/password/confirmInfo', function (require, exports, module) {
+define('app/center/bandemail/confirmInfo', function (require, exports, module) {
     'use strict';
     var $=require('jquery'),
     Widget = require('arale-widget/1.2.0/widget'),
@@ -50,7 +50,7 @@ define('app/center/password/confirmInfo', function (require, exports, module) {
 		//初始化展示页面
 		_initShowView:function(){
 			 //左侧菜单显示样式
-	   		$("#updatePassword").addClass("current");
+	   		$("#updateEmail").addClass("current");
 			$("#confirmType").val("1");
 			$("#confirmTypeName").html("已验证手机");
 			$("#verifyName").html("短信校验码");
@@ -88,7 +88,7 @@ define('app/center/password/confirmInfo', function (require, exports, module) {
 		_getImageRandomCode:function(){
 			var timestamp = (new Date()).valueOf();
 			$("#pictureVerifyCode").val("");
-			$("#random_img").attr("src",_base+"/center/password/getImageVerifyCode?timestamp="+timestamp);
+			$("#random_img").attr("src",_base+"/center/bandEmail/getImageVerifyCode?timestamp="+timestamp);
 		},
 		_sendVerify:function(){
 			var step = 59;
@@ -112,12 +112,12 @@ define('app/center/password/confirmInfo', function (require, exports, module) {
 						return $("#confirmType").val()
 					}
 				},
-				url :_base+"/center/password/sendVerify",
+				url :_base+"/center/bandEmail/sendVerify",
 				processing: true,
 				message : "正在处理中，请稍候...",
 				success : function(data) {
 					var resultCode = data.responseHeader.resultCode;
-					if(resultCode == "100000"){
+					if(resultCode=="100000"){
 						var url = data.data;
 						window.location.href = _base+url;
 					}else{
@@ -175,7 +175,6 @@ define('app/center/password/confirmInfo', function (require, exports, module) {
 				doc.setAttribute("style","display");
 			}
 		},
-		
 		//检查身份信息
 		_confirmInfo:function(){
 			var _this = this;
@@ -187,7 +186,7 @@ define('app/center/password/confirmInfo', function (require, exports, module) {
 			ajaxController.ajax({
 				type : "POST",
 				data : _this._getSafetyConfirmData(),
-				url :_base+"/center/password/confirmInfo",
+				url :_base+"/center/bandEmail/confirmInfo",
 				processing: true,
 				message : "正在处理中，请稍候...",
 				success : function(data) {
