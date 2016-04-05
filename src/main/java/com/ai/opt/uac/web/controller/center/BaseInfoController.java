@@ -65,7 +65,7 @@ public class BaseInfoController {
         accountRequest.setAccountId(userClient.getAccountId());
         AccountQueryResponse acc = iAccountManageSV.queryBaseInfo(accountRequest);
         BaseInfo req = new BaseInfo();
-        req.setTenantId(userClient.getTenantId());
+        req.setTenantId(acc.getTenantId());
         TenantQueryResponse ten = iTenantManageSV.queryTenantInfo(req);
         Map<String,AccountInfoData> model = new HashMap<String,AccountInfoData>();
         AccountInfoData accountInfo = new AccountInfoData();

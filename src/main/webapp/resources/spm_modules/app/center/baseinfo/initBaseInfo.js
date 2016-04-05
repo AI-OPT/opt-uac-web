@@ -101,14 +101,10 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 			}
 			if(isindus){
 				$("#errorTenMsg").attr("style","display:none");
+				$("#errorTypeMsg").attr("style","display:none");
 				if(tenantName==""){
 					$('#showTenMsg').text("请输入企业名称");
 	    			$("#errorTenMsg").attr("style","display:block");
-					$("#flag").val("0");
-					return false;
-				}else if(industryType=="00"){
-					$('#showTypeMsg').text("请选择企业类型");
-	    			$("#errorTypeMsg").attr("style","display:block");
 					$("#flag").val("0");
 					return false;
 				}else if(/^\S{4,40}/.test(tenantName)){
@@ -119,6 +115,12 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 					$("#flag").val("0");
 					return false;
 				}
+				 if(industryType=="00"){
+						$('#showTypeMsg').text("请选择企业类型");
+		    			$("#errorTypeMsg").attr("style","display:block");
+						$("#flag").val("0");
+						return false;
+				 }
 				
 			}
 		},

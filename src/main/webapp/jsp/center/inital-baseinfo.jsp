@@ -75,11 +75,11 @@
           
            <li class="user">
            <div id="bandEmail">
-           	<p class="word">邮箱</p>
-          	<p>
-          		<a href="邮箱绑定.html"><i class="icon-link"></i>绑定邮箱</a>
-          	<input type="hidden" id="email" value="${accountInfo.email}">
-          	</p>
+	           	<p class="word">邮箱</p>
+	          	<p>
+	          		<a href="${_base}/center/email/setEmail"><i class="icon-link"></i>绑定邮箱</a>
+	          		<input type="hidden" id="email" value="${accountInfo.email}">
+	          	</p>
            </div>
           <div id="haveEmail">
 	          <p class="word">邮箱</p>
@@ -132,11 +132,11 @@
 	   			<div id="oneInfo">
 	   				<ul>
 			          <li class="user">
-			          <p class="word" >
-			          ${accountInfo.tenantName}
-			          <input type="hidden" id="tenant" value="${accountInfo.tenantName}">
+			          <p class="word">企业名称</p>
+			          <p >
+			          	${accountInfo.tenantName}
+			          	<input type="hidden" id="tenant" value="${accountInfo.tenantName}">
 			          </p>
-			          <p>亚信科技</p>
 			          </li>
 			          <li class="user">
 			          <p class="word">企业类型</p>
