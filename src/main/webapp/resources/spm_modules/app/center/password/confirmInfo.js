@@ -109,13 +109,19 @@ define('app/center/password/confirmInfo', function (require, exports, module) {
 				processing: true,
 				message : "正在处理中，请稍候...",
 				success : function(data) {
-					if(data.responseHeader.resultCode=="100002"){
-						this._controlMsgText("verifyCodeMsg",data.statusInfo);
-						this._controlMsgAttr("verifyCodeMsgDiv",2);
-		        	}else{
-		        		this._controlMsgText("verifyCodeMsg","");
-						this._controlMsgAttr("verifyCodeMsgDiv",1);
-		        	}
+					var resultCode = data.responseHeader.resultCode;
+					if(resultCode == "100000"){
+						var url = data.data;
+						window.location.href = _base+url;
+					}else{
+						if(resultCode=="100002"){
+							_this._controlMsgText("verifyCodeMsg",data.statusInfo);
+							_this._controlMsgAttr("verifyCodeMsgDiv",2);
+			        	}else{
+			        		_this._controlMsgText("verifyCodeMsg","");
+			        		_this._controlMsgAttr("verifyCodeMsgDiv",1);
+			        	}
+					}
 				},
 				error : function(){
 					alert("网络连接超时!");

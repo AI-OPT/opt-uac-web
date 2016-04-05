@@ -193,7 +193,7 @@ public class RetakePasswordController {
 				// 发送手机验证码
 				String isSuccess = sendPhoneVerifyCode(sessionId, userClient);
 				if ("0000".equals(isSuccess)) {
-					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "短信验证码发送成功", "短信验证码发送成功");
+					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "短信验证码发送成功", null);
 					ResponseHeader header = new ResponseHeader();
 					header.setIsSuccess(true);
 					header.setResultCode(ResultCodeConstants.SUCCESS_CODE);
@@ -201,7 +201,7 @@ public class RetakePasswordController {
 					return responseData;
 				} else if ("0002".equals(isSuccess)) {
 					String errorMsg = PhoneVerifyConstants.SEND_VERIFY_MAX_TIME/60+"分钟内不可重复发送";
-					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, errorMsg, errorMsg);
+					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, errorMsg, null);
 					ResponseHeader header = new ResponseHeader();
 					header.setIsSuccess(false);
 					header.setResultCode(ResultCodeConstants.REGISTER_VERIFY_ERROR);
@@ -209,7 +209,7 @@ public class RetakePasswordController {
 					responseData.setResponseHeader(header);
 					return responseData;
 				} else {
-					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "短信验证码发送失败", "服务器连接超时");
+					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "短信验证码发送失败", null);
 					ResponseHeader header = new ResponseHeader();
 					header.setIsSuccess(false);
 					header.setResultCode(ResultCodeConstants.ERROR_CODE);
@@ -220,7 +220,7 @@ public class RetakePasswordController {
 				// 发送邮件验证码
 				String resultCode = sendEmailVerifyCode(sessionId, userClient);
 				if ("0000".equals(resultCode)) {
-					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "邮箱验证码发送成功", "邮箱验证码发送成功");
+					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "邮箱验证码发送成功", null);
 					ResponseHeader header = new ResponseHeader();
 					header.setIsSuccess(true);
 					header.setResultCode(ResultCodeConstants.SUCCESS_CODE);
@@ -228,7 +228,7 @@ public class RetakePasswordController {
 					return responseData;				
 				} else if ("0002".equals(resultCode)) {
 					String errorMsg = EmailVerifyConstants.SEND_VERIFY_MAX_TIME/60+"分钟内不可重复发送";
-					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, errorMsg, errorMsg);
+					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, errorMsg, null);
 					ResponseHeader header = new ResponseHeader();
 					header.setIsSuccess(false);
 					header.setResultCode(ResultCodeConstants.REGISTER_VERIFY_ERROR);
@@ -236,7 +236,7 @@ public class RetakePasswordController {
 					responseData.setResponseHeader(header);
 					return responseData;
 				} else {
-					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "邮箱验证码发送失败", "服务器连接超时");
+					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "邮箱验证码发送失败", null);
 					ResponseHeader header = new ResponseHeader();
 					header.setIsSuccess(false);
 					header.setResultCode(ResultCodeConstants.ERROR_CODE);
@@ -244,14 +244,14 @@ public class RetakePasswordController {
 					return responseData;
 				}
 			} else {
-				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "验证码发送失败", "验证方式不正确");
+				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "验证码发送失败", null);
 				ResponseHeader responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.ERROR_CODE, "验证码发送失败");
 				responseData.setResponseHeader(responseHeader);
 				return responseData;
 			}
 		} else {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "验证码发送失败", "该账号不存在");
-			ResponseHeader responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.ERROR_CODE, "验证码发送失败");
+			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "认证信息失效", "/retakePassword/userinfo");
+			ResponseHeader responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.USER_INFO_NULL, "认证信息失效");
 			responseData.setResponseHeader(responseHeader);
 			return responseData;
 		}
@@ -437,7 +437,7 @@ public class RetakePasswordController {
 		SSOClientUser userClient = (SSOClientUser) CacheUtil.getValue(uuid, Constants.RetakePassword.CACHE_NAMESPACE, SSOClientUser.class);
 		if (userClient == null) {
 			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "认证身份失效", "/retakePassword/userinfo");
-			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "认证身份失效");
+			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.USER_INFO_NULL, "认证身份失效");
 		} else {
 			IAccountSecurityManageSV accountManageSV = DubboConsumerFactory.getService("iAccountSecurityManageSV");
 			AccountPasswordRequest passwordRequest = new AccountPasswordRequest();
@@ -472,7 +472,6 @@ public class RetakePasswordController {
 		}
 		Map<String, Object> model = new HashMap<String, Object>();
 		model.put("uuid", uuid);
-		// CacheUtil.deletCache(uuid, Constants.RetakePassword.CACHE_NAMESPACE);
 		return new ModelAndView("jsp/retakepassword/retaksuccess", model);
 	}
 

@@ -105,13 +105,19 @@ define('app/center/phone/setPhone', function (require, exports, module) {
 				processing: true,
 				message : "正在处理中，请稍候...",
 				success : function(data) {
-					if(data.responseHeader.resultCode=="100002"){
-						this._controlMsgText("verifyCodeMsg",data.statusInfo);
-						this._controlMsgAttr("verifyCodeMsgDiv",2);
-		        	}else{
-		        		this._controlMsgText("verifyCodeMsg","");
-						this._controlMsgAttr("verifyCodeMsgDiv",1);
-		        	}
+					var resultCode = data.responseHeader.resultCode;
+					if(resultCode == "100000"){
+						var url = data.data;
+						window.location.href = _base+url;
+					}else{
+						if(resultCode=="100002"){
+							_this._controlMsgText("verifyCodeMsg",data.statusInfo);
+							_this._controlMsgAttr("verifyCodeMsgDiv",2);
+			        	}else{
+			        		_this._controlMsgText("verifyCodeMsg","");
+							_this._controlMsgAttr("verifyCodeMsgDiv",1);
+			        	}
+					}
 				},
 				error : function(){
 					alert("网络连接超时!");
@@ -134,17 +140,17 @@ define('app/center/phone/setPhone', function (require, exports, module) {
 				message : "正在处理中，请稍候...",
 				success : function(data) {
 					var statusCode = data.responseHeader.resultCode;
-					var url = data.data;
-					if(statusCode == "000000"){
+					if(statusCode == "000000" || statusCode == "100000"){
+						var url = data.data;
 						window.location.href = _base+url;
 					}else {
 						var msg = data.statusInfo;
 						if(statusCode == "100002"){
-							_controlMsgText("verifyCodeMsg",msg);
-							_controlMsgAttr("verifyCodeMsgDiv",2);
+							_this._controlMsgText("verifyCodeMsg",msg);
+							_this._controlMsgAttr("verifyCodeMsgDiv",2);
 						}else{
-							_controlMsgText("verifyCodeMsg","");
-							_controlMsgAttr("verifyCodeMsgDiv",1);
+							_this._controlMsgText("verifyCodeMsg","");
+							_this._controlMsgAttr("verifyCodeMsgDiv",1);
 						}
 					}
 				},
