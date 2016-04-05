@@ -58,9 +58,7 @@ define('app/register/register-success', function (require, exports, module) {
 						success : function(data) {
 							//var status = data.responseHeader.isSuccess;
 							var status=data.responseHeader.resultCode;
-							alert(status);
 							var url = data.data;
-							alert(url);
 							window.location.href = _base+url;
 						},
 						error: function() {
