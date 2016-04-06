@@ -19,7 +19,7 @@ import com.ai.opt.sso.client.filter.SSOClientUtil;
 @Controller
 public class LogoutController {
 	private static final Logger LOG = LoggerFactory.getLogger(LogoutController.class);
-	@RequestMapping("/logout")
+	@RequestMapping("/ssologout")
 	public void logout(HttpServletRequest request,HttpServletResponse response){
 		HttpSession session = request.getSession();
 		SSOClientUser user = (SSOClientUser) session.getAttribute(SSOClientConstants.USER_SESSION_KEY);

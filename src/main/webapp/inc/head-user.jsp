@@ -7,7 +7,7 @@
      <ul style="display:none;">
       <li><a href="${_base}/center/baseInfo/getAccountInfo">个人中心</a></li>
       <li><a href="${_base}/center/password/confirminfo">修改密码</a></li>
-      <li><a href="${_base}/logout">退出</a></li>
+      <li><a href="${_base}/ssologout">退出</a></li>
      </ul>
     </div>
    </div>
