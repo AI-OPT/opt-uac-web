@@ -54,7 +54,6 @@ public class BaseInfoController {
      * @return
      */
     @RequestMapping("/getAccountInfo")
-    @ResponseBody
     public ModelAndView checkUserInfo(HttpServletRequest request) {
         // 获取账户信息
         SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
