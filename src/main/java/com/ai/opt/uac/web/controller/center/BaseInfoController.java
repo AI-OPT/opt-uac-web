@@ -39,13 +39,13 @@ public class BaseInfoController {
     @RequestMapping("/baseInfoStart")
     public ModelAndView baseInfoStart(HttpServletRequest request) {
 
-        return new ModelAndView("jsp/accountcenter/baseinfo");
+        return new ModelAndView("jsp/center/baseinfo");
     }
 
     @RequestMapping("/initBaseInfo")
     public ModelAndView initBaseInfo(HttpServletRequest request) {
 
-        return new ModelAndView("jsp/accountcenter/inital-baseinfo");
+        return new ModelAndView("jsp/center/inital-baseinfo");
     }
     /**
      * 获得账户信息
