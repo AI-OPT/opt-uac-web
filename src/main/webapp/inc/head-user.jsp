@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
    <div class="user">
-    <div class="msg"><a href="#"><i class="icon-bell-alt"></i><span class="badge">4</span></a></div>
+    <div class="msg" style="display:none;"><a href="#"><i class="icon-bell-alt"></i><span class="badge">4</span></a></div>
     <div class="user-cnt">
      <p><img src="${_baasBase }/images/login_user.png"><span>你好，古珍珍</span><i class="icon-angle-down"></i></p>
      <ul style="display:none;">
