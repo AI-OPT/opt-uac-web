@@ -50,7 +50,7 @@
          
      <!--表单验证-->
     <div class="Retrieve-cnt">
-          <input type="hidden" id="confirmType" value="1">
+      <input type="hidden" id="confirmType" value="1">
       <ul>
          <li class="user">
           <p class="word" id="confirmTypeName">已验证手机</p>
@@ -91,6 +91,8 @@
   </div>
   <%@ include file="/inc/foot.jsp"%>
   <script type="text/javascript">
+  		var phone = "${confirmInfo.phone}";
+  		var email = "${confirmInfo.email}";
 		(function() {
 			seajs.use([ 'app/center/password/confirmInfo' ], function(ConfirmInfoPager) {
 				var pager = new ConfirmInfoPager({

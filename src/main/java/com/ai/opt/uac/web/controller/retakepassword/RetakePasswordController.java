@@ -47,7 +47,6 @@ import com.ai.opt.uac.web.model.email.SendEmailRequest;
 import com.ai.opt.uac.web.model.login.LoginUser;
 import com.ai.opt.uac.web.model.retakepassword.AccountData;
 import com.ai.opt.uac.web.model.retakepassword.SafetyConfirmData;
-import com.ai.opt.uac.web.model.retakepassword.SendVerifyRequest;
 import com.ai.opt.uac.web.util.CacheUtil;
 import com.ai.opt.uac.web.util.VerifyUtil;
 import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
@@ -182,14 +181,13 @@ public class RetakePasswordController {
 	 */
 	@RequestMapping("/sendVerify")
 	@ResponseBody
-	public ResponseData<String> sendVerify(HttpServletRequest request, SendVerifyRequest sendVerifyRequest) {
+	public ResponseData<String> sendVerify(HttpServletRequest request,  String confirmType) {
 		String uuid = request.getParameter(Constants.UUID.KEY_NAME);
 		SSOClientUser userClient = (SSOClientUser) CacheUtil.getValue(uuid, Constants.RetakePassword.CACHE_NAMESPACE, SSOClientUser.class);
-		String checkType = sendVerifyRequest.getCheckType();
 		ResponseData<String> responseData = null;
 		String sessionId = request.getSession().getId();
 		if (userClient != null) {
-			if (RetakePassword.CHECK_TYPE_PHONE.equals(checkType)) {
+			if (RetakePassword.CHECK_TYPE_PHONE.equals(confirmType)) {
 				// 发送手机验证码
 				String isSuccess = sendPhoneVerifyCode(sessionId, userClient);
 				if ("0000".equals(isSuccess)) {
@@ -216,7 +214,7 @@ public class RetakePasswordController {
 					responseData.setResponseHeader(header);
 					return responseData;
 				}
-			} else if (RetakePassword.CHECK_TYPE_EMAIL.equals(checkType)) {
+			} else if (RetakePassword.CHECK_TYPE_EMAIL.equals(confirmType)) {
 				// 发送邮件验证码
 				String resultCode = sendEmailVerifyCode(sessionId, userClient);
 				if ("0000".equals(resultCode)) {

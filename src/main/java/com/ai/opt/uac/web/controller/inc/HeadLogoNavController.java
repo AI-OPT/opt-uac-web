@@ -10,7 +10,6 @@ import com.ai.opt.sdk.util.StringUtil;
 import com.ai.opt.sdk.web.model.ResponseData;
 import com.ai.opt.sso.client.filter.SSOClientConstants;
 import com.ai.opt.sso.client.filter.SSOClientUser;
-import com.ai.opt.uac.web.model.retakepassword.SendVerifyRequest;
 
 @RequestMapping("/headLogoNav")
 @Controller
@@ -22,7 +21,7 @@ public class HeadLogoNavController {
 	 */
 	@RequestMapping("/isHasEmail")
 	@ResponseBody
-	public ResponseData<String> isHasEmail(HttpServletRequest request, SendVerifyRequest sendVerifyRequest) {
+	public ResponseData<String> isHasEmail(HttpServletRequest request) {
 		SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
 		if (userClient != null) {
 			String email = userClient.getEmail();

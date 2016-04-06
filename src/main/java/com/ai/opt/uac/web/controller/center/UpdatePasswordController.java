@@ -44,7 +44,6 @@ import com.ai.opt.uac.web.constants.VerifyConstants.ResultCodeConstants;
 import com.ai.opt.uac.web.model.email.SendEmailRequest;
 import com.ai.opt.uac.web.model.retakepassword.AccountData;
 import com.ai.opt.uac.web.model.retakepassword.SafetyConfirmData;
-import com.ai.opt.uac.web.model.retakepassword.SendVerifyRequest;
 import com.ai.opt.uac.web.util.CacheUtil;
 import com.ai.opt.uac.web.util.VerifyUtil;
 import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
@@ -92,14 +91,13 @@ public class UpdatePasswordController {
 	 */
 	@RequestMapping("/sendVerify")
 	@ResponseBody
-	public ResponseData<String> sendVerify(HttpServletRequest request, SendVerifyRequest sendVerifyRequest) {
+	public ResponseData<String> sendVerify(HttpServletRequest request, String confirmType) {
 		SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
-		String checkType = sendVerifyRequest.getCheckType();
 		ResponseData<String> responseData = null;
 		ResponseHeader responseHeader = null;
 		String sessionId = request.getSession().getId();
 		if (userClient != null) {
-			if (UpdatePassword.CHECK_TYPE_PHONE.equals(checkType)) {
+			if (UpdatePassword.CHECK_TYPE_PHONE.equals(confirmType)) {
 				// 发送手机验证码
 				String isSuccess = sendPhoneVerifyCode(sessionId, userClient);
 				if ("0000".equals(isSuccess)) {
@@ -126,7 +124,7 @@ public class UpdatePasswordController {
 					responseData.setResponseHeader(header);
 					return responseData;
 				}
-			} else if (UpdatePassword.CHECK_TYPE_EMAIL.equals(checkType)) {
+			} else if (UpdatePassword.CHECK_TYPE_EMAIL.equals(confirmType)) {
 				// 发送邮件验证码
 				String isSuccess = sendEmailVerifyCode(sessionId, userClient);
 				if ("0000".equals(isSuccess)) {
@@ -153,10 +151,9 @@ public class UpdatePasswordController {
 					responseData.setResponseHeader(header);
 					return responseData;
 				}
-
 			} else {
-				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "验证码发送失败,验证方式不正确", null);
-				responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.USER_INFO_NULL, "验证码发送失败");
+				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "验证码发送失败,验证方式不正确", null);
+				responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.ERROR_CODE, "验证码发送失败");
 				responseData.setResponseHeader(responseHeader);
 				return responseData;
 			}

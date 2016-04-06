@@ -41,7 +41,6 @@ import com.ai.opt.uac.web.constants.VerifyConstants.ResultCodeConstants;
 import com.ai.opt.uac.web.model.email.SendEmailRequest;
 import com.ai.opt.uac.web.model.retakepassword.AccountData;
 import com.ai.opt.uac.web.model.retakepassword.SafetyConfirmData;
-import com.ai.opt.uac.web.model.retakepassword.SendVerifyRequest;
 import com.ai.opt.uac.web.util.CacheUtil;
 import com.ai.opt.uac.web.util.VerifyUtil;
 import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
@@ -88,13 +87,12 @@ public class UpdateEmialController {
 	 */
 	@RequestMapping("/sendVerify")
 	@ResponseBody
-	public ResponseData<String> sendVerify(HttpServletRequest request, SendVerifyRequest sendVerifyRequest) {
+	public ResponseData<String> sendVerify(HttpServletRequest request,  String confirmType) {
 		SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
-		String checkType = sendVerifyRequest.getCheckType();
 		ResponseData<String> responseData = null;
 		String sessionId = request.getSession().getId();
 		if (userClient != null) {
-			if (UpdateEmail.CHECK_TYPE_PHONE.equals(checkType)) {
+			if (UpdateEmail.CHECK_TYPE_PHONE.equals(confirmType)) {
 				// 发送手机验证码
 				String isSuccess = sendPhoneVerifyCode(sessionId, userClient);
 				if ("0000".equals(isSuccess)) {
@@ -122,7 +120,7 @@ public class UpdateEmialController {
 					return responseData;
 				}
 
-			} else if (UpdateEmail.CHECK_TYPE_EMAIL.equals(checkType)) {
+			} else if (UpdateEmail.CHECK_TYPE_EMAIL.equals(confirmType)) {
 				// 发送邮件验证码
 				String isSuccess = sendEmailVerifyCode(sessionId, userClient);
 

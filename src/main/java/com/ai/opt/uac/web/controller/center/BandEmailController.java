@@ -41,7 +41,6 @@ import com.ai.opt.uac.web.constants.VerifyConstants.ResultCodeConstants;
 import com.ai.opt.uac.web.model.email.SendEmailRequest;
 import com.ai.opt.uac.web.model.retakepassword.AccountData;
 import com.ai.opt.uac.web.model.retakepassword.SafetyConfirmData;
-import com.ai.opt.uac.web.model.retakepassword.SendVerifyRequest;
 import com.ai.opt.uac.web.util.CacheUtil;
 import com.ai.opt.uac.web.util.VerifyUtil;
 import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
@@ -88,9 +87,8 @@ public class BandEmailController {
 		 */
 		@RequestMapping("/sendVerify")
 		@ResponseBody
-		public ResponseData<String> sendVerify(HttpServletRequest request, SendVerifyRequest sendVerifyRequest) {
+		public ResponseData<String> sendVerify(HttpServletRequest request,  String checkType) {
 			SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
-			String checkType = sendVerifyRequest.getCheckType();
 			ResponseData<String> responseData = null;
 			String sessionId = request.getSession().getId();
 			if (userClient != null) {

@@ -25,12 +25,79 @@ define('app/center/password/setPassword', function (require, exports, module) {
     		//key的格式: 事件+空格+对象选择器;value:事件方法
     		"click [id='submitBtn']":"_updatePassword",
     		"blur [id='password']":"_checkNewPassword",
-    		"blur [id='confirmPassword']":"_checkConfirmPassword"
+    		"blur [id='password']":"_pwStrength",
+    		"blur [id='confirmPassword']":"_checkConfirmPassword",
+    		"keyup [id='password']":"_pwStrength"
         },
     	//重写父类
     	setup: function () {
     		UpdatePasswordPager.superclass.setup.call(this);
     	},
+    	//判断输入密码的类型  
+		_CharMode: function(iN){  
+			if (iN>=48 && iN <=57) //数字  
+			return 1;  
+			if (iN>=65 && iN <=90) //大写  
+			return 2;  
+			if (iN>=97 && iN <=122) //小写  
+			return 4;  
+			else  
+			return 8;   
+		},  
+		//bitTotal函数  
+		//计算密码模式  
+		_bitTotal:function(num){  
+			var modes=0;  
+			for (var i=0;i<4;i++){  
+				if (num & 1) modes++;  
+				num>>>=1;  
+			}  
+			return modes;  
+		},  
+		//返回强度级别  
+		_checkStrong:function(sPW){  
+			if (sPW.length<=8)  
+				return 0; //密码太短  
+			var Modes=0;  
+			for (var i=0;i<sPW.length;i++){  
+				//密码模式  
+				Modes|=this._CharMode(sPW.charCodeAt(i));  
+			}  
+			return this._bitTotal(Modes);  
+		},  
+		 
+		//显示颜色  
+		_pwStrength:function(){  
+			var pwd = $("#password").val();
+			var O_color="#eeeeee";  
+			var L_color="#FF0000";  
+			var M_color="#FF9900";  
+			var H_color="#33CC00"; 
+			var Lcolor,Mcolor,Hcolor;
+			if (pwd==null||pwd==''){  
+				Lcolor=Mcolor=Hcolor=O_color;  
+			}else{  
+				var S_level=this._checkStrong(pwd);  
+				switch(S_level) {  
+					case 0:  
+					Lcolor=Mcolor=Hcolor=O_color;  
+					case 1:  
+					Lcolor=L_color;  
+					Mcolor=Hcolor=O_color;  
+					break;  
+					case 2:  
+					Lcolor=Mcolor=M_color;  
+					Hcolor=O_color;  
+					break;  
+					default:  
+					Lcolor=Mcolor=Hcolor=H_color;  
+				}  
+			}  
+			document.getElementById("strength_L").style.background=Lcolor;  
+			document.getElementById("strength_M").style.background=Mcolor;  
+			document.getElementById("strength_H").style.background=Hcolor;  
+			return;  
+		},  
     	//检查新密码格式
 		_checkNewPassword: function(){
 			var newPassword = $("#password").val();

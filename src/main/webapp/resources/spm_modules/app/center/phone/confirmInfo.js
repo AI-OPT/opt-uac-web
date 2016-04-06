@@ -65,7 +65,6 @@ define('app/center/phone/confirmInfo', function (require, exports, module) {
 			$("#verifyName").html("短信校验码");
 			$("#email").attr("style","display:none");
 			$("#phone").removeAttr("style");
-			var email = $("#email").val();
 			if(email != "" && email != null && email != undefined){
 				$("#changeConfirmType").removeAttr("disabled");
 				$("#changeConfirmType").html("通过已验证邮箱验证");
@@ -116,9 +115,7 @@ define('app/center/phone/confirmInfo', function (require, exports, module) {
 			ajaxController.ajax({
 				type : "POST",
 				data : {
-					"checkType": function(){
-						return $("#confirmType").val()
-					}
+					"confirmType": $("#confirmType").val()
 				},
 				url :_base+"/center/phone/sendVerify",
 				processing: true,

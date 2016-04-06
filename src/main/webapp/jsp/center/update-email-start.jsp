@@ -97,6 +97,8 @@
   </div>
   <%@ include file="/inc/foot.jsp"%>
    <script type="text/javascript">
+   		var phone = "${confirmInfo.phone}";
+		var email = "${confirmInfo.email}";
 		(function() {
 			seajs.use([ 'app/center/email/confirmInfo' ], function(ConfirmInfoPager) {
 				var pager = new ConfirmInfoPager({

@@ -32,13 +32,14 @@ define('app/center/password/confirmInfo', function (require, exports, module) {
     		"blur [id='verifyCode']":"_checkVerifyCode"
         },
         init: function(){
-        	_initShowView();
+        	//_initShowView();
         	_getImageRandomCode();
         },
     	//重写父类
     	setup: function () {
     		ConfirmInfoPager.superclass.setup.call(this);
-    		this._renderAccountInfo();
+    		//this._renderAccountInfo();
+    		this._initShowView();
     	},
     
     	//加载账户数据
@@ -56,7 +57,6 @@ define('app/center/password/confirmInfo', function (require, exports, module) {
 			$("#verifyName").html("短信校验码");
 			$("#email").attr("style","display:none");
 			$("#phone").removeAttr("style");
-			var email = $("#email").val();
 			if(email != "" && email != null && email != undefined){
 				$("#changeConfirmType").removeAttr("disabled");
 				$("#changeConfirmType").html("通过已验证邮箱验证");
@@ -107,10 +107,7 @@ define('app/center/password/confirmInfo', function (require, exports, module) {
 			ajaxController.ajax({
 				type : "POST",
 				data : {
-					"accountId":1,
-					"checkType": function(){
-						return $("#confirmType").val()
-					}
+					"confirmType":$("#confirmType").val()
 				},
 				url :_base+"/center/password/sendVerify",
 				processing: true,

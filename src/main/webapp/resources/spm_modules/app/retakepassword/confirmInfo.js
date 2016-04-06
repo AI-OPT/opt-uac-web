@@ -113,9 +113,7 @@ define('app/retakepassword/confirmInfo', function (require, exports, module) {
 			ajaxController.ajax({
 				type : "POST",
 				data : {
-					"checkType": function(){
-						return $("#confirmType").val()
-					}
+					"confirmType": $("#confirmType").val()
 				},
 				url :_base+"/retakePassword/sendVerify?k="+uuid,
 				processing: true,
