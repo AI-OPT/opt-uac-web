@@ -83,12 +83,12 @@ define('app/retakepassword/resetpassword', function (require, exports, module) {
 			}
 		},
     	//控制显示内容
-		_controlMsgText(id,msg){
+		_controlMsgText: function(id,msg){
 			var doc = document.getElementById(id+"");
 			doc.innerText=msg;
 		},
 		//控制显隐属性 1:隐藏 2：显示
-		_controlMsgAttr(id,flag){
+		_controlMsgAttr: function(id,flag){
 			var doc = document.getElementById(id+"");
 			if(flag == 1){
 				doc.setAttribute("style","display:none");

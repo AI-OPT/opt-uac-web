@@ -78,7 +78,7 @@
 	          <p class="word" id="verifyName">短信校验码</p>
 	          <p><input type="text" class="int-medium" id="verifyCode"></p>
 	          <p class="huoqu">
-		          <input id="sendVerify"  type="button" value="获取校验码" >
+		          <input id="sendVerify"  type="button" class="button" value="获取校验码" >
 		          <span class="regsiter-note" id="verifyCodeMsgDiv" style="display:none">
 				     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
 				     <span id="verifyCodeMsg"></span>
@@ -101,9 +101,9 @@
 		var email = "${confirmInfo.email}";
 		(function() {
 			seajs.use([ 'app/center/email/confirmInfo' ], function(ConfirmInfoPager) {
-				var pager = new ConfirmInfoPager({
-					element : document.body
-				});
+				var pager = new ConfirmInfoPager(
+					{element : document.body}
+				);
 				pager.render();
 			});
 		})(); 

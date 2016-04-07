@@ -77,7 +77,7 @@
            <div id="bandEmail">
 	           	<p class="word">邮箱</p>
 	          	<p>
-	          		<a href="${_base}/center/email/setEmail"><i class="icon-link"></i>绑定邮箱</a>
+	          		<a href="${_base}/center/bandEmail/confirminfo"><i class="icon-link"></i>绑定邮箱</a>
 	          		<input type="hidden" id="email" value="${accountInfo.email}">
 	          	</p>
            </div>

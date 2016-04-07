@@ -50,7 +50,7 @@ define('app/center/bandemail/confirmInfo', function (require, exports, module) {
 		//初始化展示页面
 		_initShowView:function(){
 			 //左侧菜单显示样式
-	   		$("#updateEmail").addClass("current");
+	   		$("#setEmail").addClass("current");
 			$("#confirmType").val("1");
 			$("#confirmTypeName").html("已验证手机");
 			$("#verifyName").html("短信校验码");
@@ -162,12 +162,12 @@ define('app/center/bandemail/confirmInfo', function (require, exports, module) {
 			}
 		},
 		//控制显示内容
-		_controlMsgText(id,msg){
+		_controlMsgText: function(id,msg){
 			var doc = document.getElementById(id+"");
 			doc.innerText=msg;
 		},
 		//控制显隐属性 1:隐藏 2：显示
-		_controlMsgAttr(id,flag){
+		_controlMsgAttr: function(id,flag){
 			var doc = document.getElementById(id+"");
 			if(flag == 1){
 				doc.setAttribute("style","display:none");
