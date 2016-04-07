@@ -149,10 +149,8 @@ return;
 		         <li class="SMSidentifying">
 		         	<input type="text" class="int-xlarge-SMSidentifying" placeholder="短信验证码" id="phoneVerifyCode">
 		         	 <span class="yzm">
-		         	<a >
-		         	 	<input class="regsiter-getIdentify_btn"id="PHONE_IDENTIFY"  type="button" value="获取验证码" >
-		         	</a>
-		         	</span>
+		         	 	<input class="button"id="PHONE_IDENTIFY"  type="button" value="获取验证码" >
+		         	 </span>
 		         		
 		         	<span class="regsiter-note" id="errorSmsMsg">
 		         		<i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">

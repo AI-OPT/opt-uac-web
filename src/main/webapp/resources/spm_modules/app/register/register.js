@@ -64,6 +64,7 @@ define('app/register/register', function (require, exports, module) {
     		if(phoneFlag!="0"&&picFlag!="0"&& passFlag!="0"&& smsFlag!="0"){
             	 var step = 59;
                  $('#PHONE_IDENTIFY').val('重新发送60');
+                 $("#PHONE_IDENTIFY").attr("disabled", true);
                  var _res = setInterval(function(){
                      $("#PHONE_IDENTIFY").attr("disabled", true);//设置disabled属性
                      $('#PHONE_IDENTIFY').val('重新发送'+step);

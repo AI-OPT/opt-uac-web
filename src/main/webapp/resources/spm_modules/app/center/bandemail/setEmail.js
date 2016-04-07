@@ -101,6 +101,7 @@ define('app/center/bandemail/setEmail', function (require, exports, module) {
 			}
 			var step = 59;
             $('#sendPhoneBtn').val('重新发送60');
+            $("#sendEmailBtn").attr("disabled", true);
             var _res = setInterval(function(){
                 $("#sendEmailBtn").attr("disabled", true);//设置disabled属性
                 $('#sendEmailBtn').val('重新发送'+step);

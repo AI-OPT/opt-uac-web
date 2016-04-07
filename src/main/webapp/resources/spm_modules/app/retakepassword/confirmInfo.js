@@ -98,6 +98,7 @@ define('app/retakepassword/confirmInfo', function (require, exports, module) {
 		},
 		_sendVerify:function(){
 			 var step = 59;
+			 $("#sendVerify").attr("disabled", true);//设置disabled属性
              $('#sendVerify').val('重新发送60');
              var _res = setInterval(function(){
                  $("#sendVerify").attr("disabled", true);//设置disabled属性
@@ -125,11 +126,11 @@ define('app/retakepassword/confirmInfo', function (require, exports, module) {
 						window.location.href = _base+url;
 		        	}else {
 		        		if(resultCode == "100002"){
-			        		this._controlMsgText("ssmVerifyCodeMsg",data.statusInfo);
-							this._controlMsgAttr("ssmVerifyCodeMsgDiv",2);
+			        		_this._controlMsgText("ssmVerifyCodeMsg",data.statusInfo);
+							_this._controlMsgAttr("ssmVerifyCodeMsgDiv",2);
 			        	}else{
-			        		this._controlMsgText("ssmVerifyCodeMsg","");
-							this._controlMsgAttr("ssmVerifyCodeMsgDiv",1);
+			        		_this._controlMsgText("ssmVerifyCodeMsg","");
+							_this._controlMsgAttr("ssmVerifyCodeMsgDiv",1);
 			        	}
 		        	}
 				},

@@ -101,6 +101,7 @@ define('app/center/phone/confirmInfo', function (require, exports, module) {
 		_sendVerify:function(){
 			var step = 59;
             $('#sendVerify').val('重新发送60');
+            $("#sendVerify").attr("disabled", true);
             var _res = setInterval(function(){
                 $("#sendVerify").attr("disabled", true);//设置disabled属性
                 $('#sendVerify').val('重新发送'+step);

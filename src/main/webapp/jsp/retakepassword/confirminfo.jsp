@@ -87,7 +87,7 @@
 	          <p class="word" id="verifyName">短信验证码</p>
 	          <p><input type="text" class="int-medium" id="verifyCode"></p>
 	          <p class="huoqu">
-	          	  <input id="sendVerify"  type="button" value="获取验证码" >
+	          	  <input id="sendVerify"  type="button" class="send-button" value="获取验证码" >
 			      <span class="regsiter-note" id="ssmVerifyCodeMsgDiv" style="display:none">
 				     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
 				     <span id="ssmVerifyCodeMsg"></span>

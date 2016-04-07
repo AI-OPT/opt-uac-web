@@ -84,8 +84,9 @@ box-shadow:0 0 14px rgba(218,218, 218, .7);  }
 .regsiter-wrapper-cnt ul .regsiter-btn:hover{ background:#10a2fb;} 
 .regsiter-wrapper-cnt ul .zuns a{ color:#10a2fb}
 /** 获取验证码按钮样式 **/
-.regsiter-getIdentify_btn{ float:right; width:100px;  float:left;background:#10a2fb;}
-
+.yzm .button{  background:#1c9aec; width:100px; height:35px; float:left; text-align:center; line-height:35px; color:#fff;}
+.yzm .button:hover{ background:#10a2fb;}
+.yzm .button:disabled{ color:#fff; background:#c0c0c0;}
 
 /**设置密码强度样式**/
 .regsiter-set-password{width:210px; float:left; margin-left:170px; height:30px;display: inline-block; }

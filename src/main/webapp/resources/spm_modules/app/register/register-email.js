@@ -107,6 +107,7 @@ define('app/register/register-email', function (require, exports, module) {
     		if(flag!="0"){
     			var step = 59;
                 $('#getIdentify').val('重新发送60');
+                $("#getIdentify").attr("disabled", true);
                 var _res = setInterval(function(){
                     $("#getIdentify").attr("disabled", true);//设置disabled属性
                     $('#getIdentify').val('重新发送'+step);

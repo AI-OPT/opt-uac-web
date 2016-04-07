@@ -263,3 +263,7 @@
 .pop-cnt ul li .pop-status{ background:#1c9aec;color:#fff;}
 .pop-cnt ul li .pop-status:hover{background:#10a2fb;}
 .pop-cnt ul li .pop-btn{ width:120px; height:40px;}
+
+.send-button{ width:110px; float:left; height:40px; background:#1c9aec; margin-left:10px; color:#fff; text-align:center; line-height:40px;}
+.send-button:hover{ color:#fff; background:#10a2fb;}
+.send-button:disabled{ color:#fff; background:#c0c0c0;}

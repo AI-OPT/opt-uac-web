@@ -68,7 +68,7 @@
           <p class="word">短信校验码</p>
           <p><input class="int-medium" placeholder="" id="verifyCode"></p>
            <p class="huoqu">
-           	   <input id="sendPhoneBtn"  type="button" value="获取短信校验码" >
+           	   <input id="sendPhoneBtn"  type="button" class="send-button" value="获取短信校验码" >
 	           <span class="regsiter-note" id="verifyCodeMsgDiv" style="display:none">
 				     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
 				     <span id="verifyCodeMsg"></span>

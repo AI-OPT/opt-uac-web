@@ -134,6 +134,7 @@ define('app/center/phone/setPhone', function (require, exports, module) {
     		}
     		var step = 59;
             $('#sendPhoneBtn').val('重新发送60');
+            $("#sendPhoneBtn").attr("disabled", true);
             var _res = setInterval(function(){
                 $("#sendPhoneBtn").attr("disabled", true);//设置disabled属性
                 $('#sendPhoneBtn').val('重新发送'+step);

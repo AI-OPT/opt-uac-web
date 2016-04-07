@@ -38,9 +38,7 @@
           	<input type="hidden" id="flag">
           	<input type="hidden" name="accountIdKey" id="accountIdKey" value="${requestScope.accountIdKey}"/>
           <span class="yzm">
-	          <a >
-			     <input class="regsiter-getIdentify_btn"id="getIdentify"  type="button" value="获取验证码" >
-			  </a>
+			     <input class="regsiter-getIdentify_btn"id="getIdentify"  type="button" class="send-button" value="获取验证码" >
           </span>
           
          </li>
