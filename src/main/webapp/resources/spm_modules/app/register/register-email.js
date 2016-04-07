@@ -26,8 +26,8 @@ define('app/register/register-email', function (require, exports, module) {
     		 _hideErroText();
          },
     	_bindHandle: function(){
-    		//$("#email").on("blur",this._validServiceEmail);
-    		$("#getIdentify").on("click",this._validServiceEmail);
+    		$("#email").on("blur",this._validServiceEmail);
+    		//$("#getIdentify").on("click",this._validServiceEmail);
     		$("#getIdentify").on("click",this._getIdentify);
     		$("#BTN_PASS").on("click",this._passEmail);
     		$("#BTN_SUBMIT").on("click",this._validServiceEmail);
@@ -43,7 +43,7 @@ define('app/register/register-email', function (require, exports, module) {
     		 $("#errorEmIdentifyMsg").attr("style","display:none");
     	},
     	_validServiceEmail: function(){
-    		
+    		$("#identifyCode").val("");
     		$("#errorEmIdentifyMsg").attr("style","display:none");
     		var emailCode = $('#email').val();
     		if(emailCode!=""){
@@ -64,6 +64,7 @@ define('app/register/register-email', function (require, exports, module) {
         		        	if(data.responseHeader.resultCode=="10004"){
         		        		$("#showErroeEmIdentify").html("邮箱已被其他账户绑定 ");
     		    				$("#errorEmIdentifyMsg").attr("style","display:block");
+    		    				$("#flag").val("0");
     		    				return false;
     			        	}else if(data.responseHeader.resultCode=="000000"){
     			        		$("#errorEmIdentifyMsg").attr("style","display:none");
@@ -103,6 +104,7 @@ define('app/register/register-email', function (require, exports, module) {
 			}
     	},
     	_getIdentify: function(){
+    		$("#identifyCode").val("");
     		var flag = $("#flag").val();
     		if(flag!="0"){
     			var step = 59;
