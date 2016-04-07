@@ -48,8 +48,34 @@ define('app/register/register-email', function (require, exports, module) {
     		var emailCode = $('#email').val();
     		if(emailCode!=""){
     			if(/^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/.test(emailCode)){
-    				$("#errorEmIdentifyMsg").attr("style","display:none");
-    				$("#flag").val("1");
+    				
+    				var	param={
+        					email:	$("#email").val(),
+        					accountIdKey:$("#accountIdKey").val()
+        				   };
+            		ajaxController.ajax({
+        		        type: "post",
+        		        processing: false,
+        		        url: _base+"/reg/checkEmail",
+        		        dataType: "json",
+        		        data: param,
+        		        message: "正在加载数据..",
+        		        success: function (data) {
+        		        	if(data.responseHeader.resultCode=="10004"){
+        		        		$("#showErroeEmIdentify").html("邮箱已被其他账户绑定 ");
+    		    				$("#errorEmIdentifyMsg").attr("style","display:block");
+    		    				return false;
+    			        	}else if(data.responseHeader.resultCode=="000000"){
+    			        		$("#errorEmIdentifyMsg").attr("style","display:none");
+    		    				$("#flag").val("1");
+        		        	}
+        		        },
+        		        error: function(XMLHttpRequest, textStatus, errorThrown) {
+        					 alert(XMLHttpRequest.status);
+        					 alert(XMLHttpRequest.readyState);
+        					 alert(textStatus);
+        					   }
+        		    }); 
     			}else{
     				$("#showErroeEmIdentify").text("邮箱地址格式错误 ");
     				$("#errorEmIdentifyMsg").attr("style","display:block");

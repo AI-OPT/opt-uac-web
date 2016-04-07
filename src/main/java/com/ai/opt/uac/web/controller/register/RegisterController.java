@@ -174,6 +174,97 @@ public class RegisterController {
         return responseData;
     }
 
+    
+ 
+    @RequestMapping("/checkPhone")
+    @ResponseBody
+    public ResponseData<String> checkPhone(PhoneRegisterRequest request, HttpSession session,HttpServletRequest req) {
+        ResponseData<String> responseData = null;
+        ResponseHeader header = new ResponseHeader();
+        header.setIsSuccess(true);
+        try {
+            IRegisterSV iRegisterSV = DubboConsumerFactory.getService("iRegisterSV");
+            PhoneRegisterResponse response = iRegisterSV.registerByPhone(request);
+           String code = response.getResponseHeader().getResultCode();
+           String accountId = Long.toString(response.getAccountId());
+           if(Register.PHONE_NOTONE_ERROR.equals(code)){
+               header.setResultCode(Register.PHONE_NOTONE_ERROR);
+               header.setResultMessage("手机已经注册");
+               responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "手机已经注册",
+                       accountId);
+               responseData.setResponseHeader(header);
+               
+           }else{
+               header.setResultCode(Register.REGISTER_SUCCESS_ID);
+               header.setResultMessage("成功");
+               String accountIdKey = UUIDUtil.genId32();
+               responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "手机校验成功",
+                       accountIdKey);
+               responseData.setResponseHeader(header);
+           }
+        } catch (Exception e) {
+            LOG.error("手机校验失败！", e);
+            responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "手机校验失败",
+                    null);
+        }
+        return responseData;
+    }
+    @RequestMapping("/checkEmail")
+    @ResponseBody
+    public ResponseData<String> checkEmial(UpdateEmailReq request, HttpSession session) {
+        ResponseData<String> responseData = null;
+        ResponseHeader header = new ResponseHeader();
+        header.setIsSuccess(true);
+        try {
+            ICacheClient iCacheClient = CacheClientFactory
+                    .getCacheClient(Register.CACHE_NAMESPACE);
+            //从缓存获取账号ID
+            String id = iCacheClient.get(request.getAccountIdKey());
+            IAccountSecurityManageSV iAccountSecurityManageSV = DubboConsumerFactory
+                    .getService("iAccountSecurityManageSV");
+            AccountEmailRequest req = new AccountEmailRequest();
+            if(StringUtil.isBlank(id)){
+                //跳转到注册页面
+                header.setResultCode(Register.UUID_INVIAL_ERROR);
+                header.setResultMessage("uuid失效");
+                responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "uuid失效",
+                        null);
+                responseData.setResponseHeader(header);
+                return responseData;
+            }else{
+                long accountId = Long.parseLong(id);
+                req.setAccountId(accountId);
+                req.setEmail(request.getEmail());
+                req.setUpdateAccountId(accountId);
+                BaseResponse  baseInfo = iAccountSecurityManageSV.setEmailData(req);
+                String resultCode = baseInfo.getResponseHeader().getResultCode();
+                String resultMessage = baseInfo.getResponseHeader().getResultMessage();
+                if(Register.EMAIL_NOTONE_ERROR.equals(resultCode)){
+                    header.setResultCode(Register.EMAIL_NOTONE_ERROR);
+                    header.setResultMessage("邮箱已经注册");
+                    responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "邮箱已经注册",
+                            null);
+                    responseData.setResponseHeader(header);
+                    return responseData;
+                }else if (ResultCode.SUCCESS_CODE.equals(resultCode)) {
+                    header.setResultCode(Register.BAND_EMAIL_SUCCESS_ID);
+                    header.setResultMessage("邮箱校验成功");
+                    responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "邮箱校验成功",
+                            null);
+                    responseData.setResponseHeader(header);
+                } else {
+                    responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, resultMessage,
+                            null);
+                }
+            }
+        } catch (Exception e) {
+            LOG.error("邮箱校验失败！", e);
+            responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "邮箱校验失败",
+                    null);
+        }
+        return responseData;
+    }  
+    
     /**
      * 绑定email
      * 

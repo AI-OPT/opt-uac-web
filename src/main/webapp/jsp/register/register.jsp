@@ -161,7 +161,10 @@ return;
 		         </li>
 		         <li>
 		         	<input type="button" class="regsiter-btn" value="注 册"  id="BTN_REGISTER">
-		         	<input type="hidden" id="errorFlag">
+		         	<input type="hidden" id="errorPhoneFlag">
+		         	<input type="hidden" id="errorPicFlag">
+		         	<input type="hidden" id="errorPassFlag">
+		         	<input type="hidden" id="errorSMSFlag">
 		         </li>
 		         <li class="zuns">* 注册表示您同意遵守<A href="#">《云计费服务条款》</A></li>
 	

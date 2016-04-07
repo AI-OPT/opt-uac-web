@@ -57,8 +57,11 @@ define('app/register/register', function (require, exports, module) {
     	},
     	//获取短信验证码
     	_getPhoneVitentify: function(){
-    		var flag = $('#errorFlag').val();
-             if(flag!=0){
+    		var phoneFlag=$('#errorPhoneFlag').val();
+    		var picFlag=$('#errorPicFlag').val();
+    		var passFlag=$('#errorPassFlag').val();
+    		var smsFlag=$('#errorSMSFlag').val();
+    		if(phoneFlag!="0"&&picFlag!="0"&& passFlag!="0"&& smsFlag!="0"){
             	 var step = 59;
                  $('#PHONE_IDENTIFY').val('重新发送60');
                  var _res = setInterval(function(){
@@ -108,19 +111,49 @@ define('app/register/register', function (require, exports, module) {
     	
     	//校验手机
     	_validServicePho: function(){
+    		$("#errorPhoneMsg").attr("style","display:none");
     		var phone = $('#phone').val();
     		if (phone==""){
     			$('#showPhoneMsg').text("请输入手机号码");
     			$("#errorPhoneMsg").attr("style","display:block");
-    			$('#errorFlag').val("0");
+    			$('#errorPhoneFlag').val("0");
 				return false;
 			}else if( /^1\d{10}$/.test(phone)){
-				$('#errorFlag').val("1");
-				$("#errorPhoneMsg").attr("style","display:none");
+				var	param={
+    					phone:$("#phone").val(),
+    					accountPassword:"test",		   
+    					phoneVerifyCode:"test",   
+    					pictureVerifyCode:"test"
+    				   };
+        		ajaxController.ajax({
+    			        type: "post",
+    			        processing: false,
+    			        url: _base+"/reg/checkPhone",
+    			        dataType: "json",
+    			        data: param,
+    			        message: "正在加载数据..",
+    			        success: function (data) {
+    			         if(data.responseHeader.resultCode=="10003"){
+    			        		$('#showPhoneMsg').text("手机号码已注册");
+    							$("#errorPhoneMsg").attr("style","display:block");
+    							$('#errorPhoneFlag').val("0");
+    							return false;
+    			        	}else if(data.responseHeader.resultCode=="000000"){
+    			        		$('#errorPhoneFlag').val("1");
+    							$("#errorPhoneMsg").attr("style","display:none");
+    			        	}
+    			        	
+    			        },
+    			        error: function(XMLHttpRequest, textStatus, errorThrown) {
+    						 alert(XMLHttpRequest.status);
+    						 alert(XMLHttpRequest.readyState);
+    						 alert(textStatus);
+    						}
+    			    }); 
 			}else{
 				$('#showPhoneMsg').text("手机号码格式不正确");
 				$("#errorPhoneMsg").attr("style","display:block");
-				$('#errorFlag').val("0");
+				$('#errorPhoneFlag').val("0");
 				return false;
 			}
     	},
@@ -131,33 +164,32 @@ define('app/register/register', function (require, exports, module) {
     		if(password==""){
     			$('#showPawMsg').text("请输入密码");
     			$("#errorPawMsg").attr("style","display:block");
-    			$('#errorFlag').val("0");
+    			$('#errorPassFlag').val("0");
 				return false;
     		}else if(/[\x01-\xFF]*/.test(password)){
     				if(/^\S*$/.test(password)){
     					if(/^[\x21-\x7E]{6,14}$/.test(password)){
     						$("#errorPawMsg").attr("style","display:none");
-    						$('#errorFlag').val("1");
+    						$('#errorPassFlag').val("1");
     					}else{
     						$('#showPawMsg').text("长度为6-14个字符 ");
     		    			$("#errorPawMsg").attr("style","display:block");
-    		    			$('#errorFlag').val("0");
+    		    			$('#errorPassFlag').val("0");
     						return false;
     					}
     					
     				}else{
     					$('#showPawMsg').text("不允许有空格 ");
             			$("#errorPawMsg").attr("style","display:block");
-            			$('#errorFlag').val("0");
+            			$('#errorPassFlag').val("0");
         				return false;
     				}
     			}else{
     				$('#showPawMsg').text("支持数字、字母、符号组合 ");
         			$("#errorPawMsg").attr("style","display:block");
-        			$('#errorFlag').val("0");
+        			$('#errorPassFlag').val("0");
     				return false;
     			}
-    			
     	},
     	//图形验证码
     	_validServicePic: function(){
@@ -166,13 +198,12 @@ define('app/register/register', function (require, exports, module) {
     		if(pictureCode==""){
     			$('#showPicMsg').text("请输入图形验证码 ");
     			$("#errorPicMsg").attr("style","display:block");
-    			$('#errorFlag').val("0");
+    			$('#errorPicFlag').val("0");
 				return false;
     		}else{
-    			$('#errorFlag').val("1");
+    			$('#errorPicFlag').val("1");
     			return true;
     		}
-    		
     	},
     	//短信验证码
     	_validServiceSSM: function(){
@@ -181,16 +212,19 @@ define('app/register/register', function (require, exports, module) {
     		if(smsCode==""){
     			$('#showSmsMsg').text("请输入短信验证码 ");
     			$("#errorSmsMsg").attr("style","display:block");
-    			$('#errorFlag').val("0");
+    			$('#errorSMSFlag').val("0");
 				return false;
     		}else{
-    			$('#errorFlag').val("1");
+    			$('#errorSMSFlag').val("1");
     			return true;
     		}
     	},
     	_sumbit: function(){
-    		var falg=$('#errorFlag').val();
-    		if(falg!="0"){
+    		var phoneFlag=$('#errorPhoneFlag').val();
+    		var picFlag=$('#errorPicFlag').val();
+    		var passFlag=$('#errorPassFlag').val();
+    		var smsFlag=$('#errorSMSFlag').val();
+    		if(phoneFlag!="0"&&picFlag!="0"&& passFlag!="0"&& smsFlag!="0"){
     			var	param={
     					phone:	$("#phone").val(),  
     					accountPassword:$("#password").val(),		   
