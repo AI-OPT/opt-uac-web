@@ -68,6 +68,11 @@ public class RegisterController {
 
         return new ModelAndView("jsp/register/register");
     }
+    @RequestMapping("/protocol")
+    public ModelAndView registerProtocol(HttpServletRequest request) {
+    	
+    	return new ModelAndView("jsp/register/register-protocol");
+    }
 
     @RequestMapping("/toRegisterEmail")
     public ModelAndView registerEmail(
