@@ -172,6 +172,7 @@ define('app/retakepassword/resetpassword', function (require, exports, module) {
 			ajaxController.ajax({
 				type : "POST",
 				data : {"password":newPassword},
+				dataType: 'json',
 				url :_base+"/retakePassword/setNewPassword?k="+uuid,
 				processing: true,
 				message : "正在处理中，请稍候...",

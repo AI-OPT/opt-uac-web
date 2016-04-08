@@ -106,6 +106,7 @@ define('app/retakepassword/userInfo', function (require, exports, module) {
 						return jQuery.trim($("#pictureVerifyCode").val());
 					}
 				},
+				dataType: 'json',
 				url :_base+"/retakePassword/checkUserInfo",
 				processing: true,
 				message : "正在处理中，请稍候...",

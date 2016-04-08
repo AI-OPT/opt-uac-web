@@ -119,6 +119,7 @@ define('app/center/bandemail/setEmail', function (require, exports, module) {
 						return $("#email").val()
 					}
 				},
+				dataType: 'json',
 				url :_base+"/center/bandEmail/sendEmailVerify?k="+uuid,
 				processing: true,
 				message : "正在处理中，请稍候...",
@@ -153,6 +154,7 @@ define('app/center/bandemail/setEmail', function (require, exports, module) {
 			ajaxController.ajax({
 				type : "POST",
 				data : _this._getSafetyConfirmData(),
+				dataType: 'json',
 				url :_base+"/center/bandEmail/setNewEmail?k="+uuid,
 				processing: true,
 				message : "正在处理中，请稍候...",

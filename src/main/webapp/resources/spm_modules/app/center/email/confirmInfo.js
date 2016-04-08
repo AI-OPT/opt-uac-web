@@ -109,6 +109,7 @@ define('app/center/email/confirmInfo', function (require, exports, module) {
 				data : {
 					"confirmType":$("#confirmType").val()
 				},
+				dataType: 'json',
 				url :_base+"/center/email/sendVerify",
 				processing: true,
 				message : "正在处理中，请稍候...",
@@ -183,6 +184,7 @@ define('app/center/email/confirmInfo', function (require, exports, module) {
 			ajaxController.ajax({
 				type : "POST",
 				data : _this._getSafetyConfirmData(),
+				dataType: 'json',
 				url :_base+"/center/email/confirmInfo",
 				processing: true,
 				message : "正在处理中，请稍候...",

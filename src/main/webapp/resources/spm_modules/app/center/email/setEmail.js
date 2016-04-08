@@ -77,6 +77,7 @@ define('app/center/email/setEmail', function (require, exports, module) {
 						return $("#email").val()
 					}
 				},
+				dataType: 'json',
 				url :_base+"/center/email/checkEmailDiffOld?k="+uuid,
 				async: false,
 				processing: true,
@@ -170,6 +171,7 @@ define('app/center/email/setEmail', function (require, exports, module) {
 						return $("#email").val()
 					}
 				},
+				dataType: 'json',
 				url :_base+"/center/email/sendEmailVerify?k="+uuid,
 				processing: true,
 				message : "正在处理中，请稍候...",
@@ -209,6 +211,7 @@ define('app/center/email/setEmail', function (require, exports, module) {
 			ajaxController.ajax({
 				type : "POST",
 				data : _this._getSafetyConfirmData(),
+				dataType: 'json',
 				url :_base+"/center/email/setNewEmail?k="+uuid,
 				processing: true,
 				message : "正在处理中，请稍候...",

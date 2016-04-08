@@ -110,6 +110,7 @@ define('app/center/password/confirmInfo', function (require, exports, module) {
 				data : {
 					"confirmType":$("#confirmType").val()
 				},
+				dataType: 'json',
 				url :_base+"/center/password/sendVerify",
 				processing: true,
 				message : "正在处理中，请稍候...",
@@ -185,6 +186,7 @@ define('app/center/password/confirmInfo', function (require, exports, module) {
 			ajaxController.ajax({
 				type : "POST",
 				data : _this._getSafetyConfirmData(),
+				dataType: 'json',
 				url :_base+"/center/password/confirmInfo",
 				processing: true,
 				message : "正在处理中，请稍候...",
