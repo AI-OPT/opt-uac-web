@@ -16,12 +16,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.ai.opt.base.vo.BaseResponse;
 import com.ai.opt.base.vo.ResponseHeader;
 import com.ai.opt.sdk.cache.factory.CacheClientFactory;
+import com.ai.opt.sdk.configcenter.factory.ConfigCenterFactory;
 import com.ai.opt.sdk.util.DubboConsumerFactory;
 import com.ai.opt.sdk.util.RandomUtil;
 import com.ai.opt.sdk.util.StringUtil;
@@ -88,12 +90,12 @@ public class UpdatePhoneController {
 	 */
 	@RequestMapping("/sendVerify")
 	@ResponseBody
-	public ResponseData<String> sendVerify(HttpServletRequest request,  String confirmType) {
+	public ResponseData<String> sendVerify(HttpServletRequest request, @RequestParam(value="updatPhoneConfirmType") String updatPhoneConfirmType) {
 		SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
 		ResponseData<String> responseData = null;
 		String sessionId = request.getSession().getId();
 		if (userClient != null) {
-			if (UpdatePhone.CHECK_TYPE_PHONE.equals(confirmType)) {
+			if (UpdatePhone.CHECK_TYPE_PHONE.equals(updatPhoneConfirmType)) {
 				// 发送手机验证码
 				String isSuccess = sendPhoneVerifyCode(sessionId, userClient);
 				if ("0000".equals(isSuccess)) {
@@ -104,7 +106,8 @@ public class UpdatePhoneController {
 					responseData.setResponseHeader(header);
 					return responseData;
 				} else if ("0002".equals(isSuccess)) {
-					String errorMsg = PhoneVerifyConstants.SEND_VERIFY_MAX_TIME / 60 + "分钟内不可重复发送";
+					String maxTimeStr = ConfigCenterFactory.getConfigCenterClient().get(PhoneVerifyConstants.SEND_VERIFY_MAX_TIME_KEY);
+					String errorMsg = Integer.valueOf(maxTimeStr) / 60 + "分钟内不可重复发送";
 					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, errorMsg, errorMsg);
 					ResponseHeader header = new ResponseHeader();
 					header.setIsSuccess(false);
@@ -121,7 +124,7 @@ public class UpdatePhoneController {
 					return responseData;
 				}
 
-			} else if (UpdatePhone.CHECK_TYPE_EMAIL.equals(confirmType)) {
+			} else if (UpdatePhone.CHECK_TYPE_EMAIL.equals(updatPhoneConfirmType)) {
 				// 发送邮件验证码
 				String isSuccess = sendEmailVerifyCode(sessionId, userClient);
 
@@ -131,7 +134,8 @@ public class UpdatePhoneController {
 					responseData.setResponseHeader(header);
 					return responseData;
 				} else if ("0002".equals(isSuccess)) {
-					String errorMsg = EmailVerifyConstants.SEND_VERIFY_MAX_TIME / 60 + "分钟内不可重复发送";
+					String maxTimeStr = ConfigCenterFactory.getConfigCenterClient().get(EmailVerifyConstants.SEND_VERIFY_MAX_TIME_KEY);
+					String errorMsg = Integer.valueOf(maxTimeStr) / 60 + "分钟内不可重复发送";
 					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, errorMsg, null);
 					ResponseHeader header = new ResponseHeader();
 					header.setIsSuccess(false);
@@ -177,13 +181,15 @@ public class UpdatePhoneController {
 		if (StringUtil.isBlank(times)) {
 			// 将验证码放入缓存
 			String cacheKey = UpdatePhone.CACHE_KEY_VERIFY_PHONE + sessionId;
-			cacheClient.setex(cacheKey, PhoneVerifyConstants.VERIFY_OVERTIME, phoneVerifyCode);
+			String overTimeStr = ConfigCenterFactory.getConfigCenterClient().get(PhoneVerifyConstants.VERIFY_OVERTIME_KEY);
+			cacheClient.setex(cacheKey, Integer.valueOf(overTimeStr), phoneVerifyCode);
 			// 将发送次数放入缓存
-			cacheClient.setex(smskey, PhoneVerifyConstants.SEND_VERIFY_MAX_TIME, smstimes);
+			String maxTimeStr = ConfigCenterFactory.getConfigCenterClient().get(PhoneVerifyConstants.SEND_VERIFY_MAX_TIME_KEY);
+			cacheClient.setex(smskey, Integer.valueOf(maxTimeStr), smstimes);
 			// 设置短息信息
 			List<SMData> dataList = new LinkedList<SMData>();
 			SMData smData = new SMData();
-			smData.setGsmContent("${VERIFY}:" + phoneVerifyCode + "^${VALIDMINS}:" + PhoneVerifyConstants.VERIFY_OVERTIME / 60);
+			smData.setGsmContent("${VERIFY}:" + phoneVerifyCode + "^${VALIDMINS}:" + Integer.valueOf(overTimeStr) / 60);
 			smData.setPhone(userClient.getPhone());
 			smData.setTemplateId(PhoneVerifyConstants.TEMPLATE_RETAKE_PASSWORD_ID);
 			smData.setServiceType(PhoneVerifyConstants.SERVICE_TYPE);
@@ -231,11 +237,13 @@ public class UpdatePhoneController {
 			String verifyCode = RandomUtil.randomNum(EmailVerifyConstants.VERIFY_SIZE);
 			// 将验证码放入缓存
 			String cacheKey = UpdatePhone.CACHE_KEY_VERIFY_EMAIL + sessionId;
-			cacheClient.setex(cacheKey, EmailVerifyConstants.VERIFY_OVERTIME, verifyCode);
+			String overTimeStr = ConfigCenterFactory.getConfigCenterClient().get(EmailVerifyConstants.VERIFY_OVERTIME_KEY);
+			cacheClient.setex(cacheKey, Integer.valueOf(overTimeStr), verifyCode);
 			// 将发送次数放入缓存
-			cacheClient.setex(smskey, EmailVerifyConstants.SEND_VERIFY_MAX_TIME, smstimes);
+			String maxTimeStr = ConfigCenterFactory.getConfigCenterClient().get(EmailVerifyConstants.SEND_VERIFY_MAX_TIME_KEY);
+			cacheClient.setex(smskey, Integer.valueOf(maxTimeStr), smstimes);
 			// 超时时间
-			String overTime = ObjectUtils.toString(EmailVerifyConstants.VERIFY_OVERTIME / 60);
+			String overTime = ObjectUtils.toString(Integer.valueOf(overTimeStr) / 60);
 			emailRequest.setData(new String[] { nickName, verifyCode, overTime });
 			boolean flag = VerifyUtil.sendEmail(emailRequest);
 			if (flag) {
@@ -383,7 +391,8 @@ public class UpdatePhoneController {
 				responseData.setResponseHeader(header);
 				return responseData;
 			} else if ("0002".equals(rasultCode)) {
-				String errorMsg = PhoneVerifyConstants.SEND_VERIFY_MAX_TIME/60+"分钟内不可重复发送";
+				String maxTimeStr = ConfigCenterFactory.getConfigCenterClient().get(PhoneVerifyConstants.SEND_VERIFY_MAX_TIME_KEY);
+				String errorMsg = Integer.valueOf(maxTimeStr)/60+"分钟内不可重复发送";
 				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, errorMsg, errorMsg);
 				ResponseHeader header = new ResponseHeader();
 				header.setIsSuccess(false);
@@ -413,13 +422,15 @@ public class UpdatePhoneController {
 			String phoneVerifyCode = RandomUtil.randomNum(PhoneVerifyConstants.VERIFY_SIZE);
 			// 将验证码放入缓存
 			String cacheKey = UpdatePhone.CACHE_KEY_VERIFY_SETPHONE + request.getSession().getId();
-			cacheClient.setex(cacheKey, PhoneVerifyConstants.VERIFY_OVERTIME, phoneVerifyCode);
+			String overTimeStr = ConfigCenterFactory.getConfigCenterClient().get(PhoneVerifyConstants.VERIFY_OVERTIME_KEY);
+			cacheClient.setex(cacheKey, Integer.valueOf(overTimeStr), phoneVerifyCode);
 			// 将发送次数放入缓存
-			cacheClient.setex(smskey, PhoneVerifyConstants.SEND_VERIFY_MAX_TIME, smstimes);
+			String maxTimeStr = ConfigCenterFactory.getConfigCenterClient().get(PhoneVerifyConstants.SEND_VERIFY_MAX_TIME_KEY);
+			cacheClient.setex(smskey, Integer.valueOf(maxTimeStr), smstimes);
 			// 设置短息信息
 			List<SMData> dataList = new LinkedList<SMData>();
 			SMData smData = new SMData();
-			smData.setGsmContent("${VERIFY}:" + phoneVerifyCode + "^${VALIDMINS}:" + PhoneVerifyConstants.VERIFY_OVERTIME / 60);
+			smData.setGsmContent("${VERIFY}:" + phoneVerifyCode + "^${VALIDMINS}:" + Integer.valueOf(overTimeStr) / 60);
 			smData.setPhone(phone);
 			smData.setTemplateId(PhoneVerifyConstants.TEMPLATE_RETAKE_SETPHONE_ID);
 			smData.setServiceType(PhoneVerifyConstants.SERVICE_TYPE);

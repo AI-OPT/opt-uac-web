@@ -10,6 +10,9 @@ import com.ai.opt.sdk.configcenter.client.IConfigCenterClient;
 import com.ai.opt.sdk.configcenter.factory.ConfigCenterFactory;
 import com.ai.opt.sdk.constants.SDKConstants;
 import com.ai.opt.uac.web.constants.Constants;
+import com.ai.opt.uac.web.constants.VerifyConstants;
+import com.ai.opt.uac.web.constants.VerifyConstants.EmailVerifyConstants;
+import com.ai.opt.uac.web.constants.VerifyConstants.PhoneVerifyConstants;
 
 public class IConfigCenterClientTest {
 
@@ -145,5 +148,36 @@ public class IConfigCenterClientTest {
 
     	 System.out.println("url config ... end");
      }
+     
+     @Test
+     public void addSendVerifyTimesConfig(){
+    	 System.out.println("addSendVerifyTimesConfig ... start");
+    	 String PHONE_VERIFY_OVERTIME = "300";
+    	 String PHONE_SEND_VERIFY_MAX_TIME = "60";
+    	 String EMAIL_VERIFY_OVERTIME = "1800";
+    	 String EMAIL_SEND_VERIFY_MAX_TIME = "60";
+    	 if (!client.exists(VerifyConstants.PhoneVerifyConstants.SEND_VERIFY_MAX_TIME_KEY)) {
+             client.add(PhoneVerifyConstants.SEND_VERIFY_MAX_TIME_KEY, PHONE_SEND_VERIFY_MAX_TIME);
+         } else {
+             client.modify(PhoneVerifyConstants.SEND_VERIFY_MAX_TIME_KEY, PHONE_SEND_VERIFY_MAX_TIME);
+         }
+    	 if (!client.exists(VerifyConstants.PhoneVerifyConstants.VERIFY_OVERTIME_KEY)) {
+             client.add(PhoneVerifyConstants.VERIFY_OVERTIME_KEY, PHONE_VERIFY_OVERTIME);
+         } else {
+             client.modify(PhoneVerifyConstants.VERIFY_OVERTIME_KEY, PHONE_VERIFY_OVERTIME);
+         }
+    	 
+    	 if (!client.exists(VerifyConstants.EmailVerifyConstants.SEND_VERIFY_MAX_TIME_KEY)) {
+             client.add(EmailVerifyConstants.SEND_VERIFY_MAX_TIME_KEY, EMAIL_SEND_VERIFY_MAX_TIME);
+         } else {
+             client.modify(EmailVerifyConstants.SEND_VERIFY_MAX_TIME_KEY, EMAIL_SEND_VERIFY_MAX_TIME);
+         }
+    	 if (!client.exists(VerifyConstants.EmailVerifyConstants.VERIFY_OVERTIME_KEY)) {
+             client.add(EmailVerifyConstants.VERIFY_OVERTIME_KEY, EMAIL_VERIFY_OVERTIME);
+         } else {
+             client.modify(EmailVerifyConstants.VERIFY_OVERTIME_KEY, EMAIL_VERIFY_OVERTIME);
+         }
 
+    	 System.out.println("addSendVerifyTimesConfig ... end");
+     }
 }

@@ -113,10 +113,12 @@ define('app/center/phone/confirmInfo', function (require, exports, module) {
                 }
             },1000);
 			var _this = this;
+			var type1=$("#confirmType").val();
+			alert(type1);
 			ajaxController.ajax({
 				type : "POST",
 				data : {
-					"confirmType": $("#confirmType").val()
+					"updatPhoneConfirmType": $("#confirmType").val()
 				},
 				url :_base+"/center/phone/sendVerify",
 				processing: true,

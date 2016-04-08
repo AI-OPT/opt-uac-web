@@ -9,8 +9,14 @@ public final class VerifyConstants {
 		/**手机验证码长度*/
 		public static final int VERIFY_SIZE = 6;
 		
-		/**手机验证码超时时间*/
-		public static final int VERIFY_OVERTIME = 300;
+		///**手机验证码超时时间*/
+		//public static final int VERIFY_OVERTIME = 300;
+		///** 可重复发送时间*/
+        //public static final int SEND_VERIFY_MAX_TIME = 60;
+		/**手机验证码超时时间 配置key*/
+		public static final String VERIFY_OVERTIME_KEY = "phone_verifycode_overtime";
+		/** 可重复发送时间 配置key*/
+        public static final String SEND_VERIFY_MAX_TIME_KEY = "phone_verifycode_send_maxtime";
 		
 		/** 短信注册模板ID */
         public static final String TEMPLATE_REGISTER_ID = "1";
@@ -29,9 +35,6 @@ public final class VerifyConstants {
         
         public static final String SERVICE_TYPE = "1";
         
-        /** 邮箱可重复发送时间*/
-        public static final int SEND_VERIFY_MAX_TIME = 60;
-		
 	}
 	
 	public final class EmailVerifyConstants{
@@ -43,14 +46,18 @@ public final class VerifyConstants {
 		/**邮箱验证码长度*/
 		public static final int VERIFY_SIZE = 6;
     	
-    	/**邮件验证码超时时间*/
-		public static final int VERIFY_OVERTIME = 1800;
-		
 		/**邮箱模板路径*/
 		public static final String TEMPLATE_URL = "email/template/uac-retakepassword-mail.xml";
 		
-		/** 邮箱可重复发送时间*/
-        public static final int SEND_VERIFY_MAX_TIME = 60;
+		///**邮件验证码超时时间*/
+		//public static final int VERIFY_OVERTIME = 1800;
+		///** 邮箱可重复发送时间*/
+        //public static final int SEND_VERIFY_MAX_TIME = 60;
+		/**邮件验证码超时时间 配置key*/
+		public static final String VERIFY_OVERTIME_KEY = "email_verifycode_overtime";
+		
+		/** 邮箱可重复发送时间 配置key*/
+        public static final String SEND_VERIFY_MAX_TIME_KEY = "email_verifycode_send_maxtime";
 	}
 	
 	public final class PictureVerifyConstants{

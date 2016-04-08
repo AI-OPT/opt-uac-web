@@ -22,6 +22,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.ai.opt.base.vo.BaseResponse;
 import com.ai.opt.base.vo.ResponseHeader;
 import com.ai.opt.sdk.cache.factory.CacheClientFactory;
+import com.ai.opt.sdk.configcenter.factory.ConfigCenterFactory;
 import com.ai.opt.sdk.util.DubboConsumerFactory;
 import com.ai.opt.sdk.util.RandomUtil;
 import com.ai.opt.sdk.util.StringUtil;
@@ -103,7 +104,9 @@ public class BandEmailController {
 						responseData.setResponseHeader(header);
 						return responseData;
 					} else if ("0002".equals(isSuccess)) {
-						String errorMsg = PhoneVerifyConstants.SEND_VERIFY_MAX_TIME / 60 + "分钟内不可重复发送";
+						String maxTimeStr = ConfigCenterFactory.getConfigCenterClient().get(PhoneVerifyConstants.SEND_VERIFY_MAX_TIME_KEY);
+						int maxTime = Integer.valueOf(maxTimeStr)/60;
+						String errorMsg = maxTime + "分钟内不可重复发送";
 						responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, errorMsg, null);
 						ResponseHeader header = new ResponseHeader();
 						header.setIsSuccess(false);
@@ -125,12 +128,14 @@ public class BandEmailController {
 					String isSuccess = sendEmailVerifyCode(sessionId, userClient);
 
 					if ("0000".equals(isSuccess)) {
-						responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "短信验证码发送成功", null);
-						ResponseHeader header = new ResponseHeader(true, ResultCodeConstants.SUCCESS_CODE, "短信验证码发送成功");
+						responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "验证码发送成功", null);
+						ResponseHeader header = new ResponseHeader(true, ResultCodeConstants.SUCCESS_CODE, "验证码发送成功");
 						responseData.setResponseHeader(header);
 						return responseData;
 					} else if ("0002".equals(isSuccess)) {
-						String errorMsg = EmailVerifyConstants.SEND_VERIFY_MAX_TIME / 60 + "分钟内不可重复发送";
+						String maxTimeStr = ConfigCenterFactory.getConfigCenterClient().get(EmailVerifyConstants.SEND_VERIFY_MAX_TIME_KEY);
+						int maxTime = Integer.valueOf(maxTimeStr)/60;
+						String errorMsg = maxTime + "分钟内不可重复发送";
 						responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, errorMsg, null);
 						ResponseHeader header = new ResponseHeader();
 						header.setIsSuccess(false);
@@ -176,13 +181,15 @@ public class BandEmailController {
 			if (StringUtil.isBlank(times)) {
 				// 将验证码放入缓存
 				String cacheKey = BandEmail.CACHE_KEY_VERIFY_PHONE + sessionId;
-				cacheClient.setex(cacheKey, PhoneVerifyConstants.VERIFY_OVERTIME, phoneVerifyCode);
+				String overTimeStr = ConfigCenterFactory.getConfigCenterClient().get(PhoneVerifyConstants.VERIFY_OVERTIME_KEY);
+				cacheClient.setex(cacheKey, Integer.valueOf(overTimeStr), phoneVerifyCode);
 				// 将发送次数放入缓存
-				cacheClient.setex(smskey, PhoneVerifyConstants.SEND_VERIFY_MAX_TIME, smstimes);
+				String maxTimeStr = ConfigCenterFactory.getConfigCenterClient().get(PhoneVerifyConstants.SEND_VERIFY_MAX_TIME_KEY);
+				cacheClient.setex(smskey, Integer.valueOf(maxTimeStr), smstimes);
 				// 设置短息信息
 				List<SMData> dataList = new LinkedList<SMData>();
 				SMData smData = new SMData();
-				smData.setGsmContent("${VERIFY}:" + phoneVerifyCode + "^${VALIDMINS}:" + PhoneVerifyConstants.VERIFY_OVERTIME / 60);
+				smData.setGsmContent("${VERIFY}:" + phoneVerifyCode + "^${VALIDMINS}:" + Integer.valueOf(overTimeStr) / 60);
 				smData.setPhone(userClient.getPhone());
 				smData.setTemplateId(PhoneVerifyConstants.TEMPLATE_RETAKE_PASSWORD_ID);
 				smData.setServiceType(PhoneVerifyConstants.SERVICE_TYPE);
@@ -213,7 +220,7 @@ public class BandEmailController {
 		private String sendEmailVerifyCode(String sessionId, SSOClientUser userClient) {
 			// 查询是否发送过短信
 			String smstimes = "1";
-			String smskey = BandEmail.CACHE_KEY_CONFIRM_SEND_EMAIL_NUM + userClient.getPhone();
+			String smskey = BandEmail.CACHE_KEY_CONFIRM_SEND_EMAIL_NUM + userClient.getEmail();
 			ICacheClient cacheClient = CacheClientFactory.getCacheClient(BandEmail.CACHE_NAMESPACE);
 			String times = cacheClient.get(smskey);
 			if (StringUtil.isBlank(times)) {
@@ -228,11 +235,13 @@ public class BandEmailController {
 				String verifyCode = RandomUtil.randomNum(EmailVerifyConstants.VERIFY_SIZE);
 				// 将验证码放入缓存
 				String cacheKey = BandEmail.CACHE_KEY_VERIFY_EMAIL + sessionId;
-				cacheClient.setex(cacheKey, EmailVerifyConstants.VERIFY_OVERTIME, verifyCode);
+				String overTimeStr = ConfigCenterFactory.getConfigCenterClient().get(EmailVerifyConstants.VERIFY_OVERTIME_KEY);
+				cacheClient.setex(cacheKey, Integer.valueOf(overTimeStr), verifyCode);
 				// 将发送次数放入缓存
-				cacheClient.setex(smskey, EmailVerifyConstants.SEND_VERIFY_MAX_TIME, smstimes);
+				String maxTimeStr = ConfigCenterFactory.getConfigCenterClient().get(EmailVerifyConstants.SEND_VERIFY_MAX_TIME_KEY);
+				cacheClient.setex(smskey, Integer.valueOf(maxTimeStr), smstimes);
 				// 超时时间
-				String overTime = ObjectUtils.toString(EmailVerifyConstants.VERIFY_OVERTIME / 60);
+				String overTime = ObjectUtils.toString(Integer.valueOf(overTimeStr) / 60);
 				emailRequest.setData(new String[] { nickName, verifyCode, overTime });
 				boolean flag = VerifyUtil.sendEmail(emailRequest);
 				if (flag) {
@@ -348,7 +357,8 @@ public class BandEmailController {
 					responseData.setResponseHeader(header);
 					return responseData;
 				} else if ("0002".equals(rasultCode)) {
-					String errorMsg = PhoneVerifyConstants.SEND_VERIFY_MAX_TIME/60+"分钟内不可重复发送";
+					String maxTimeStr = ConfigCenterFactory.getConfigCenterClient().get(EmailVerifyConstants.SEND_VERIFY_MAX_TIME_KEY);
+					String errorMsg = Integer.valueOf(maxTimeStr)/60+"分钟内不可重复发送";
 					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, errorMsg, errorMsg);
 					ResponseHeader header = new ResponseHeader();
 					header.setIsSuccess(false);
@@ -370,7 +380,7 @@ public class BandEmailController {
 		private String sendBandEmailVerifyCode(HttpServletRequest request, String email, SSOClientUser userClient) {
 			// 查询是否发送过邮件
 			String smstimes = "1";
-			String smskey = BandEmail.CACHE_KEY_UPDATE_SEND_EMAIL_NUM + userClient.getPhone();
+			String smskey = BandEmail.CACHE_KEY_UPDATE_SEND_EMAIL_NUM + userClient.getEmail();
 			ICacheClient cacheClient = CacheClientFactory.getCacheClient(BandEmail.CACHE_NAMESPACE);
 			String times = cacheClient.get(smskey);
 			if (StringUtil.isBlank(times)) {
@@ -383,11 +393,13 @@ public class BandEmailController {
 				String verifyCode = RandomUtil.randomNum(EmailVerifyConstants.VERIFY_SIZE);
 				// 将验证码放入缓存
 				String cacheKey = BandEmail.CACHE_KEY_VERIFY_SETEMAIL + request.getSession().getId();
-				cacheClient.setex(cacheKey, EmailVerifyConstants.VERIFY_OVERTIME, verifyCode);
+				String overTimeStr = ConfigCenterFactory.getConfigCenterClient().get(EmailVerifyConstants.VERIFY_OVERTIME_KEY);
+				cacheClient.setex(cacheKey, Integer.valueOf(overTimeStr), verifyCode);
 				// 将发送次数放入缓存
-				cacheClient.setex(smskey, PhoneVerifyConstants.SEND_VERIFY_MAX_TIME, smstimes);
+				String maxTimeStr = ConfigCenterFactory.getConfigCenterClient().get(EmailVerifyConstants.SEND_VERIFY_MAX_TIME_KEY);
+				cacheClient.setex(smskey, Integer.valueOf(maxTimeStr), smstimes);
 				// 超时时间
-				String overTime = ObjectUtils.toString(EmailVerifyConstants.VERIFY_OVERTIME / 60);
+				String overTime = ObjectUtils.toString(Integer.valueOf(overTimeStr) / 60);
 				emailRequest.setData(new String[] { nickName, verifyCode, overTime });
 				boolean isSuccess = VerifyUtil.sendEmail(emailRequest);
 				if (isSuccess) {

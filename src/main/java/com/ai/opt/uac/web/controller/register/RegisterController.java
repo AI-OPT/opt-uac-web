@@ -400,7 +400,8 @@ public class RegisterController {
                     String identifyCode = RandomUtil.randomNum(EmailVerifyConstants.VERIFY_SIZE);
                     String[] tomails = new String[] { email };
                     //超时时间
-                    String overTime = ObjectUtils.toString(EmailVerifyConstants.VERIFY_OVERTIME/60);
+                    String overTimeStr = ConfigCenterFactory.getConfigCenterClient().get(EmailVerifyConstants.VERIFY_OVERTIME_KEY);
+                    String overTime = ObjectUtils.toString(Integer.valueOf(overTimeStr)/60);
                     String[] data = new String[] { nickName, identifyCode ,overTime};
                     SendEmailRequest emailRequest = new SendEmailRequest();
                     emailRequest.setSubject(EmailVerifyConstants.EMAIL_SUBJECT);
@@ -410,9 +411,10 @@ public class RegisterController {
                     VerifyUtil.sendEmail(emailRequest);
                     //存验证码到缓存
                     String key = Register.REGISTER_EMAIL_KEY+request.getSession().getId();
-                    iCacheClient.setex(key, EmailVerifyConstants.VERIFY_OVERTIME, identifyCode);
+                    iCacheClient.setex(key, Integer.valueOf(overTimeStr), identifyCode);
                     //存发送次数到缓存
-                    iCacheClient.setex(emailskey, Register.EMAIL_DUP_TIMES, emailtimes);
+                    String maxTimeStr = ConfigCenterFactory.getConfigCenterClient().get(EmailVerifyConstants.SEND_VERIFY_MAX_TIME_KEY);
+                    iCacheClient.setex(emailskey, Integer.valueOf(maxTimeStr), emailtimes);
                     
                     ResponseHeader header = new ResponseHeader();
                     header.setIsSuccess(true);
@@ -489,7 +491,8 @@ public class RegisterController {
                 data.setTemplateId(PhoneVerifyConstants.TEMPLATE_REGISTER_ID);
                 String identifyCode = RandomUtil.randomNum(PhoneVerifyConstants.VERIFY_SIZE);
                 String codeContent = "${VERIFY}:" + identifyCode;
-                String timeContent = "^${VALIDMINS}:" + PhoneVerifyConstants.VERIFY_OVERTIME/60;
+                String overTimeStr = ConfigCenterFactory.getConfigCenterClient().get(PhoneVerifyConstants.VERIFY_OVERTIME_KEY);
+                String timeContent = "^${VALIDMINS}:" + Integer.valueOf(overTimeStr)/60;
                 data.setGsmContent(codeContent + timeContent);
                 dataList.add(data);
                 smData.setDataList(dataList);
@@ -498,9 +501,10 @@ public class RegisterController {
                 // 存验证码到缓存
                 String key = Register.REGISTER_PHONE_KEY + request.getSession().getId();
                 ICacheClient iCacheClient = CacheClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
-                iCacheClient.setex(key, PhoneVerifyConstants.VERIFY_OVERTIME, identifyCode);
+                iCacheClient.setex(key, Integer.valueOf(overTimeStr), identifyCode);
                 //存发送次数到缓存
-                iCacheClient.setex(smskey, SMSUtil.SMS_VERIFY_TIMES, smstimes);
+                String maxTimeStr = ConfigCenterFactory.getConfigCenterClient().get(PhoneVerifyConstants.SEND_VERIFY_MAX_TIME_KEY);
+                iCacheClient.setex(smskey, Integer.valueOf(maxTimeStr), smstimes);
                 ResponseHeader header = new ResponseHeader();
                 header.setIsSuccess(true);
                 header.setResultCode(SMSUtil.CACHE_SMS_SUCCESS_CODE);
