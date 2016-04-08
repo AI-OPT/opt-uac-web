@@ -380,7 +380,7 @@ public class BandEmailController {
 		private String sendBandEmailVerifyCode(HttpServletRequest request, String email, SSOClientUser userClient) {
 			// 查询是否发送过邮件
 			String smstimes = "1";
-			String smskey = BandEmail.CACHE_KEY_UPDATE_SEND_EMAIL_NUM + userClient.getEmail();
+			String smskey = BandEmail.CACHE_KEY_UPDATE_SEND_EMAIL_NUM + email + request.getSession().getId();;
 			ICacheClient cacheClient = CacheClientFactory.getCacheClient(BandEmail.CACHE_NAMESPACE);
 			String times = cacheClient.get(smskey);
 			if (StringUtil.isBlank(times)) {
@@ -392,7 +392,7 @@ public class BandEmailController {
 				// 验证码
 				String verifyCode = RandomUtil.randomNum(EmailVerifyConstants.VERIFY_SIZE);
 				// 将验证码放入缓存
-				String cacheKey = BandEmail.CACHE_KEY_VERIFY_SETEMAIL + request.getSession().getId();
+				String cacheKey = BandEmail.CACHE_KEY_VERIFY_SETEMAIL + email + request.getSession().getId();
 				String overTimeStr = ConfigCenterFactory.getConfigCenterClient().get(EmailVerifyConstants.VERIFY_OVERTIME_KEY);
 				cacheClient.setex(cacheKey, Integer.valueOf(overTimeStr), verifyCode);
 				// 将发送次数放入缓存
@@ -436,7 +436,7 @@ public class BandEmailController {
 			} else {
 				// 检查验证码
 				ICacheClient cacheClient = CacheClientFactory.getCacheClient(BandEmail.CACHE_NAMESPACE);
-				String cacheKey = BandEmail.CACHE_KEY_VERIFY_SETEMAIL + request.getSession().getId();
+				String cacheKey = BandEmail.CACHE_KEY_VERIFY_SETEMAIL + email + request.getSession().getId();
 				String verifyCodeCache = cacheClient.get(cacheKey);
 				ResponseData<String> checkVerifyCode = VerifyUtil.checkEmailVerifyCode(verifyCode, verifyCodeCache);
 				String emailResultCode = checkVerifyCode.getResponseHeader().getResultCode();

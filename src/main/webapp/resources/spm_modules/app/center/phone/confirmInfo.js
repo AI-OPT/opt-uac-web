@@ -114,12 +114,13 @@ define('app/center/phone/confirmInfo', function (require, exports, module) {
             },1000);
 			var _this = this;
 			var type1=$("#confirmType").val();
-			alert(type1);
+			//alert(type1);
 			ajaxController.ajax({
-				type : "POST",
-				data : {
-					"updatPhoneConfirmType": $("#confirmType").val()
+				type : "post",
+				data: {
+					"confirmType":$("#confirmType").val()
 				},
+				dataType: 'json',
 				url :_base+"/center/phone/sendVerify",
 				processing: true,
 				message : "正在处理中，请稍候...",

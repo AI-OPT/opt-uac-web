@@ -13,6 +13,7 @@ import com.ai.opt.uac.web.constants.Constants;
 import com.ai.opt.uac.web.constants.VerifyConstants;
 import com.ai.opt.uac.web.constants.VerifyConstants.EmailVerifyConstants;
 import com.ai.opt.uac.web.constants.VerifyConstants.PhoneVerifyConstants;
+import com.ai.opt.uac.web.constants.VerifyConstants.PictureVerifyConstants;
 
 public class IConfigCenterClientTest {
 
@@ -156,6 +157,7 @@ public class IConfigCenterClientTest {
     	 String PHONE_SEND_VERIFY_MAX_TIME = "60";
     	 String EMAIL_VERIFY_OVERTIME = "1800";
     	 String EMAIL_SEND_VERIFY_MAX_TIME = "60";
+    	 String PICTURE_VERIFY_OVERTIME = "600";
     	 if (!client.exists(VerifyConstants.PhoneVerifyConstants.SEND_VERIFY_MAX_TIME_KEY)) {
              client.add(PhoneVerifyConstants.SEND_VERIFY_MAX_TIME_KEY, PHONE_SEND_VERIFY_MAX_TIME);
          } else {
@@ -176,6 +178,11 @@ public class IConfigCenterClientTest {
              client.add(EmailVerifyConstants.VERIFY_OVERTIME_KEY, EMAIL_VERIFY_OVERTIME);
          } else {
              client.modify(EmailVerifyConstants.VERIFY_OVERTIME_KEY, EMAIL_VERIFY_OVERTIME);
+         }
+    	 if (!client.exists(VerifyConstants.PictureVerifyConstants.VERIFY_OVERTIME_KEY)) {
+             client.add(PictureVerifyConstants.VERIFY_OVERTIME_KEY, PICTURE_VERIFY_OVERTIME);
+         } else {
+             client.modify(PictureVerifyConstants.VERIFY_OVERTIME_KEY, PICTURE_VERIFY_OVERTIME);
          }
 
     	 System.out.println("addSendVerifyTimesConfig ... end");

@@ -90,12 +90,12 @@ public class UpdatePhoneController {
 	 */
 	@RequestMapping("/sendVerify")
 	@ResponseBody
-	public ResponseData<String> sendVerify(HttpServletRequest request, @RequestParam(value="updatPhoneConfirmType") String updatPhoneConfirmType) {
+	public ResponseData<String> sendVerify(HttpServletRequest request, @RequestParam(value="confirmType",required=false)String confirmType) {
 		SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
 		ResponseData<String> responseData = null;
 		String sessionId = request.getSession().getId();
 		if (userClient != null) {
-			if (UpdatePhone.CHECK_TYPE_PHONE.equals(updatPhoneConfirmType)) {
+			if (UpdatePhone.CHECK_TYPE_PHONE.equals(confirmType)) {
 				// 发送手机验证码
 				String isSuccess = sendPhoneVerifyCode(sessionId, userClient);
 				if ("0000".equals(isSuccess)) {
@@ -124,7 +124,7 @@ public class UpdatePhoneController {
 					return responseData;
 				}
 
-			} else if (UpdatePhone.CHECK_TYPE_EMAIL.equals(updatPhoneConfirmType)) {
+			} else if (UpdatePhone.CHECK_TYPE_EMAIL.equals(confirmType)) {
 				// 发送邮件验证码
 				String isSuccess = sendEmailVerifyCode(sessionId, userClient);
 
@@ -414,14 +414,14 @@ public class UpdatePhoneController {
 	private String sendUpdatePhoneVerifyCode(HttpServletRequest request, String phone, SSOClientUser userClient) {
 		// 查询是否发送过邮件
 		String smstimes = "1";
-		String smskey = UpdatePhone.CACHE_KEY_UPDATE_SEND_PHONE_NUM + userClient.getPhone();
+		String smskey = UpdatePhone.CACHE_KEY_UPDATE_SEND_PHONE_NUM + phone + request.getSession().getId();
 		ICacheClient cacheClient = CacheClientFactory.getCacheClient(UpdatePhone.CACHE_NAMESPACE);
 		String times = cacheClient.get(smskey);
 		if (StringUtil.isBlank(times)) {
 			SMDataInfoNotify smDataInfoNotify = new SMDataInfoNotify();
 			String phoneVerifyCode = RandomUtil.randomNum(PhoneVerifyConstants.VERIFY_SIZE);
 			// 将验证码放入缓存
-			String cacheKey = UpdatePhone.CACHE_KEY_VERIFY_SETPHONE + request.getSession().getId();
+			String cacheKey = UpdatePhone.CACHE_KEY_VERIFY_SETPHONE + phone + request.getSession().getId();
 			String overTimeStr = ConfigCenterFactory.getConfigCenterClient().get(PhoneVerifyConstants.VERIFY_OVERTIME_KEY);
 			cacheClient.setex(cacheKey, Integer.valueOf(overTimeStr), phoneVerifyCode);
 			// 将发送次数放入缓存
@@ -481,7 +481,7 @@ public class UpdatePhoneController {
 			}
 			// 检查验证码
 			ICacheClient cacheClient = CacheClientFactory.getCacheClient(UpdatePhone.CACHE_NAMESPACE);
-			String cacheKey = UpdatePhone.CACHE_KEY_VERIFY_SETPHONE + request.getSession().getId();
+			String cacheKey = UpdatePhone.CACHE_KEY_VERIFY_SETPHONE + phone + request.getSession().getId();
 			String verifyCodeCache = cacheClient.get(cacheKey);
 			ResponseData<String> checkVerifyCode = VerifyUtil.checkPhoneVerifyCode(verifyCode, verifyCodeCache);
 			String phoneResultCode = checkVerifyCode.getResponseHeader().getResultCode();

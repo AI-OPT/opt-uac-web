@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import com.ai.opt.base.vo.ResponseHeader;
 import com.ai.opt.sdk.cache.factory.CacheClientFactory;
+import com.ai.opt.sdk.configcenter.factory.ConfigCenterFactory;
 import com.ai.opt.sdk.mail.EmailFactory;
 import com.ai.opt.sdk.mail.EmailTemplateUtil;
 import com.ai.opt.sdk.util.DubboConsumerFactory;
@@ -50,7 +51,8 @@ public class VerifyUtil {
 		String verifyCode = RandomUtil.randomString(PictureVerifyConstants.VERIFY_SIZE);
 		// 将认证码存入缓存
 		ICacheClient cacheClient = CacheClientFactory.getCacheClient(namespace);
-		cacheClient.setex(cacheKey, PictureVerifyConstants.VERIFY_OVERTIME, verifyCode);
+		String overTimeStr = ConfigCenterFactory.getConfigCenterClient().get(PictureVerifyConstants.VERIFY_OVERTIME_KEY);
+		cacheClient.setex(cacheKey, Integer.valueOf(overTimeStr), verifyCode);
 		LOGGER.debug("cacheKey=" + cacheKey + ",verifyCode=" + verifyCode);
 		// 将认证码显示到图象中
 		g.setColor(Color.black);
