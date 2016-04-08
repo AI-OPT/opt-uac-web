@@ -110,16 +110,18 @@ public class BaseInfoController {
             accountBase.setNickName(data.getNickName());
             accountBase.setUpdateAccountId(data.getAccountId());
             accountBase.setAccountId(data.getAccountId());
-            TenantInfoRequest tenant = new TenantInfoRequest();
-            tenant.setAccountId(data.getAccountId());
-            tenant.setIndustryCode(data.getIndustryCode());
-            tenant.setTenantName(data.getTenantName());
-            tenant.setUpdateAccountId(userClient.getAccountId());
             iAccountManageSV.updateBaseInfo(accountBase);
-            TenantInsertResponse re= iTenantManageSV.insertTenantInfo(tenant);
+            if((!StringUtil.isBlank(data.getTenantName())) && (!data.getIndustryCode().equals("00"))){
+                TenantInfoRequest tenant = new TenantInfoRequest();
+                tenant.setAccountId(data.getAccountId());
+                tenant.setIndustryCode(data.getIndustryCode());
+                tenant.setTenantName(data.getTenantName());
+                tenant.setUpdateAccountId(userClient.getAccountId());
+                TenantInsertResponse re= iTenantManageSV.insertTenantInfo(tenant);
+                userClient.setTenantId(re.getTenantId());
+            }
             //修改客户端存储的昵称、tenantID
             userClient.setNickName(data.getNickName());
-            userClient.setTenantId(re.getTenantId());
             request.getSession().setAttribute(SSOClientConstants.USER_SESSION_KEY, userClient);
             responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "成功",
                         null);
