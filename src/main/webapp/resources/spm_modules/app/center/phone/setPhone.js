@@ -33,6 +33,14 @@ define('app/center/phone/setPhone', function (require, exports, module) {
     		UpdatePhonePager.superclass.setup.call(this);
     	},
     	_checkPhone: function(){
+    		var isOk = this._checkPhoneFormat();
+    		if(isOk){
+    			isOk = this._checkPhoneValue();
+    		}
+    		return isOk;
+    	},
+    	//检查手机格式
+    	_checkPhoneFormat:function(){
     		var phone=jQuery.trim($("#phone").val());
     		var msg = "";
     		if(phone==""|| phone == null || phone == undefined){
@@ -50,10 +58,10 @@ define('app/center/phone/setPhone', function (require, exports, module) {
 				return false;
 			}
     	},
-    	//检查新邮箱与原邮箱不同
-		_checkPhoneDiffOld: function(){
+    	//检查新邮箱与原邮箱不同 不重复
+    	_checkPhoneValue: function(){
 			var _this = this;
-			var isOk;
+			var isOk = false;
 			ajaxController.ajax({
 				type : "POST",
 				data : {
@@ -62,7 +70,7 @@ define('app/center/phone/setPhone', function (require, exports, module) {
 					}
 				},
 				dataType: 'json',
-				url :_base+"/center/phone/checkPhoneDiffOld?k="+uuid,
+				url :_base+"/center/phone/checkPhoneValue?k="+uuid,
 				async: false,
 				processing: true,
 				message : "正在处理中，请稍候...",
@@ -73,15 +81,6 @@ define('app/center/phone/setPhone', function (require, exports, module) {
 						var url = data.data;
 						window.location.href = _base+url;
 					}else{
-						isOk = true;
-						if(resultCode=="100002"){
-							_this._controlMsgText("verifyCodeMsg",data.statusInfo);
-							_this._controlMsgAttr("verifyCodeMsgDiv",2);
-							isOk = false;
-				        }else{
-				        	_this._controlMsgText("verifyCodeMsg","");
-				        	_this._controlMsgAttr("verifyCodeMsgDiv",1);
-				        } 
 						if(resultCode=="100005"){
 				        	_this._controlMsgText("phoneMsg",data.statusInfo);
 							_this._controlMsgAttr("phoneMsgDiv",2);
@@ -89,6 +88,7 @@ define('app/center/phone/setPhone', function (require, exports, module) {
 				        }else{
 				        	_this._controlMsgText("phoneMsg","");
 				        	_this._controlMsgAttr("phoneMsgDiv",1);
+				        	isOk = true;
 				        }
 					}
 				},
@@ -127,10 +127,6 @@ define('app/center/phone/setPhone', function (require, exports, module) {
     	_sendPhone:function(){
     		var isOk = this._checkPhone();
     		if(!isOk){
-    			return false;
-    		}
-    		var isDiffOk = this._checkPhoneDiffOld();
-    		if(!isDiffOk){
     			return false;
     		}
     		$("#sendPhoneBtn").attr("disabled", true);
@@ -194,10 +190,6 @@ define('app/center/phone/setPhone', function (require, exports, module) {
 			if(!(checkPhone&&checkVerify)){
 				return false;
 			}
-			var isDiffOk = this._checkPhoneDiffOld();
-    		if(!isDiffOk){
-    			return false;
-    		}
 			ajaxController.ajax({
 				type : "POST",
 				data : _this._getSafetyConfirmData(),

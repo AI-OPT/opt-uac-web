@@ -47,8 +47,15 @@ define('app/center/bandemail/setEmail', function (require, exports, module) {
     		 //左侧菜单显示样式
 	   		$("#setEmail").addClass("current");
     	},
+    	_checkEmail:function(){
+    		var isOk = this._checkEmailFormat();
+    		if(isOk){
+    			isOk = this._checkEmailValue();
+    		}
+    		return isOk;
+    	},
     	//检查新密码格式
-		_checkEmail: function(){
+		_checkEmailFormat: function(){
 			var email = jQuery.trim($("#email").val());
 			var msg = "";
 			if(email == "" || email == null || email == undefined){
@@ -65,6 +72,46 @@ define('app/center/bandemail/setEmail', function (require, exports, module) {
 				this._controlMsgAttr("emailMsgDiv",2);
 				return false;
 			}
+		},
+		//检查新邮箱是否唯一
+		_checkEmailValue: function(){
+			var _this = this;
+			var isOk = false;
+			ajaxController.ajax({
+				type : "POST",
+				data : {
+					"email": function(){
+						return $("#email").val()
+					}
+				},
+				dataType: 'json',
+				url :_base+"/center/bandEmail/checkEmailValue",
+				async: false,
+				processing: true,
+				message : "正在处理中，请稍候...",
+				success : function(data) {
+					var resultCode = data.responseHeader.resultCode;
+					if(resultCode == "100000"){
+						isOk = false;
+						var url = data.data;
+						window.location.href = _base+url;
+					}else{
+						if(resultCode=="100006"){
+				        	_this._controlMsgText("emailMsg",data.statusInfo);
+							_this._controlMsgAttr("emailMsgDiv",2);
+							isOk = false;
+				        }else{
+				        	_this._controlMsgText("emailMsg","");
+				        	_this._controlMsgAttr("emailMsgDiv",1);
+				        	isOk = true;
+				        }
+					}
+				},
+				error : function(){
+					alert("网络连接超时!");
+				}
+			});
+			return isOk;
 		},
 		//检查验证码
 		_checkVerifyCode: function(){

@@ -21,9 +21,12 @@ import com.ai.opt.sdk.util.RandomUtil;
 import com.ai.opt.sdk.web.model.ResponseData;
 import com.ai.opt.uac.api.seq.interfaces.ICreateSeqSV;
 import com.ai.opt.uac.api.seq.param.PhoneMsgSeqResponse;
+import com.ai.opt.uac.api.sso.interfaces.ILoginSV;
+import com.ai.opt.uac.api.sso.param.UserLoginResponse;
 import com.ai.opt.uac.web.constants.Constants;
 import com.ai.opt.uac.web.constants.VerifyConstants;
 import com.ai.opt.uac.web.constants.VerifyConstants.PictureVerifyConstants;
+import com.ai.opt.uac.web.constants.VerifyConstants.ResultCodeConstants;
 import com.ai.opt.uac.web.model.email.SendEmailRequest;
 import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
 import com.ai.runner.center.mmp.api.manager.interfaces.SMSServices;
@@ -203,4 +206,62 @@ public class VerifyUtil {
 		responseData.setResponseHeader(responseHeader);
 		return responseData;
 	}
+	
+	/**
+	 * 检测手机号码唯一性
+	 * @param phone
+	 * @return
+	 */
+    public static ResponseData<String> checkPhoneOnly(String phone) {
+        ResponseData<String> responseData = null;
+        ResponseHeader header = null;
+        try {
+            ILoginSV loginService = DubboConsumerFactory.getService("iLoginSV");
+            UserLoginResponse userLoginResponse = loginService.queryAccountByUserName(phone);
+            if(userLoginResponse!=null){
+                String resultCode = userLoginResponse.getResponseHeader().getResultCode();
+				if(resultCode.equals(ResultCodeConstants.SUCCESS_CODE)){
+					header = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.PHONE_ERROR, "该手机号码已经注册");
+                    responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "该手机号码已经注册", null);
+                    responseData.setResponseHeader(header);
+                } else{
+                	header = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "成功");
+                    responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "成功", null);
+                    responseData.setResponseHeader(header);
+                }
+            }
+        } catch (Exception e) {
+            responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "手机校验失败",null);
+        }
+        return responseData;
+    }
+    
+    /**
+     * 检测邮箱唯一性 
+     * @param email
+     * @return
+     */
+    public static ResponseData<String> checkEmialOnly(String email) {
+    	 ResponseData<String> responseData = null;
+         ResponseHeader header = null;
+         try {
+             ILoginSV loginService = DubboConsumerFactory.getService("iLoginSV");
+             UserLoginResponse userLoginResponse = loginService.queryAccountByUserName(email);
+             if(userLoginResponse!=null){
+                 String resultCode = userLoginResponse.getResponseHeader().getResultCode();
+ 				if(resultCode.equals(ResultCodeConstants.SUCCESS_CODE)){
+ 					header = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.EMAIL_ERROR, "该邮箱已经注册");
+                     responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "该邮箱已经注册", null);
+                     responseData.setResponseHeader(header);
+                 } else{
+                 	header = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "成功");
+                     responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "成功", null);
+                     responseData.setResponseHeader(header);
+                 }
+             }
+         } catch (Exception e) {
+             responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "邮箱校验失败",null);
+         }
+         return responseData;
+    }  
 }

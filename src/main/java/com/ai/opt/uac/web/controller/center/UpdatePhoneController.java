@@ -330,12 +330,12 @@ public class UpdatePhoneController {
 	}
 	
 	/**
-	 * 检查修改手机与原手机不同
+	 * 检查修改手机号正确性（不与原手机不同，不重复）
 	 * @param request
 	 * @param phone
 	 * @return
 	 */
-	@RequestMapping("/checkPhoneDiffOld")
+	@RequestMapping("/checkPhoneValue")
 	@ResponseBody
 	public ResponseData<String> checkPhoneDiffOld(HttpServletRequest request, String phone){
 		ResponseData<String> responseData = null;
@@ -348,6 +348,7 @@ public class UpdatePhoneController {
 			responseData.setResponseHeader(responseHeader);
 			return responseData;
 		}
+		//检查不用原手机号相同
 		String oldPhone = userClient.getPhone();
 		if (phone.equals(oldPhone)) {
 			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "新手机号码不能与旧手机号码相同，请重新输入", null);
@@ -355,12 +356,10 @@ public class UpdatePhoneController {
 			responseData.setResponseHeader(responseHeader);
 			return responseData;
 		}
-		responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", null);
-		responseHeader = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "正确");
-		responseData.setResponseHeader(responseHeader);
-		return responseData; 
+		//检查手机号码唯一性
+		return VerifyUtil.checkPhoneOnly(phone);
 	}
-
+	
 	/**
 	 * 发送短信验证码(修改新手机时验证)
 	 * 
