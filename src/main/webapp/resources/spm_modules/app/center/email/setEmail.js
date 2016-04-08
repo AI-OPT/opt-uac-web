@@ -151,19 +151,7 @@ define('app/center/email/setEmail', function (require, exports, module) {
 			if(!isDiffOk){
 				return false;
 			}else{
-			var step = 59;
-            $('#sendPhoneBtn').val('重新发送60');
-            $("#sendEmailBtn").attr("disabled", true);
-            var _res = setInterval(function(){
-                $("#sendEmailBtn").attr("disabled", true);//设置disabled属性
-                $('#sendEmailBtn').val('重新发送'+step);
-                step-=1;
-                if(step <= 0){
-                $("#sendEmailBtn").removeAttr("disabled"); //移除disabled属性
-                $('#sendEmailBtn').val('获取验证码');
-                clearInterval(_res);//清除setInterval
-                }
-            },1000);
+			$("#sendEmailBtn").attr("disabled", true);
 			ajaxController.ajax({
 				type : "POST",
 				data : {
@@ -181,6 +169,23 @@ define('app/center/email/setEmail', function (require, exports, module) {
 						var url = data.data;
 						window.location.href = _base+url;
 					}else{
+						if(resultCode=="000000"){
+							var step = 59;
+				            $('#sendEmailBtn').val('重新发送60');
+				            $("#sendEmailBtn").attr("disabled", true);
+				            var _res = setInterval(function(){
+				                $("#sendEmailBtn").attr("disabled", true);//设置disabled属性
+				                $('#sendEmailBtn').val('重新发送'+step);
+				                step-=1;
+				                if(step <= 0){
+				                $("#sendEmailBtn").removeAttr("disabled"); //移除disabled属性
+				                $('#sendEmailBtn').val('获取验证码');
+				                clearInterval(_res);//清除setInterval
+				                }
+				            },1000);
+						}else{
+							$("#sendEmailBtn").removeAttr("disabled"); 
+						}
 						if(resultCode=="100002"){
 							_this._controlMsgText("verifyCodeMsg",data.statusInfo);
 							_this._controlMsgAttr("verifyCodeMsgDiv",2);
@@ -189,6 +194,9 @@ define('app/center/email/setEmail', function (require, exports, module) {
 			        		_this._controlMsgAttr("verifyCodeMsgDiv",1);
 			        	}
 					}
+				},
+				failure : function(){
+					$("#sendEmailBtn").removeAttr("disabled"); //移除disabled属性
 				},
 				error : function(){
 					alert("网络连接超时!");

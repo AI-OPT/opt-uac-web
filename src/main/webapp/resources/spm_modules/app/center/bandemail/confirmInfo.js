@@ -91,30 +91,14 @@ define('app/center/bandemail/confirmInfo', function (require, exports, module) {
 			$("#random_img").attr("src",_base+"/center/bandEmail/getImageVerifyCode?timestamp="+timestamp);
 		},
 		_sendVerify:function(){
-			var step = 59;
-			$('#sendVerify').val('重新发送60');
-			$("#sendVerify").attr("disabled", true);
-            var _res = setInterval(function(){
-                $("#sendVerify").attr("disabled", true);//设置disabled属性
-                $('#sendVerify').val('重新发送'+step);
-                step-=1;
-                if(step <= 0){
-                $("#sendVerify").removeAttr("disabled"); //移除disabled属性
-                $('#sendVerify').val('获取验证码');
-                clearInterval(_res);//清除setInterval
-                }
-            },1000);
 			var _this = this;
+			$("#sendVerify").attr("disabled", true);
 			ajaxController.ajax({
 				type : "POST",
 				data : {
-					"accountId":1,
-					"checkType": function(){
-						return $("#confirmType").val()
-					}
 				},
 				dataType: 'json',
-				url :_base+"/center/bandEmail/sendVerify",
+				url :_base+"/center/bandEmail/sendVerify?confirmType="+$("#confirmType").val(),
 				processing: true,
 				message : "正在处理中，请稍候...",
 				success : function(data) {
@@ -123,6 +107,23 @@ define('app/center/bandemail/confirmInfo', function (require, exports, module) {
 						var url = data.data;
 						window.location.href = _base+url;
 					}else{
+						if(resultCode=="000000"){
+							var step = 59;
+				            $('#sendVerify').val('重新发送60');
+				            $("#sendVerify").attr("disabled", true);
+				            var _res = setInterval(function(){
+				                $("#sendVerify").attr("disabled", true);//设置disabled属性
+				                $('#sendVerify').val('重新发送'+step);
+				                step-=1;
+				                if(step <= 0){
+				                $("#sendVerify").removeAttr("disabled"); //移除disabled属性
+				                $('#sendVerify').val('获取验证码');
+				                clearInterval(_res);//清除setInterval
+				                }
+				            },1000);
+						}else{
+							$("#sendVerify").removeAttr("disabled");
+						}
 						if(resultCode=="100002"){
 							_this._controlMsgText("verifyCodeMsg",data.statusInfo);
 							_this._controlMsgAttr("verifyCodeMsgDiv",2);
@@ -131,6 +132,9 @@ define('app/center/bandemail/confirmInfo', function (require, exports, module) {
 			        		_this._controlMsgAttr("verifyCodeMsgDiv",1);
 			        	}
 					}
+				},
+				failure : function(){
+					$("#sendVerify").removeAttr("disabled"); //移除disabled属性
 				},
 				error : function(){
 					alert("网络连接超时!");

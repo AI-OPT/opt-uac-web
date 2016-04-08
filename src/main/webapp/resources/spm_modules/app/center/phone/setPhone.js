@@ -133,19 +133,7 @@ define('app/center/phone/setPhone', function (require, exports, module) {
     		if(!isDiffOk){
     			return false;
     		}
-    		var step = 59;
-            $('#sendPhoneBtn').val('重新发送60');
-            $("#sendPhoneBtn").attr("disabled", true);
-            var _res = setInterval(function(){
-                $("#sendPhoneBtn").attr("disabled", true);//设置disabled属性
-                $('#sendPhoneBtn').val('重新发送'+step);
-                step-=1;
-                if(step <= 0){
-                $("#sendPhoneBtn").removeAttr("disabled"); //移除disabled属性
-                $('#sendPhoneBtn').val('获取验证码');
-                clearInterval(_res);//清除setInterval
-                }
-            },1000);
+    		$("#sendPhoneBtn").attr("disabled", true);
 			var _this = this;
 			ajaxController.ajax({
 				type : "POST",
@@ -164,6 +152,23 @@ define('app/center/phone/setPhone', function (require, exports, module) {
 						var url = data.data;
 						window.location.href = _base+url;
 					}else{
+						if(resultCode=="000000"){
+							var step = 59;
+				            $('#sendPhoneBtn').val('重新发送60');
+				            $("#sendPhoneBtn").attr("disabled", true);
+				            var _res = setInterval(function(){
+				                $("#sendPhoneBtn").attr("disabled", true);//设置disabled属性
+				                $('#sendPhoneBtn').val('重新发送'+step);
+				                step-=1;
+				                if(step <= 0){
+				                $("#sendPhoneBtn").removeAttr("disabled"); //移除disabled属性
+				                $('#sendPhoneBtn').val('获取验证码');
+				                clearInterval(_res);//清除setInterval
+				                }
+				            },1000);
+						}else{
+							$("#sendPhoneBtn").removeAttr("disabled");
+						}
 						if(resultCode=="100002"){
 							_this._controlMsgText("verifyCodeMsg",data.statusInfo);
 							_this._controlMsgAttr("verifyCodeMsgDiv",2);
@@ -172,6 +177,9 @@ define('app/center/phone/setPhone', function (require, exports, module) {
 							_this._controlMsgAttr("verifyCodeMsgDiv",1);
 			        	}
 					}
+				},
+				failure : function(){
+					$("#sendPhoneBtn").removeAttr("disabled"); //移除disabled属性
 				},
 				error : function(){
 					alert("网络连接超时!");
@@ -207,12 +215,16 @@ define('app/center/phone/setPhone', function (require, exports, module) {
 						if(statusCode == "100002"){
 							_this._controlMsgText("verifyCodeMsg",msg);
 							_this._controlMsgAttr("verifyCodeMsgDiv",2);
-						}if(statusCode == "100005"){
-							_this._controlMsgText("phoneMsg",msg);
-							_this._controlMsgAttr("phoneMsgDiv",2);
 						}else{
 							_this._controlMsgText("verifyCodeMsg","");
 							_this._controlMsgAttr("verifyCodeMsgDiv",1);
+						}
+						if(statusCode == "100005"){
+							_this._controlMsgText("phoneMsg",msg);
+							_this._controlMsgAttr("phoneMsgDiv",2);
+						}else{
+							_this._controlMsgText("phoneMsg","");
+							_this._controlMsgAttr("phoneMsgDiv",1);
 						}
 					}
 				},

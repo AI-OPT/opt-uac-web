@@ -88,12 +88,12 @@ public class BandEmailController {
 		 */
 		@RequestMapping("/sendVerify")
 		@ResponseBody
-		public ResponseData<String> sendVerify(HttpServletRequest request,  String checkType) {
+		public ResponseData<String> sendVerify(HttpServletRequest request,  String confirmType) {
 			SSOClientUser userClient = (SSOClientUser) request.getSession().getAttribute(SSOClientConstants.USER_SESSION_KEY);
 			ResponseData<String> responseData = null;
 			String sessionId = request.getSession().getId();
 			if (userClient != null) {
-				if (BandEmail.CHECK_TYPE_PHONE.equals(checkType)) {
+				if (BandEmail.CHECK_TYPE_PHONE.equals(confirmType)) {
 					// 发送手机验证码
 					String isSuccess = sendPhoneVerifyCode(sessionId, userClient);
 					if ("0000".equals(isSuccess)) {
@@ -123,7 +123,7 @@ public class BandEmailController {
 						return responseData;
 					}
 
-				} else if (BandEmail.CHECK_TYPE_EMAIL.equals(checkType)) {
+				} else if (BandEmail.CHECK_TYPE_EMAIL.equals(confirmType)) {
 					// 发送邮件验证码
 					String isSuccess = sendEmailVerifyCode(sessionId, userClient);
 

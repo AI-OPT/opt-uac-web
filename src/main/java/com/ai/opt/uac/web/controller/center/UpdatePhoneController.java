@@ -523,7 +523,7 @@ public class UpdatePhoneController {
 		String uuid = request.getParameter(Constants.UUID.KEY_NAME);
 		SSOClientUser userClient = (SSOClientUser) CacheUtil.getValue(uuid, Constants.UpdatePhone.CACHE_NAMESPACE, SSOClientUser.class);
 		if (userClient == null) {
-			return new ModelAndView("redirect:/center/email/confirminfo");
+			return new ModelAndView("redirect:/center/phone/confirminfo");
 		}
 		request.getSession().setAttribute(SSOClientConstants.USER_SESSION_KEY, userClient);
 		CacheUtil.deletCache(uuid, Constants.UpdatePhone.CACHE_NAMESPACE);
