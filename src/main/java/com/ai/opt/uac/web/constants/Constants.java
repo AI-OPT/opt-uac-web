@@ -109,6 +109,10 @@ public final class Constants {
         public static final String REGISTER_SSM_ERROR = "000003";
         /** 短信验证码失效ID */
         public static final String REGISTER_SSM_OVERTIME_ERROR = "000004";
+        /** 发送短信手机号不一致错误 */
+        public static final String REGISTER_SSM_DUMPHONE_ERROR = "000007";
+        /** 发送邮箱不一致错误 */
+        public static final String REGISTER_EMAIL_NOTSAME_ERROR = "000008";
         /** 邮箱验证码失效ID */
         public static final String REGISTER_EMAIL_OVERTIME_ERROR = "000005";
         /** 邮箱验证码错误ID */

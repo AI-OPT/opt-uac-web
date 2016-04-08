@@ -43,15 +43,13 @@ define('app/register/register-email', function (require, exports, module) {
     		 $("#errorEmIdentifyMsg").attr("style","display:none");
     	},
     	_validServiceEmail: function(){
-    		$("#identifyCode").val("");
     		$("#errorEmIdentifyMsg").attr("style","display:none");
     		var emailCode = $('#email').val();
     		if(emailCode!=""){
     			if(/^(\w-*\.*)+@(\w-?)+(\.\w{2,})+$/.test(emailCode)){
     				
     				var	param={
-        					email:	$("#email").val(),
-        					accountIdKey:$("#accountIdKey").val()
+        					email:	$("#email").val()
         				   };
             		ajaxController.ajax({
         		        type: "post",
@@ -104,7 +102,13 @@ define('app/register/register-email', function (require, exports, module) {
 			}
     	},
     	_getIdentify: function(){
-    		$("#identifyCode").val("");
+    		var emailCode = $('#email').val();
+    		if(emailCode==""){
+    			$("#showErroeEmIdentify").text("请输入邮箱地址 ");
+				$("#errorEmIdentifyMsg").attr("style","display:block");
+				$("#flag").val("0");
+				return false;
+    		}
     		var flag = $("#flag").val();
     		if(flag!="0"){
     			var step = 59;
@@ -171,7 +175,12 @@ define('app/register/register-email', function (require, exports, module) {
     			        data: param,
     			        message: "正在加载数据..",
     			        success: function (data) {
-    			        	if(data.responseHeader.resultCode=="000005"){
+    			        	if(data.responseHeader.resultCode=="000008"){
+    			        		$("#showErroeEmIdentify").text("请重新获取验证码 ");
+    		    				$("#errorEmIdentifyMsg").attr("style","display:block");
+    		    				$('#identifyCode').val("");
+    		    				return false;
+    			        	}else if(data.responseHeader.resultCode=="000005"){
     			        		$("#showErroeEmIdentify").text("邮箱验证码已失效 ");
     		    				$("#errorEmIdentifyMsg").attr("style","display:block");
     		    				return false;

@@ -121,10 +121,7 @@ define('app/register/register', function (require, exports, module) {
 				return false;
 			}else if( /^1\d{10}$/.test(phone)){
 				var	param={
-    					phone:$("#phone").val(),
-    					accountPassword:"test",		   
-    					phoneVerifyCode:"test",   
-    					pictureVerifyCode:"test"
+    					phone:$("#phone").val()
     				   };
         		ajaxController.ajax({
     			        type: "post",
@@ -247,6 +244,11 @@ define('app/register/register', function (require, exports, module) {
     			        	}else if(data.responseHeader.resultCode=="000001"){
     			        		$('#showPicMsg').text("图形验证码错误 ");
     			    			$("#errorPicMsg").attr("style","display:block");
+    							return false;
+    			        	}else if(data.responseHeader.resultCode=="000007"){
+    			        		$('#showSmsMsg').text("请重新发送验证码  ");
+    			    			$("#errorSmsMsg").attr("style","display:block");
+    			    			$('#phoneVerifyCode').val("");
     							return false;
     			        	}else if(data.responseHeader.resultCode=="000004"){
     			        		$('#showSmsMsg').text("验证码已失效  ");
