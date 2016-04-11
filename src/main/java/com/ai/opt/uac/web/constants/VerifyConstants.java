@@ -20,7 +20,9 @@ public final class VerifyConstants {
 		/** 可重复发送时间 配置key */
 		public static final String SEND_VERIFY_MAX_TIME_KEY = "phone_verifycode_send_maxtime";
 		/** ip可重复发送次数 配置key */
-        public static final String SEND_TELE_IP_TIMES_KEY = "phone_ip_send_maxtimes";
+        public static final String SEND_VERIFY_IP_MAX_NO_KEY = "phone_send_ip_maxno";
+        /** ip可重复发送次数保存时间  配置key */
+        public static final String IP_SEND_OVERTIME_KEY = "phone_ip_send_overtime";
 
 		/** 短信注册模板ID */
 		public static final String TEMPLATE_REGISTER_ID = "1";
@@ -63,6 +65,11 @@ public final class VerifyConstants {
 
 		/** 邮箱可重复发送时间 配置key */
 		public static final String SEND_VERIFY_MAX_TIME_KEY = "email_verifycode_send_maxtime";
+		
+		/** ip可重复发送次数 配置key */
+        public static final String SEND_VERIFY_IP_MAX_NO_KEY = "email_send_ip_maxno";
+        /** ip可重复发送次数保存时间  配置key */
+        public static final String IP_SEND_OVERTIME_KEY = "email_ip_send_overtime";
 	}
 
 	public final class PictureVerifyConstants {

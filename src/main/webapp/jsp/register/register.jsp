@@ -96,7 +96,7 @@ return;
      <div class="login-header-cnt">
        <div class="login-header-cnt-logo"><img src="${_base}/theme/baas/images/logo.png"></div>
        <div class="login-header-cnt-mail">账户注册</div>
-       <div class="login-header-cnt-right">已有云计费账号？ <a href="${_base}/login">立即登录>></a></div>
+       <div class="login-header-cnt-right">已有账号？ <a href="${_base}/login">立即登录>></a></div>
        </div>
      
   </div>
@@ -164,7 +164,7 @@ return;
 		         	<input type="hidden" id="errorPassFlag">
 		         	<input type="hidden" id="errorSMSFlag">
 		         </li>
-		         <li class="zuns">* 注册表示您同意遵守<A href="${_base }/reg/protocol" target="_blank">《云计费服务条款》</A></li>
+		         <li class="zuns">* 注册表示您同意遵守<A href="${_base }/reg/protocol" target="_blank">《亚信云计费服务条款》</A></li>
 	
 	         </ul>
    		</div>

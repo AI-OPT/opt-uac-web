@@ -1,4 +1,4 @@
-define('app/retakepassword/success', function (require, exports, module) {
+define('app/center/password/success', function (require, exports, module) {
     'use strict';
     var $=require('jquery'),
     Widget = require('arale-widget/1.2.0/widget'),
@@ -33,9 +33,9 @@ define('app/retakepassword/success', function (require, exports, module) {
     	_autoGotoLogin:function(){
     		var _this = this;
     		var step = 4;
-    		$('#message').text('恭喜您，密码重设成功！5秒后自动登录 ');
+    		$('#message').text('恭喜您，密码修改成功！5秒后跳转到登录页面  ');
     		var _res = setInterval(function(){
-                $('#message').text('恭喜您，密码重设成功！'+step+'秒后自动登录 ');
+                $('#message').text('恭喜您，密码修改成功！'+step+'秒后跳转到登录页面 ');
                 step-=1;
                 if(step == 0){
                 	_this._gotoLogin();
@@ -43,26 +43,8 @@ define('app/retakepassword/success', function (require, exports, module) {
                 }
             },1000);
     	},
-		//检查账户信息
     	_gotoLogin: function(){
-			ajaxController.ajax({
-				url :_base+"/retakePassword/login?k="+uuid,
-				processing: true,
-				message : "正在处理中，请稍候...",
-				success : function(data) {
-					//var status = data.responseHeader.isSuccess;
-					var status=data.responseHeader.resultCode;
-					var url = data.data;
-					if(status == "1"){
-						window.location.href = _base+url;
-					}else{
-						window.location.href = url;
-					}
-				},
-				error: function() {
-					alert("连接服务器超时")
-				}
-			});
+    		window.location.href = _base+"/ssologout";
 		}		
     });
     

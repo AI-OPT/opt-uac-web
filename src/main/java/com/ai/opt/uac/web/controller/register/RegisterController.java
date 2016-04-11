@@ -482,7 +482,7 @@ public class RegisterController {
             String smskey = SMSUtil.CACHE_KEY_SMS_REGISTER + sMDataReq.getPhone()+request.getSession().getId();
             String ipkey = SMSUtil.CACHE_KEY_SMS_IP_REGISTER+GetIPUtil.getIp2(request);
             //获取ip发送次数
-            String maxTimes = ConfigCenterFactory.getConfigCenterClient().get(PhoneVerifyConstants.SEND_TELE_IP_TIMES_KEY);
+            String maxTimes = ConfigCenterFactory.getConfigCenterClient().get(PhoneVerifyConstants.SEND_VERIFY_IP_MAX_NO_KEY);
             ICacheClient cacheClient = CacheClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
             String times = cacheClient.get(smskey);
             String realIpTimes = cacheClient.get(ipkey);

@@ -153,13 +153,16 @@ public class IConfigCenterClientTest {
      @Test
      public void addSendVerifyTimesConfig(){
     	 System.out.println("addSendVerifyTimesConfig ... start");
-    	/* String PHONE_VERIFY_OVERTIME = "300";
+    	 String PHONE_VERIFY_OVERTIME = "300";
     	 String PHONE_SEND_VERIFY_MAX_TIME = "60";
     	 String EMAIL_VERIFY_OVERTIME = "1800";
     	 String EMAIL_SEND_VERIFY_MAX_TIME = "60";
-    	 String PICTURE_VERIFY_OVERTIME = "600";*/
+    	 String PICTURE_VERIFY_OVERTIME = "600";
     	 String PHONE_IP_SEND_MAXTIMES="5";
-    /*	 if (!client.exists(VerifyConstants.PhoneVerifyConstants.SEND_VERIFY_MAX_TIME_KEY)) {
+    	 String EMAIL_IP_SEND_MAXTIMES="5";
+    	 String PHONE_IP_SEND_OVERTIME="300";
+    	 String EMAIL_IP_SEND_OVERTIME="300";
+    	 if (!client.exists(VerifyConstants.PhoneVerifyConstants.SEND_VERIFY_MAX_TIME_KEY)) {
              client.add(PhoneVerifyConstants.SEND_VERIFY_MAX_TIME_KEY, PHONE_SEND_VERIFY_MAX_TIME);
          } else {
              client.modify(PhoneVerifyConstants.SEND_VERIFY_MAX_TIME_KEY, PHONE_SEND_VERIFY_MAX_TIME);
@@ -184,14 +187,28 @@ public class IConfigCenterClientTest {
              client.add(PictureVerifyConstants.VERIFY_OVERTIME_KEY, PICTURE_VERIFY_OVERTIME);
          } else {
              client.modify(PictureVerifyConstants.VERIFY_OVERTIME_KEY, PICTURE_VERIFY_OVERTIME);
-         }*/
-    	 
-    	 
-    	 
-    	 if (!client.exists(VerifyConstants.PhoneVerifyConstants.SEND_TELE_IP_TIMES_KEY)) {
-             client.add(PhoneVerifyConstants.SEND_TELE_IP_TIMES_KEY, PHONE_IP_SEND_MAXTIMES);
+         }
+    	 if (!client.exists(VerifyConstants.PhoneVerifyConstants.SEND_VERIFY_IP_MAX_NO_KEY)) {
+             client.add(PhoneVerifyConstants.SEND_VERIFY_IP_MAX_NO_KEY, PHONE_IP_SEND_MAXTIMES);
          } else {
-             client.modify(PhoneVerifyConstants.SEND_TELE_IP_TIMES_KEY, PHONE_IP_SEND_MAXTIMES);
+             client.modify(PhoneVerifyConstants.SEND_VERIFY_IP_MAX_NO_KEY, PHONE_IP_SEND_MAXTIMES);
+         }
+    	 if (!client.exists(VerifyConstants.EmailVerifyConstants.SEND_VERIFY_IP_MAX_NO_KEY)) {
+             client.add(EmailVerifyConstants.SEND_VERIFY_IP_MAX_NO_KEY, EMAIL_IP_SEND_MAXTIMES);
+         } else {
+             client.modify(EmailVerifyConstants.SEND_VERIFY_IP_MAX_NO_KEY, EMAIL_IP_SEND_MAXTIMES);
+         }
+    	 
+    	 if (!client.exists(VerifyConstants.PhoneVerifyConstants.IP_SEND_OVERTIME_KEY)) {
+             client.add(PhoneVerifyConstants.IP_SEND_OVERTIME_KEY, PHONE_IP_SEND_OVERTIME);
+         } else {
+             client.modify(PhoneVerifyConstants.IP_SEND_OVERTIME_KEY, PHONE_IP_SEND_OVERTIME);
+         }
+    	 
+    	 if (!client.exists(VerifyConstants.EmailVerifyConstants.IP_SEND_OVERTIME_KEY)) {
+             client.add(EmailVerifyConstants.IP_SEND_OVERTIME_KEY, EMAIL_IP_SEND_OVERTIME);
+         } else {
+             client.modify(EmailVerifyConstants.IP_SEND_OVERTIME_KEY, EMAIL_IP_SEND_OVERTIME);
          }
     	 System.out.println("addSendVerifyTimesConfig ... end");
      }

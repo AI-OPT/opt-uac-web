@@ -25,7 +25,6 @@ define('app/center/password/setPassword', function (require, exports, module) {
     		//key的格式: 事件+空格+对象选择器;value:事件方法
     		"click [id='submitBtn']":"_updatePassword",
     		"blur [id='password']":"_checkNewPassword",
-    		"blur [id='password']":"_pwStrength",
     		"blur [id='confirmPassword']":"_checkConfirmPassword",
     		"keyup [id='password']":"_pwStrength"
         },
