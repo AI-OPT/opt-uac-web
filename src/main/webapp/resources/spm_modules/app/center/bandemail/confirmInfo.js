@@ -27,7 +27,6 @@ define('app/center/bandemail/confirmInfo', function (require, exports, module) {
     		"click [id='sendVerify']":"_sendVerify",
     		"click [id='random_img']":"_getImageRandomCode",
     		"click [id='changeImage']":"_getImageRandomCode",
-    		"click [id='changeConfirmType']":"_changeShowViewByType",
     		"blur [id='pictureVerifyCode']":"_checkPictureVerifyCode",
     		"blur [id='verifyCode']":"_checkVerifyCode"
         },
@@ -54,36 +53,6 @@ define('app/center/bandemail/confirmInfo', function (require, exports, module) {
 			$("#confirmType").val("1");
 			$("#confirmTypeName").html("已验证手机");
 			$("#verifyName").html("短信校验码");
-			$("#email").attr("style","display:none");
-			$("#phone").removeAttr("style");
-			var email = $("#email").val();
-			if(email != "" && email != null && email != undefined){
-				$("#changeConfirmType").removeAttr("disabled");
-				$("#changeConfirmType").html("通过已验证邮箱验证");
-			}else{
-				$("#changeConfirmType").attr("disabled", true);
-				$("#changeConfirmType").html("");
-			}
-		},
-		//身份认证方式改变触发事件
-		_changeShowViewByType:function(){
-			var _this = this;
-			var confirmType=$('#confirmType').val();
-			if(confirmType == "1"){
-				$('#confirmType').val("2")
-				$("#confirmTypeName").html("已验证邮箱");
-				$("#changeConfirmType").html("通过已验证手机验证");
-				$("#verifyName").html("邮箱校验码");
-				$("#email").removeAttr("style");
-				$("#phone").attr("style","display:none");
-			}else if(confirmType == "2"){
-				$("#confirmType").val("1");
-				$("#confirmTypeName").html("已验证手机");
-				$("#changeConfirmType").html("通过已验证邮箱验证");
-				$("#verifyName").html("短信校验码");
-				$("#email").attr("style","display:none");
-				$("#phone").removeAttr("style");
-			}
 		},
 		_getImageRandomCode:function(){
 			var timestamp = (new Date()).valueOf();

@@ -52,7 +52,7 @@ import com.ai.opt.uac.web.model.login.LoginUser;
 import com.ai.opt.uac.web.model.register.GetSMDataReq;
 import com.ai.opt.uac.web.model.register.UpdateEmailReq;
 import com.ai.opt.uac.web.util.CacheUtil;
-import com.ai.opt.uac.web.util.GetIPUtil;
+import com.ai.opt.uac.web.util.IPUtil;
 import com.ai.opt.uac.web.util.VerifyUtil;
 import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
 import com.ai.runner.base.exception.CallerException;
@@ -480,7 +480,7 @@ public class RegisterController {
             String smstimes = "1";
             int iptimes = 1;
             String smskey = SMSUtil.CACHE_KEY_SMS_REGISTER + sMDataReq.getPhone()+request.getSession().getId();
-            String ipkey = SMSUtil.CACHE_KEY_SMS_IP_REGISTER+GetIPUtil.getIp2(request);
+            String ipkey = SMSUtil.CACHE_KEY_SMS_IP_REGISTER+IPUtil.getIp(request);
             //获取ip发送次数
             String maxTimes = ConfigCenterFactory.getConfigCenterClient().get(PhoneVerifyConstants.SEND_VERIFY_IP_MAX_NO_KEY);
             ICacheClient cacheClient = CacheClientFactory.getCacheClient(Register.CACHE_NAMESPACE);

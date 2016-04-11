@@ -71,6 +71,10 @@ public final class Constants {
         public static final String CACHE_KEY_SEND_EMAIL_NUM = "retake-password-send-email-num";
         /** 找回密码发送手机次数key*/
         public static final String CACHE_KEY_SEND_PHONE_NUM = "retake-password-send-phone-num";
+        /** IP发送手机次数key*/
+        public static final String CACHE_KEY_IP_SEND_PHONE_NUM = "retake-password-ip-send-phone-num";
+        /** IP发送邮件次数key*/
+        public static final String CACHE_KEY_IP_SEND_EMAIL_NUM = "retake-password-ip-send-email-num";
 		
 		public static final String FAIL_CODE = "0";
 		
@@ -158,6 +162,10 @@ public final class Constants {
         public static final String CACHE_KEY_SEND_EMAIL_NUM = "update-password-send-email-num";
         /** 身份认证发送手机次数key*/
         public static final String CACHE_KEY_SEND_PHONE_NUM = "update-password-send-phone-num";
+        /** IP发送手机次数key*/
+        public static final String CACHE_KEY_IP_SEND_PHONE_NUM = "update-password-ip-send-phone-num";
+        /** IP发送邮件次数key*/
+        public static final String CACHE_KEY_IP_SEND_EMAIL_NUM = "update-password-ip-send-email-num";
 	}
     
     public static final class UpdatePhone{
@@ -191,7 +199,11 @@ public final class Constants {
         public static final String CACHE_KEY_CONFIRM_SEND_PHONE_NUM = "update-phone-confirm-send-phone-num";
         /** 修改手机发送手机次数key*/
         public static final String CACHE_KEY_UPDATE_SEND_PHONE_NUM = "update-phone-update-send-phone-num";
-	}
+        /** IP发送手机次数key*/
+        public static final String CACHE_KEY_IP_SEND_PHONE_NUM = "update-phone-ip-send-phone-num";
+        /** IP发送邮件次数key*/
+        public static final String CACHE_KEY_IP_SEND_EMAIL_NUM = "update-phone-ip-send-email-num";
+    }
     
     public static final class UpdateEmail{
 		private UpdateEmail(){}
@@ -227,7 +239,11 @@ public final class Constants {
         public static final String CACHE_KEY_CONFIRM_SEND_PHONE_NUM = "update-email-confirm-send-phone-num";
         /** 修改邮箱发送手机次数key*/
         public static final String CACHE_KEY_UPDATE_SEND_EMAIL_NUM = "update-email-update-send-phone-num";
-	}
+        /** IP发送手机次数key*/
+        public static final String CACHE_KEY_IP_SEND_PHONE_NUM = "update-email-ip-send-phone-num";
+        /** IP发送邮件次数key*/
+        public static final String CACHE_KEY_IP_SEND_EMAIL_NUM = "update-email-ip-send-email-num";
+    }
     
     public static final class BandEmail{
 		private BandEmail(){}
@@ -261,6 +277,10 @@ public final class Constants {
         public static final String CACHE_KEY_CONFIRM_SEND_PHONE_NUM = "band-email-confirm-send-phone-num";
         /** 修改邮箱发送手机次数key*/
         public static final String CACHE_KEY_UPDATE_SEND_EMAIL_NUM = "band-email-update-send-phone-num";
+        /** IP发送手机次数key*/
+        public static final String CACHE_KEY_IP_SEND_PHONE_NUM = "band-email-ip-send-phone-num";
+        /** IP发送邮件次数key*/
+        public static final String CACHE_KEY_IP_SEND_EMAIL_NUM = "band-email-ip-send-email-num";
 	}
     
     public static final class SMSUtil{

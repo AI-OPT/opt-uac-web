@@ -43,6 +43,7 @@ import com.ai.opt.uac.web.model.email.SendEmailRequest;
 import com.ai.opt.uac.web.model.retakepassword.AccountData;
 import com.ai.opt.uac.web.model.retakepassword.SafetyConfirmData;
 import com.ai.opt.uac.web.util.CacheUtil;
+import com.ai.opt.uac.web.util.IPUtil;
 import com.ai.opt.uac.web.util.VerifyUtil;
 import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
 import com.ai.runner.center.mmp.api.manager.param.SMData;
@@ -94,6 +95,11 @@ public class BandEmailController {
 			String sessionId = request.getSession().getId();
 			if (userClient != null) {
 				if (BandEmail.CHECK_TYPE_PHONE.equals(confirmType)) {
+					//检查ip发送验证码次数
+					ResponseData<String> checkIpSendPhone = VerifyUtil.checkIPSendPhoneCount(BandEmail.CACHE_NAMESPACE, IPUtil.getIp(request)+BandEmail.CACHE_KEY_IP_SEND_PHONE_NUM);
+					if(!checkIpSendPhone.getResponseHeader().isSuccess()){
+						return checkIpSendPhone;
+					}
 					// 发送手机验证码
 					String isSuccess = sendPhoneVerifyCode(sessionId, userClient);
 					if ("0000".equals(isSuccess)) {
@@ -124,9 +130,13 @@ public class BandEmailController {
 					}
 
 				} else if (BandEmail.CHECK_TYPE_EMAIL.equals(confirmType)) {
+					//检查ip发送验证码次数
+					ResponseData<String> checkIpSendEmail = VerifyUtil.checkIPSendEmailCount(BandEmail.CACHE_NAMESPACE, IPUtil.getIp(request)+BandEmail.CACHE_KEY_IP_SEND_EMAIL_NUM);
+					if(!checkIpSendEmail.getResponseHeader().isSuccess()){
+						return checkIpSendEmail;
+					}
 					// 发送邮件验证码
 					String isSuccess = sendEmailVerifyCode(sessionId, userClient);
-
 					if ("0000".equals(isSuccess)) {
 						responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "验证码发送成功", null);
 						ResponseHeader header = new ResponseHeader(true, ResultCodeConstants.SUCCESS_CODE, "验证码发送成功");
@@ -361,6 +371,11 @@ public class BandEmailController {
 				responseData.setResponseHeader(responseHeader);
 				return responseData;
 			} else {
+				//检查ip发送验证码次数
+				ResponseData<String> checkIpSendPhone = VerifyUtil.checkIPSendEmailCount(BandEmail.CACHE_NAMESPACE, IPUtil.getIp(request)+BandEmail.CACHE_KEY_IP_SEND_EMAIL_NUM);
+				if(!checkIpSendPhone.getResponseHeader().isSuccess()){
+					return checkIpSendPhone;
+				}
 				String rasultCode = sendBandEmailVerifyCode(request, email, userClient);
 				if ("0000".equals(rasultCode)) {
 					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "短信验证码发送成功", "短信验证码发送成功");

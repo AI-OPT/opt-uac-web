@@ -9,8 +9,10 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.ai.net.xss.util.StringUtil;
 import com.ai.opt.base.vo.ResponseHeader;
 import com.ai.opt.sdk.cache.factory.CacheClientFactory;
+import com.ai.opt.sdk.configcenter.client.IConfigCenterClient;
 import com.ai.opt.sdk.configcenter.factory.ConfigCenterFactory;
 import com.ai.opt.sdk.mail.EmailFactory;
 import com.ai.opt.sdk.mail.EmailTemplateUtil;
@@ -34,7 +36,7 @@ public class VerifyUtil {
 	private static final Logger LOGGER = LoggerFactory.getLogger(VerifyUtil.class);
 
 	public static BufferedImage getImageVerifyCode(String namespace, String cacheKey, int width, int height) {
-		//int width = 100, height = 38;
+		// int width = 100, height = 38;
 		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
 		// 获取图形上下文
@@ -71,7 +73,7 @@ public class VerifyUtil {
 		g.drawString(Str, 68, 32);
 		// 随机产生88个干扰点，使图象中的认证码不易被其它程序探测到
 		Random random = new Random();
-		for (int i = 0; i < 30; i++) {
+		for (int i = 0; i < 88; i++) {
 			int x = random.nextInt(width);
 			int y = random.nextInt(height);
 			g.drawOval(x, y, 0, 0);
@@ -85,6 +87,7 @@ public class VerifyUtil {
 
 	/**
 	 * 发送邮件
+	 * 
 	 * @param emailRequest
 	 * @return
 	 */
@@ -99,13 +102,14 @@ public class VerifyUtil {
 		}
 		return success;
 	}
-	
+
 	/**
 	 * 发送手机信息
+	 * 
 	 * @param smDataInfoNotify
 	 * @return
 	 */
-	public static boolean sendPhoneInfo(SMDataInfoNotify smDataInfoNotify){
+	public static boolean sendPhoneInfo(SMDataInfoNotify smDataInfoNotify) {
 		SMSServices smsService = DubboConsumerFactory.getService("sMSServices");
 		boolean isSuccess = true;
 		try {
@@ -119,6 +123,7 @@ public class VerifyUtil {
 
 	/**
 	 * 创建短信信息seq
+	 * 
 	 * @return
 	 */
 	public static String createPhoneMsgSeq() {
@@ -133,9 +138,10 @@ public class VerifyUtil {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * 检查图片验证码
+	 * 
 	 * @param verifyCode
 	 * @param cacheVerifyCode
 	 * @return
@@ -156,9 +162,10 @@ public class VerifyUtil {
 		responseData.setResponseHeader(responseHeader);
 		return responseData;
 	}
-	
+
 	/**
 	 * 检查邮箱验证码
+	 * 
 	 * @param verifyCode
 	 * @param cacheVerifyCode
 	 * @return
@@ -204,62 +211,139 @@ public class VerifyUtil {
 		responseData.setResponseHeader(responseHeader);
 		return responseData;
 	}
-	
+
 	/**
 	 * 检测手机号码唯一性
+	 * 
 	 * @param phone
 	 * @return
 	 */
-    public static ResponseData<String> checkPhoneOnly(String phone) {
-        ResponseData<String> responseData = null;
-        ResponseHeader header = null;
-        try {
-            ILoginSV loginService = DubboConsumerFactory.getService("iLoginSV");
-            UserLoginResponse userLoginResponse = loginService.queryAccountByUserName(phone);
-            if(userLoginResponse!=null){
-                String resultCode = userLoginResponse.getResponseHeader().getResultCode();
-				if(resultCode.equals(ResultCodeConstants.SUCCESS_CODE)){
+	public static ResponseData<String> checkPhoneOnly(String phone) {
+		ResponseData<String> responseData = null;
+		ResponseHeader header = null;
+		try {
+			ILoginSV loginService = DubboConsumerFactory.getService("iLoginSV");
+			UserLoginResponse userLoginResponse = loginService.queryAccountByUserName(phone);
+			if (userLoginResponse != null) {
+				String resultCode = userLoginResponse.getResponseHeader().getResultCode();
+				if (resultCode.equals(ResultCodeConstants.SUCCESS_CODE)) {
 					header = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.PHONE_ERROR, "该手机号码已经注册");
-                    responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "该手机号码已经注册", null);
-                    responseData.setResponseHeader(header);
-                } else{
-                	header = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "成功");
-                    responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "成功", null);
-                    responseData.setResponseHeader(header);
-                }
-            }
-        } catch (Exception e) {
-            responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "手机校验失败",null);
-        }
-        return responseData;
-    }
-    
-    /**
-     * 检测邮箱唯一性 
-     * @param email
-     * @return
-     */
-    public static ResponseData<String> checkEmialOnly(String email) {
-    	 ResponseData<String> responseData = null;
-         ResponseHeader header = null;
-         try {
-             ILoginSV loginService = DubboConsumerFactory.getService("iLoginSV");
-             UserLoginResponse userLoginResponse = loginService.queryAccountByUserName(email);
-             if(userLoginResponse!=null){
-                 String resultCode = userLoginResponse.getResponseHeader().getResultCode();
- 				if(resultCode.equals(ResultCodeConstants.SUCCESS_CODE)){
- 					header = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.EMAIL_ERROR, "该邮箱已经注册");
-                     responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "该邮箱已经注册", null);
-                     responseData.setResponseHeader(header);
-                 } else{
-                 	header = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "成功");
-                     responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "成功", null);
-                     responseData.setResponseHeader(header);
-                 }
-             }
-         } catch (Exception e) {
-             responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "邮箱校验失败",null);
-         }
-         return responseData;
-    }  
+					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "该手机号码已经注册", null);
+					responseData.setResponseHeader(header);
+				} else {
+					header = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "成功");
+					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "成功", null);
+					responseData.setResponseHeader(header);
+				}
+			}
+		} catch (Exception e) {
+			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "手机校验失败", null);
+		}
+		return responseData;
+	}
+
+	/**
+	 * 检测邮箱唯一性
+	 * 
+	 * @param email
+	 * @return
+	 */
+	public static ResponseData<String> checkEmialOnly(String email) {
+		ResponseData<String> responseData = null;
+		ResponseHeader header = null;
+		try {
+			ILoginSV loginService = DubboConsumerFactory.getService("iLoginSV");
+			UserLoginResponse userLoginResponse = loginService.queryAccountByUserName(email);
+			if (userLoginResponse != null) {
+				String resultCode = userLoginResponse.getResponseHeader().getResultCode();
+				if (resultCode.equals(ResultCodeConstants.SUCCESS_CODE)) {
+					header = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.EMAIL_ERROR, "该邮箱已经注册");
+					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "该邮箱已经注册", null);
+					responseData.setResponseHeader(header);
+				} else {
+					header = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "成功");
+					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "成功", null);
+					responseData.setResponseHeader(header);
+				}
+			}
+		} catch (Exception e) {
+			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "邮箱校验失败", null);
+		}
+		return responseData;
+	}
+
+	/**
+	 * 检查ip发送手机验证码次数是否超限
+	 * 
+	 * @param namespace
+	 * @param key
+	 * @return
+	 */
+	public static ResponseData<String> checkIPSendPhoneCount(String namespace, String key) {
+		ResponseData<String> responseData = null;
+		ResponseHeader header = null;
+		ICacheClient cacheClient = CacheClientFactory.getCacheClient(namespace);
+		String countStr = cacheClient.get(key);
+		IConfigCenterClient configCenterClient = ConfigCenterFactory.getConfigCenterClient();
+		String overTime = configCenterClient.get(VerifyConstants.PhoneVerifyConstants.IP_SEND_OVERTIME_KEY);
+		if (!StringUtil.isBlank(countStr)) {
+			String maxNoStr = configCenterClient.get(VerifyConstants.PhoneVerifyConstants.SEND_VERIFY_IP_MAX_NO_KEY);
+			int maxNo = Integer.valueOf(maxNoStr);
+			int count = Integer.valueOf(countStr);
+			count++;
+			if (count > maxNo) {
+				String message = "频繁发送手机验证码，已被禁止" + Integer.valueOf(overTime) / 60 + "分钟";
+				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, message);
+				header = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_VERIFY_ERROR, message);
+				responseData.setResponseHeader(header);
+				return responseData;
+			}else{
+				cacheClient.setex(key, Integer.valueOf(overTime), Integer.toString(count));
+			}
+		}else{
+			cacheClient.setex(key, Integer.valueOf(overTime), "1");
+		}
+		responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, null);
+		header = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.REGISTER_VERIFY_ERROR, null);
+		responseData.setResponseHeader(header);
+		return responseData;
+	}
+	
+	/**
+	 * 检查ip发送邮箱验证码次数是否超限
+	 * 
+	 * @param namespace
+	 * @param key
+	 * @return
+	 */
+	public static ResponseData<String> checkIPSendEmailCount(String namespace, String key) {
+		ResponseData<String> responseData = null;
+		ResponseHeader header = null;
+		ICacheClient cacheClient = CacheClientFactory.getCacheClient(namespace);
+		String countStr = cacheClient.get(key);
+		IConfigCenterClient configCenterClient = ConfigCenterFactory.getConfigCenterClient();
+		//限制时间
+		String overTime = configCenterClient.get(VerifyConstants.EmailVerifyConstants.IP_SEND_OVERTIME_KEY);
+		if (!StringUtil.isBlank(countStr)) {
+			String maxNoStr = configCenterClient.get(VerifyConstants.EmailVerifyConstants.SEND_VERIFY_IP_MAX_NO_KEY);
+			int maxNo = Integer.valueOf(maxNoStr);
+			int count = Integer.valueOf(countStr);
+			count++;
+			if (count > maxNo) {
+				String message = "频繁发送邮箱验证码，已被禁止" + Integer.valueOf(overTime) / 60 + "分钟";
+				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, message);
+				header = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_VERIFY_ERROR, message);
+				responseData.setResponseHeader(header);
+				return responseData;
+			}else{
+				cacheClient.setex(key, Integer.valueOf(overTime), Integer.toString(count));
+			}
+		}else{
+			cacheClient.setex(key, Integer.valueOf(overTime), "1");
+		}
+		responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, null);
+		header = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.REGISTER_VERIFY_ERROR, null);
+		responseData.setResponseHeader(header);
+		return responseData;
+	}
 }
