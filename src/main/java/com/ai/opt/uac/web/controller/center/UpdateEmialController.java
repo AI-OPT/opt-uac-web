@@ -326,14 +326,14 @@ public class UpdateEmialController {
 	}
 	
 	/**
-	 * 检查修改邮箱与原邮箱不同
+	 * 检查修改邮箱与原邮箱不同 是否唯一
 	 * @param request
 	 * @param email
 	 * @return
 	 */
-	@RequestMapping("/checkEmailDiffOld")
+	@RequestMapping("/checkEmailValue")
 	@ResponseBody
-	public ResponseData<String> checkEmailDiffOld(HttpServletRequest request, String email){
+	public ResponseData<String> checkEmailValue(HttpServletRequest request, String email){
 		ResponseData<String> responseData = null;
 		ResponseHeader responseHeader = null;
 		String uuid = request.getParameter(Constants.UUID.KEY_NAME);
@@ -344,6 +344,7 @@ public class UpdateEmialController {
 			responseData.setResponseHeader(responseHeader);
 			return responseData;
 		}
+		//检查与原邮箱不同
 		String oldEmail = userClient.getEmail();
 		if (email.equals(oldEmail)) {
 			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "新邮箱地址不能与旧邮箱地址相同，请重新输入", null);
@@ -351,10 +352,8 @@ public class UpdateEmialController {
 			responseData.setResponseHeader(responseHeader);
 			return responseData;
 		}
-		responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "正确", null);
-		responseHeader = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.SUCCESS_CODE, "正确");
-		responseData.setResponseHeader(responseHeader);
-		return responseData; 
+		//检查是否重复
+		return VerifyUtil.checkEmialOnly(email);
 	}
 
 	/**

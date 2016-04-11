@@ -49,6 +49,14 @@ define('app/center/email/setEmail', function (require, exports, module) {
     	},
     	//检查新密码格式
 		_checkEmail: function(){
+			var isOk = this._checkEmailFormat();
+			if(isOk){
+				isOk = this._checkEmailValue();
+			}
+			return isOk;
+		},
+		//检查手机格式 
+		_checkEmailFormat:function(){
 			var email = jQuery.trim($("#email").val());
 			var msg = "";
 			if(email == "" || email == null || email == undefined){
@@ -66,10 +74,10 @@ define('app/center/email/setEmail', function (require, exports, module) {
 				return false;
 			}
 		},
-		//检查新邮箱与原邮箱不同
-		_checkEmailDiffOld: function(){
+		//检查新邮箱与原邮箱不同 不重复
+		_checkEmailValue: function(){
 			var _this = this;
-			var isOk;
+			var isOk = false;
 			ajaxController.ajax({
 				type : "POST",
 				data : {
@@ -78,7 +86,7 @@ define('app/center/email/setEmail', function (require, exports, module) {
 					}
 				},
 				dataType: 'json',
-				url :_base+"/center/email/checkEmailDiffOld?k="+uuid,
+				url :_base+"/center/email/checkEmailValue?k="+uuid,
 				async: false,
 				processing: true,
 				message : "正在处理中，请稍候...",
@@ -89,15 +97,6 @@ define('app/center/email/setEmail', function (require, exports, module) {
 						var url = data.data;
 						window.location.href = _base+url;
 					}else{
-						isOk = true;
-						if(resultCode=="100002"){
-							_this._controlMsgText("verifyCodeMsg",data.statusInfo);
-							_this._controlMsgAttr("verifyCodeMsgDiv",2);
-							isOk = false;
-				        }else{
-				        	_this._controlMsgText("verifyCodeMsg","");
-				        	_this._controlMsgAttr("verifyCodeMsgDiv",1);
-				        } 
 						if(resultCode=="100006"){
 				        	_this._controlMsgText("emailMsg",data.statusInfo);
 							_this._controlMsgAttr("emailMsgDiv",2);
@@ -105,6 +104,7 @@ define('app/center/email/setEmail', function (require, exports, module) {
 				        }else{
 				        	_this._controlMsgText("emailMsg","");
 				        	_this._controlMsgAttr("emailMsgDiv",1);
+				        	isOk = true;
 				        }
 					}
 				},
@@ -147,10 +147,6 @@ define('app/center/email/setEmail', function (require, exports, module) {
 			if(!isOk){
 				return false;
 			}
-			var isDiffOk = this._checkEmailDiffOld();
-			if(!isDiffOk){
-				return false;
-			}else{
 			$("#sendEmailBtn").attr("disabled", true);
 			ajaxController.ajax({
 				type : "POST",
@@ -202,7 +198,6 @@ define('app/center/email/setEmail', function (require, exports, module) {
 					alert("网络连接超时!");
 				}
 			});
-			}
 		},
 		//更新邮箱
 		_updateEmail:function(){
@@ -210,10 +205,6 @@ define('app/center/email/setEmail', function (require, exports, module) {
 			var checkEmail = this._checkEmail();
 			var checkVerify = this._checkVerifyCode();
 			if(!(checkEmail&&checkVerify)){
-				return false;
-			}
-			var isDiffOk = this._checkEmailDiffOld();
-			if(!isDiffOk){
 				return false;
 			}
 			ajaxController.ajax({

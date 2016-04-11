@@ -328,6 +328,19 @@ public class BandEmailController {
 		}
 
 		/**
+		 * 检查修改邮箱是否唯一
+		 * @param request
+		 * @param email
+		 * @return
+		 */
+		@RequestMapping("/checkEmailValue")
+		@ResponseBody
+		public ResponseData<String> checkEmailValue(HttpServletRequest request, String email){
+			//检查是否重复
+			return VerifyUtil.checkEmialOnly(email);
+		}
+
+		/**
 		 * 发送邮件验证码(修改新邮箱时验证)
 		 * 
 		 * @param request
