@@ -57,6 +57,7 @@ define('app/register/register', function (require, exports, module) {
     	},
     	//获取短信验证码
     	_getPhoneVitentify: function(){
+    		$("#errorSmsMsg").attr("style","display:none");
     		var phoneFlag=$('#errorPhoneFlag').val();
     		var picFlag=$('#errorPicFlag').val();
     		var passFlag=$('#errorPassFlag').val();
