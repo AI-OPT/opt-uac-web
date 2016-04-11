@@ -158,8 +158,8 @@ public class IConfigCenterClientTest {
     	 String EMAIL_VERIFY_OVERTIME = "1800";
     	 String EMAIL_SEND_VERIFY_MAX_TIME = "60";
     	 String PICTURE_VERIFY_OVERTIME = "600";
-    	 String PHONE_IP_SEND_MAXTIMES="2";
-    	 String EMAIL_IP_SEND_MAXTIMES="2";
+    	 String PHONE_IP_SEND_MAXTIMES="10";
+    	 String EMAIL_IP_SEND_MAXTIMES="10";
     	 String PHONE_IP_SEND_OVERTIME="300";
     	 String EMAIL_IP_SEND_OVERTIME="300";
     	 if (!client.exists(VerifyConstants.PhoneVerifyConstants.SEND_VERIFY_MAX_TIME_KEY)) {

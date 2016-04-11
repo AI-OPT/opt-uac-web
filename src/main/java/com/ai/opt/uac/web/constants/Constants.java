@@ -95,6 +95,10 @@ public final class Constants {
         public static final String REGISTER_PHONE_KEY = "register-verify-phone";
         /** 缓存命名空间 */
         public static final String CACHE_NAMESPACE = "com.ai.opt.uac.register.cache";
+        /**IP发送短信次数缓存key*/
+        public static final String CACHE_KEY_IP_SEND_PHONE_NUM = "register-ip-send-phone-maxnum";
+        /**IP发送邮件次数缓存key*/
+        public static final String CACHE_KEY_IP_SEND_EMAIL_NUM = "register-ip-send-email-maxnum";
 
         /** 邮箱模板路径 */
         public static final String TEMPLATE_EMAIL_URL = "email/template/uac-register-binemail.xml";
@@ -288,7 +292,7 @@ public final class Constants {
         /** 注册时手机发送次数key*/
         public static final String CACHE_KEY_SMS_REGISTER = "register-sms";
         /** 注册时手机发送IP地址次数key*/
-        public static final String CACHE_KEY_SMS_IP_REGISTER = "register-ip";
+        //public static final String CACHE_KEY_SMS_IP_REGISTER = "register-ip";
         /** 短信发送次数失败*/
         public static final String CACHE_SMS_ERROR_CODE = "9999";
         /** ip短信发送次数失败*/

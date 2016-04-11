@@ -372,9 +372,9 @@ public class BandEmailController {
 				return responseData;
 			} else {
 				//检查ip发送验证码次数
-				ResponseData<String> checkIpSendPhone = VerifyUtil.checkIPSendEmailCount(BandEmail.CACHE_NAMESPACE, IPUtil.getIp(request)+BandEmail.CACHE_KEY_IP_SEND_EMAIL_NUM);
-				if(!checkIpSendPhone.getResponseHeader().isSuccess()){
-					return checkIpSendPhone;
+				ResponseData<String> checkIpSendEmail = VerifyUtil.checkIPSendEmailCount(BandEmail.CACHE_NAMESPACE, IPUtil.getIp(request)+BandEmail.CACHE_KEY_IP_SEND_EMAIL_NUM);
+				if(!checkIpSendEmail.getResponseHeader().isSuccess()){
+					return checkIpSendEmail;
 				}
 				String rasultCode = sendBandEmailVerifyCode(request, email, userClient);
 				if ("0000".equals(rasultCode)) {
