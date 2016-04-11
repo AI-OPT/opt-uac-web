@@ -91,6 +91,10 @@ define('app/register/register', function (require, exports, module) {
     			    			$("#errorSmsMsg").attr("style","display:block");
     			    			$("#phoneVerifyCode").val("");
     							return false;
+    			        	}else if(data.responseHeader.resultCode=="1111"){
+    			        		$('#showSmsMsg').text("该ip地址超出发送次数 ");
+    			    			$("#errorSmsMsg").attr("style","display:block");
+    							return false;
     			        	}
      			        },
      			        error: function(XMLHttpRequest, textStatus, errorThrown) {

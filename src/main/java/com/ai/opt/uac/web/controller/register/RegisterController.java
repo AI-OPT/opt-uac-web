@@ -52,6 +52,7 @@ import com.ai.opt.uac.web.model.login.LoginUser;
 import com.ai.opt.uac.web.model.register.GetSMDataReq;
 import com.ai.opt.uac.web.model.register.UpdateEmailReq;
 import com.ai.opt.uac.web.util.CacheUtil;
+import com.ai.opt.uac.web.util.GetIPUtil;
 import com.ai.opt.uac.web.util.VerifyUtil;
 import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
 import com.ai.runner.base.exception.CallerException;
@@ -477,9 +478,14 @@ public class RegisterController {
         try {
             //获取短信发送次数
             String smstimes = "1";
-            String smskey = SMSUtil.CACHE_KEY_SMS_REGISTER + sMDataReq.getPhone()+request.getSession().getId();;
+            int iptimes = 1;
+            String smskey = SMSUtil.CACHE_KEY_SMS_REGISTER + sMDataReq.getPhone()+request.getSession().getId();
+            String ipkey = SMSUtil.CACHE_KEY_SMS_IP_REGISTER+GetIPUtil.getIp2(request);
+            //获取ip发送次数
+            String maxTimes = ConfigCenterFactory.getConfigCenterClient().get(PhoneVerifyConstants.SEND_TELE_IP_TIMES_KEY);
             ICacheClient cacheClient = CacheClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
             String times = cacheClient.get(smskey);
+            String realIpTimes = cacheClient.get(ipkey);
             if(StringUtil.isBlank(times)){
                 SMDataInfoNotify smData = new SMDataInfoNotify();
                 smData.setTenantId(request.getSession().getId());
@@ -507,6 +513,11 @@ public class RegisterController {
                 //存发送次数到缓存
                 String maxTimeStr = ConfigCenterFactory.getConfigCenterClient().get(PhoneVerifyConstants.SEND_VERIFY_MAX_TIME_KEY);
                 iCacheClient.setex(smskey, Integer.valueOf(maxTimeStr), smstimes);
+                //存ip发送次数到缓存
+                if(!StringUtil.isBlank(realIpTimes)){
+                    iptimes = Integer.parseInt(realIpTimes)+1;
+                }
+                iCacheClient.setex(ipkey, Integer.parseInt(maxTimes), String.valueOf(iptimes));
                 ResponseHeader header = new ResponseHeader();
                 header.setIsSuccess(true);
                 header.setResultCode(SMSUtil.CACHE_SMS_SUCCESS_CODE);
@@ -523,7 +534,27 @@ public class RegisterController {
                 responseData.setResponseHeader(header);
                 return responseData;
             }
-            
+            if(!StringUtil.isBlank(realIpTimes)){
+                int realTimes = Integer.parseInt(realIpTimes);
+                int max = Integer.parseInt(maxTimes);
+                if(realTimes>max){
+                    ResponseHeader header = new ResponseHeader();
+                    header.setIsSuccess(false);
+                    header.setResultCode(SMSUtil.CACHE_SMS_IP_ERROR_CODE);
+                    header.setResultMessage("ip地址超出发送次数");
+                    responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS,
+                            "ip地址超出发送次数", null);
+                    responseData.setResponseHeader(header);
+                    return responseData;
+                }
+             }else{
+                 ResponseHeader header = new ResponseHeader();
+                 header.setIsSuccess(true);
+                 header.setResultCode(SMSUtil.CACHE_SMS_SUCCESS_CODE);
+                 responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "验证码获取成功",
+                         null);
+                 responseData.setResponseHeader(header);
+             }
         } catch (Exception e) {
             LOG.error("验证码获取失败！", e);
             responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "验证码获取失败",
@@ -567,5 +598,5 @@ public class RegisterController {
         responseData.setResponseHeader(responseHeader);
         return responseData;
     } 
-   
+    
 }

@@ -19,6 +19,8 @@ public final class VerifyConstants {
 		public static final String VERIFY_OVERTIME_KEY = "phone_verifycode_overtime";
 		/** 可重复发送时间 配置key */
 		public static final String SEND_VERIFY_MAX_TIME_KEY = "phone_verifycode_send_maxtime";
+		/** ip可重复发送次数 配置key */
+        public static final String SEND_TELE_IP_TIMES_KEY = "phone_ip_send_maxtimes";
 
 		/** 短信注册模板ID */
 		public static final String TEMPLATE_REGISTER_ID = "1";

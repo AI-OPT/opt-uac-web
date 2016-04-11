@@ -267,8 +267,12 @@ public final class Constants {
         private SMSUtil(){}
         /** 注册时手机发送次数key*/
         public static final String CACHE_KEY_SMS_REGISTER = "register-sms";
+        /** 注册时手机发送IP地址次数key*/
+        public static final String CACHE_KEY_SMS_IP_REGISTER = "register-ip";
         /** 短信发送次数失败*/
         public static final String CACHE_SMS_ERROR_CODE = "9999";
+        /** ip短信发送次数失败*/
+        public static final String CACHE_SMS_IP_ERROR_CODE = "1111";
         /** 短信重复发送时间*/
         //public static final int SMS_VERIFY_TIMES = 60;
         /** 短信发送成功*/
