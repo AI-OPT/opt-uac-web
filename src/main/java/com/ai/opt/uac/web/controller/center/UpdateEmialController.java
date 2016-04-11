@@ -72,7 +72,7 @@ public class UpdateEmialController {
 	@ResponseBody
 	public void getImageVerifyCode(HttpServletRequest request, HttpServletResponse response) {
 		String cacheKey = UpdateEmail.CACHE_KEY_VERIFY_PICTURE + request.getSession().getId();
-		BufferedImage image = VerifyUtil.getImageVerifyCode(request, UpdateEmail.CACHE_NAMESPACE, cacheKey);
+		BufferedImage image = VerifyUtil.getImageVerifyCode(UpdateEmail.CACHE_NAMESPACE, cacheKey, 100, 38);
 		try {
 			ImageIO.write(image, "PNG", response.getOutputStream());
 		} catch (IOException e) {

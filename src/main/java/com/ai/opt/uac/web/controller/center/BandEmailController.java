@@ -72,7 +72,7 @@ public class BandEmailController {
 		@ResponseBody
 		public void getImageVerifyCode(HttpServletRequest request, HttpServletResponse response) {
 			String cacheKey = BandEmail.CACHE_KEY_VERIFY_PICTURE + request.getSession().getId();
-			BufferedImage image = VerifyUtil.getImageVerifyCode(request, BandEmail.CACHE_NAMESPACE, cacheKey);
+			BufferedImage image = VerifyUtil.getImageVerifyCode(BandEmail.CACHE_NAMESPACE, cacheKey, 100, 38);
 			try {
 				ImageIO.write(image, "PNG", response.getOutputStream());
 			} catch (IOException e) {

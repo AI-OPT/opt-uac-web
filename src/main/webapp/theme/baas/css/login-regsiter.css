@@ -73,7 +73,7 @@ box-shadow:0 0 14px rgba(218,218, 218, .7);  }
 .regsiter-wrapper-cnt ul .identifying span{ margin-right:2px;}
 .regsiter-wrapper-cnt ul .identifying a{ color:##1c9aec; line-height:40px;}
 .regsiter-wrapper-cnt ul .identifying a:hover{ color:#043a86;}
-.int-xlarge-identifying{width:226px; float:left; height:46px; border: none; line-height:48px; font-size:14px; background:#fff; padding-left:6px; color:#666;border:1px solid #e4e4e4;}
+.int-xlarge-identifying{width:170px; float:left; height:46px; border: none; line-height:48px; font-size:14px; background:#fff; padding-left:6px; color:#666;border:1px solid #e4e4e4;}
 .int-xlarge-identifying:hover{ border:1px solid #0697ef;}
 
 /**注册表单**/

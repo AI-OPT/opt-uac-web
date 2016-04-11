@@ -74,7 +74,7 @@ public class RetakePasswordController {
 	@ResponseBody
 	public void getUserImageVerifyCode(HttpServletRequest request, HttpServletResponse response) {
 		String cacheKey = RetakePassword.CACHE_KEY_VERIFY_PICTURE_USER + request.getSession().getId();
-		BufferedImage image = VerifyUtil.getImageVerifyCode(request, RetakePassword.CACHE_NAMESPACE, cacheKey);
+		BufferedImage image = VerifyUtil.getImageVerifyCode(RetakePassword.CACHE_NAMESPACE, cacheKey,100,38);
 		try {
 			ImageIO.write(image, "PNG", response.getOutputStream());
 		} catch (IOException e) {
@@ -165,7 +165,7 @@ public class RetakePasswordController {
 	@ResponseBody
 	public void getImageVerifyCode(HttpServletRequest request, HttpServletResponse response) {
 		String cacheKey = RetakePassword.CACHE_KEY_VERIFY_PICTURE + request.getSession().getId();
-		BufferedImage image = VerifyUtil.getImageVerifyCode(request, RetakePassword.CACHE_NAMESPACE, cacheKey);
+		BufferedImage image = VerifyUtil.getImageVerifyCode(RetakePassword.CACHE_NAMESPACE, cacheKey,100,38);
 		try {
 			ImageIO.write(image, "PNG", response.getOutputStream());
 		} catch (IOException e) {

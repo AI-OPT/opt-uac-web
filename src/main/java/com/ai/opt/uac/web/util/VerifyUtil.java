@@ -6,8 +6,6 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.Random;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,8 +33,8 @@ import com.ai.runner.center.mmp.api.manager.param.SMDataInfoNotify;
 public class VerifyUtil {
 	private static final Logger LOGGER = LoggerFactory.getLogger(VerifyUtil.class);
 
-	public static BufferedImage getImageVerifyCode(HttpServletRequest request, String namespace, String cacheKey) {
-		int width = 100, height = 38;
+	public static BufferedImage getImageVerifyCode(String namespace, String cacheKey, int width, int height) {
+		//int width = 100, height = 38;
 		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
 
 		// 获取图形上下文
@@ -47,7 +45,7 @@ public class VerifyUtil {
 		g.fillRect(0, 0, width, height);
 
 		// 画边框
-		g.setColor(Color.black);
+		g.setColor(Color.lightGray);
 		g.drawRect(0, 0, width - 1, height - 1);
 
 		// 取随机产生的认证码
@@ -58,7 +56,7 @@ public class VerifyUtil {
 		cacheClient.setex(cacheKey, Integer.valueOf(overTimeStr), verifyCode);
 		LOGGER.debug("cacheKey=" + cacheKey + ",verifyCode=" + verifyCode);
 		// 将认证码显示到图象中
-		g.setColor(Color.black);
+		g.setColor(new Color(0x10a2fb));
 
 		g.setFont(new Font("Atlantic Inline", Font.PLAIN, 30));
 		String Str = verifyCode.substring(0, 1);
