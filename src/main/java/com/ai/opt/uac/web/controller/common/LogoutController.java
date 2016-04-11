@@ -23,17 +23,18 @@ public class LogoutController {
 	public void logout(HttpServletRequest request,HttpServletResponse response){
 		HttpSession session = request.getSession();
 		SSOClientUser user = (SSOClientUser) session.getAttribute(SSOClientConstants.USER_SESSION_KEY);
-		if(user!=null){
-			try {
-				session.removeAttribute(SSOClientConstants.USER_SESSION_KEY);
-				String logOutServerUrl = SSOClientUtil.getLogOutServerUrlRuntime(request);
-				String logOutBackUrl = SSOClientUtil.getLogOutBackUrlRuntime(request);
-				response.sendRedirect(logOutServerUrl + "?service=" + logOutBackUrl);
-				session.invalidate();
-			} catch (IOException e) {
-				LOG.error("用户登出失败",e);
+		String logOutServerUrl = SSOClientUtil.getLogOutServerUrlRuntime(request);
+		String logOutBackUrl = SSOClientUtil.getLogOutBackUrlRuntime(request);
+		try {
+			if(user!=null){
+					session.removeAttribute(SSOClientConstants.USER_SESSION_KEY);
+					session.invalidate();
 			}
+			response.sendRedirect(logOutServerUrl + "?service=" + logOutBackUrl);
+		} catch (IOException e) {
+			LOG.error("用户登出失败",e);
 		}
+		
 	}
 
 }
