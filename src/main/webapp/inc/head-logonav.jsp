@@ -15,7 +15,6 @@
 </div>
 <div class="navbg"></div>
 <script type="text/javascript">
-request.
 		(function() {
 			seajs.use([ 'app/inc/headlogonav' ], function(HeadLogoNav) {
 				var pager = new HeadLogoNav({
