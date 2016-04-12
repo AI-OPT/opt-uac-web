@@ -71,6 +71,10 @@ public final class Constants {
         public static final String CACHE_KEY_SEND_EMAIL_NUM = "retake-password-send-email-num";
         /** 找回密码发送手机次数key*/
         public static final String CACHE_KEY_SEND_PHONE_NUM = "retake-password-send-phone-num";
+        /** IP发送手机次数key*/
+        public static final String CACHE_KEY_IP_SEND_PHONE_NUM = "retake-password-ip-send-phone-num";
+        /** IP发送邮件次数key*/
+        public static final String CACHE_KEY_IP_SEND_EMAIL_NUM = "retake-password-ip-send-email-num";
 		
 		public static final String FAIL_CODE = "0";
 		
@@ -91,6 +95,10 @@ public final class Constants {
         public static final String REGISTER_PHONE_KEY = "register-verify-phone";
         /** 缓存命名空间 */
         public static final String CACHE_NAMESPACE = "com.ai.opt.uac.register.cache";
+        /**IP发送短信次数缓存key*/
+        public static final String CACHE_KEY_IP_SEND_PHONE_NUM = "register-ip-send-phone-maxnum";
+        /**IP发送邮件次数缓存key*/
+        public static final String CACHE_KEY_IP_SEND_EMAIL_NUM = "register-ip-send-email-maxnum";
 
         /** 邮箱模板路径 */
         public static final String TEMPLATE_EMAIL_URL = "email/template/uac-register-binemail.xml";
@@ -158,6 +166,10 @@ public final class Constants {
         public static final String CACHE_KEY_SEND_EMAIL_NUM = "update-password-send-email-num";
         /** 身份认证发送手机次数key*/
         public static final String CACHE_KEY_SEND_PHONE_NUM = "update-password-send-phone-num";
+        /** IP发送手机次数key*/
+        public static final String CACHE_KEY_IP_SEND_PHONE_NUM = "update-password-ip-send-phone-num";
+        /** IP发送邮件次数key*/
+        public static final String CACHE_KEY_IP_SEND_EMAIL_NUM = "update-password-ip-send-email-num";
 	}
     
     public static final class UpdatePhone{
@@ -191,7 +203,11 @@ public final class Constants {
         public static final String CACHE_KEY_CONFIRM_SEND_PHONE_NUM = "update-phone-confirm-send-phone-num";
         /** 修改手机发送手机次数key*/
         public static final String CACHE_KEY_UPDATE_SEND_PHONE_NUM = "update-phone-update-send-phone-num";
-	}
+        /** IP发送手机次数key*/
+        public static final String CACHE_KEY_IP_SEND_PHONE_NUM = "update-phone-ip-send-phone-num";
+        /** IP发送邮件次数key*/
+        public static final String CACHE_KEY_IP_SEND_EMAIL_NUM = "update-phone-ip-send-email-num";
+    }
     
     public static final class UpdateEmail{
 		private UpdateEmail(){}
@@ -227,7 +243,11 @@ public final class Constants {
         public static final String CACHE_KEY_CONFIRM_SEND_PHONE_NUM = "update-email-confirm-send-phone-num";
         /** 修改邮箱发送手机次数key*/
         public static final String CACHE_KEY_UPDATE_SEND_EMAIL_NUM = "update-email-update-send-phone-num";
-	}
+        /** IP发送手机次数key*/
+        public static final String CACHE_KEY_IP_SEND_PHONE_NUM = "update-email-ip-send-phone-num";
+        /** IP发送邮件次数key*/
+        public static final String CACHE_KEY_IP_SEND_EMAIL_NUM = "update-email-ip-send-email-num";
+    }
     
     public static final class BandEmail{
 		private BandEmail(){}
@@ -261,6 +281,10 @@ public final class Constants {
         public static final String CACHE_KEY_CONFIRM_SEND_PHONE_NUM = "band-email-confirm-send-phone-num";
         /** 修改邮箱发送手机次数key*/
         public static final String CACHE_KEY_UPDATE_SEND_EMAIL_NUM = "band-email-update-send-phone-num";
+        /** IP发送手机次数key*/
+        public static final String CACHE_KEY_IP_SEND_PHONE_NUM = "band-email-ip-send-phone-num";
+        /** IP发送邮件次数key*/
+        public static final String CACHE_KEY_IP_SEND_EMAIL_NUM = "band-email-ip-send-email-num";
 	}
     
     public static final class SMSUtil{
@@ -268,12 +292,12 @@ public final class Constants {
         /** 注册时手机发送次数key*/
         public static final String CACHE_KEY_SMS_REGISTER = "register-sms";
         /** 注册时手机发送IP地址次数key*/
-        public static final String CACHE_KEY_SMS_IP_REGISTER = "register-ip";
+        //public static final String CACHE_KEY_SMS_IP_REGISTER = "register-ip";
         /** 短信发送次数失败*/
         public static final String CACHE_SMS_ERROR_CODE = "9999";
-        /** ip短信发送次数失败*/
-        public static final String CACHE_SMS_IP_ERROR_CODE = "1111";
-        /** 短信重复发送时间*/
+        ///** ip短信发送次数失败*/
+        //public static final String CACHE_SMS_IP_ERROR_CODE = "1111";
+        ///** 短信重复发送时间*/
         //public static final int SMS_VERIFY_TIMES = 60;
         /** 短信发送成功*/
         public static final String CACHE_SMS_SUCCESS_CODE = "0000";

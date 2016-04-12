@@ -141,6 +141,12 @@ define('app/register/register-email', function (require, exports, module) {
 			    			$("#errorEmIdentifyMsg").attr("style","display:block");
 			    			$("#identifyCode").val("");
 							return false;
+			        	}else if(data.responseHeader.resultCode=="100002"){
+			        		var msg = data.statusInfo;
+			        		$('#showErroeEmIdentify').text(msg);
+			    			$("#errorEmIdentifyMsg").attr("style","display:block");
+			    			$("#identifyCode").val("");
+							return false;
 			        	}else if(data.responseHeader.resultCode=="1100"){
     		        		window.location.href=_base+"/reg/toRegister";
     		        	}

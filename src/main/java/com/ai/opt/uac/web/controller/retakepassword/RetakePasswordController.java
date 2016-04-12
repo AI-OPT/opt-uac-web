@@ -48,6 +48,7 @@ import com.ai.opt.uac.web.model.login.LoginUser;
 import com.ai.opt.uac.web.model.retakepassword.AccountData;
 import com.ai.opt.uac.web.model.retakepassword.SafetyConfirmData;
 import com.ai.opt.uac.web.util.CacheUtil;
+import com.ai.opt.uac.web.util.IPUtil;
 import com.ai.opt.uac.web.util.VerifyUtil;
 import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
 import com.ai.runner.center.mmp.api.manager.param.SMData;
@@ -74,7 +75,7 @@ public class RetakePasswordController {
 	@ResponseBody
 	public void getUserImageVerifyCode(HttpServletRequest request, HttpServletResponse response) {
 		String cacheKey = RetakePassword.CACHE_KEY_VERIFY_PICTURE_USER + request.getSession().getId();
-		BufferedImage image = VerifyUtil.getImageVerifyCode(request, RetakePassword.CACHE_NAMESPACE, cacheKey);
+		BufferedImage image = VerifyUtil.getImageVerifyCode(RetakePassword.CACHE_NAMESPACE, cacheKey,100,38);
 		try {
 			ImageIO.write(image, "PNG", response.getOutputStream());
 		} catch (IOException e) {
@@ -165,7 +166,7 @@ public class RetakePasswordController {
 	@ResponseBody
 	public void getImageVerifyCode(HttpServletRequest request, HttpServletResponse response) {
 		String cacheKey = RetakePassword.CACHE_KEY_VERIFY_PICTURE + request.getSession().getId();
-		BufferedImage image = VerifyUtil.getImageVerifyCode(request, RetakePassword.CACHE_NAMESPACE, cacheKey);
+		BufferedImage image = VerifyUtil.getImageVerifyCode(RetakePassword.CACHE_NAMESPACE, cacheKey,100,38);
 		try {
 			ImageIO.write(image, "PNG", response.getOutputStream());
 		} catch (IOException e) {
@@ -188,6 +189,11 @@ public class RetakePasswordController {
 		String sessionId = request.getSession().getId();
 		if (userClient != null) {
 			if (RetakePassword.CHECK_TYPE_PHONE.equals(confirmType)) {
+				// 检查ip发送次数
+				ResponseData<String> checkIpSendPhone = VerifyUtil.checkIPSendPhoneCount(RetakePassword.CACHE_NAMESPACE, IPUtil.getIp(request)+RetakePassword.CACHE_KEY_IP_SEND_PHONE_NUM);
+				if(!checkIpSendPhone.getResponseHeader().isSuccess()){
+					return checkIpSendPhone;
+				}
 				// 发送手机验证码
 				String isSuccess = sendPhoneVerifyCode(sessionId, userClient);
 				if ("0000".equals(isSuccess)) {
@@ -216,6 +222,11 @@ public class RetakePasswordController {
 					return responseData;
 				}
 			} else if (RetakePassword.CHECK_TYPE_EMAIL.equals(confirmType)) {
+				// 检查ip发送次数
+				ResponseData<String> checkIpSendEmail = VerifyUtil.checkIPSendEmailCount(RetakePassword.CACHE_NAMESPACE, IPUtil.getIp(request)+RetakePassword.CACHE_KEY_IP_SEND_EMAIL_NUM);
+				if(!checkIpSendEmail.getResponseHeader().isSuccess()){
+					return checkIpSendEmail;
+				}
 				// 发送邮件验证码
 				String resultCode = sendEmailVerifyCode(sessionId, userClient);
 				if ("0000".equals(resultCode)) {

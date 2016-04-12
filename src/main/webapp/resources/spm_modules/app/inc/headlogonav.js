@@ -33,6 +33,7 @@ define('app/inc/headlogonav', function (require, exports, module) {
     		var _this = this;
 			ajaxController.ajax({
 				type : "POST",
+				async : false,
 				url :_base+"/headLogoNav/isHasEmail",
 				processing: true,
 				message : "正在处理中，请稍候...",
@@ -41,11 +42,9 @@ define('app/inc/headlogonav', function (require, exports, module) {
 					if(status == "1" ){
 						var resultCode = data.data;
 						if(resultCode == "1"){
-							$("#setEmail").attr("style","display:none");
-							$("#updateEmail").attr("style","display:block");
+							$("#updateEmail").html("<a href='"+_base+"/center/email/confirminfo' >修改邮箱</a>");
 						}else if(resultCode == "0"){
-							$("#setEmail").attr("style","display:block");
-							$("#updateEmail").attr("style","display:none");
+							$("#updateEmail").html("<a href='"+_base+"/center/bandEmail/confirminfo' >设置邮箱</a>");
 						}
 					}
 				},

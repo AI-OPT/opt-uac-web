@@ -57,8 +57,7 @@
          <li class="user">
           <p class="word" id="confirmTypeName">已验证手机</p>
           <p id="phone">${confirmInfo.phone}</p> 
-          <p id="email">${confirmInfo.email}</p> 
-          <p class="tong"><A id="changeConfirmType">通过已验证邮箱验证</A></p>
+          <p class="tong"></p>
          </li>
          <li class="user">
           <p class="word">图形验证码</p>

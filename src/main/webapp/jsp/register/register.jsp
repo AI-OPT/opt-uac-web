@@ -96,7 +96,7 @@ return;
      <div class="login-header-cnt">
        <div class="login-header-cnt-logo"><img src="${_base}/theme/baas/images/logo.png"></div>
        <div class="login-header-cnt-mail">账户注册</div>
-       <div class="login-header-cnt-right">已有云计费账号？ <a href="${_base}/login">立即登录>></a></div>
+       <div class="login-header-cnt-right">已有账号？ <a href="${_base}/login">立即登录>></a></div>
        </div>
      
   </div>
@@ -106,7 +106,7 @@ return;
 	         <ul>
 		         <li class="regsiter-title">账户注册</li>
 		         <li class="user">
-		         	<input type="text" name="phone" id="phone"class="int-xxlarge-user" placeholder="手机号码作为登录账号">
+		         	<input type="text" name="phone" id="phone"class="int-xxlarge-user" placeholder="手机号码">
 		         	
 		         	<span class="regsiter-note" id="errorPhoneMsg">
 		         		<i class="icon-caret-left"></i>
@@ -115,13 +115,13 @@ return;
 		         </li>
 		         
 		         <li class="password">
-		         	<input type="password" name="password" id="password"class="int-xxlarge" placeholder="密码" onKeyUp=pwStrength(this.value) onBlur=pwStrength(this.value)>
+		         	<input type="password" name="password" id="password"class="int-xxlarge" placeholder="密码"><!-- onKeyUp=pwStrength(this.value) onBlur=pwStrength(this.value) -->
 		         	<i class="icon-eye-open" id="togglePassword"></i>
 		         	<span class="regsiter-note" id="errorPawMsg">
 		         		<i class="icon-caret-left"></i>
 		         		<img src="${_base}/theme/baas/images/error.png"><span id="showPawMsg"></span>
 		         	</span>
-		         	<div class="regsiter-set-password">
+		         	<div class="regsiter-set-password" style="display:none">
 				          <p class="low" id="strength_L">
 					          <span class="f00" id=""></span>
 					          <span>低</span>
@@ -138,9 +138,9 @@ return;
 		         </li>
 		         	
 		         <li class="identifying">
-		         	<input type="text" class="int-xlarge-identifying" placeholder="验证码" id="pictureVitenfy">
-		         	<span ><A href="#"><img src="${_base}/reg/getImageVerifyCode" id="randomImg"></A></span>
-		         	<span ><a href="#"id="refresh">看不清?换一个</a></span>
+		         	<input type="text" class="int-xlarge-identifying" placeholder="图形验证码" id="pictureVitenfy">
+		         	<span ><A ><img src="${_base}/reg/getImageVerifyCode" id="randomImg"></A></span>
+		         	<span ><a id="refresh">看不清?换一个</a></span>
 		         	<span class="regsiter-note" id="errorPicMsg">
 		         		<i class="icon-caret-left"></i>
 		         		<img src="${_base}/theme/baas/images/error.png"><span id="showPicMsg"></span>
@@ -164,7 +164,7 @@ return;
 		         	<input type="hidden" id="errorPassFlag">
 		         	<input type="hidden" id="errorSMSFlag">
 		         </li>
-		         <li class="zuns">* 注册表示您同意遵守<A href="${_base }/reg/protocol" target="_blank">《云计费服务条款》</A></li>
+		         <li class="zuns">* 注册表示您同意遵守<A href="${_base }/reg/protocol" target="_blank">《亚信云计费服务条款》</A></li>
 	
 	         </ul>
    		</div>

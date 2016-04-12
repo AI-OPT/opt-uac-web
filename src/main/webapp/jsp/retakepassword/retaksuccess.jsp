@@ -54,7 +54,7 @@
  	</div>
  	<!--步骤结束-->
          
-      <div class="password-success">恭喜您，密码重设成功！<a id="gotoLogin">立即登录</a></div>
+      <div class="password-success"><b id="message">恭喜您，密码重设成功！</b><a id="gotoLogin">立即登录</a></div>
     
     
     </div>

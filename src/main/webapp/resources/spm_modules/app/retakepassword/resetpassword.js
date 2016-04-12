@@ -25,7 +25,6 @@ define('app/retakepassword/resetpassword', function (require, exports, module) {
     		//key的格式: 事件+空格+对象选择器;value:事件方法
     		"click [id='submitBtn']":"_resetPassword",
     		"blur [id='newPassword']":"_checkNewPassword",
-    		"blur [id='newPassword']":"_pwStrength",
     		"blur [id='confirmPassword']":"_checkConfirmPassword",
     		"keyup [id='newPassword']":"_pwStrength"
         },
