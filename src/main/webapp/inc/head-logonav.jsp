@@ -6,7 +6,6 @@
 <div class="subnav">
 <div class="nav">
   <ul>
-   <li><a>账户中心</a></li>
    <li id="baseInfo"><a href="${_base}/center/baseInfo/getAccountInfo">基本信息</a></li>
    <li id="updatePassword" ><a href="${_base}/center/password/confirminfo" >修改密码</a></li>
    <li id="updatePhone"><a href="${_base}/center/phone/confirminfo" >修改手机号</a></li>

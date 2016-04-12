@@ -34,12 +34,14 @@ define('app/register/register', function (require, exports, module) {
     		 $("#errorPawMsg").attr("style","display:none");
     		 $("#errorPicMsg").attr("style","display:none");
     		 $("#errorSmsMsg").attr("style","display:none");
+    		 $("#errorShowPM").attr("style","display:none");
     	},
     	//带下划线的方法，约定为内部私有方法
     	_bindHandle: function(){
     		$("#randomImg").on("click",this._refrashVitentify);
     		$("#refresh").on("click",this._refrashVitentify);
     		$("#phone").on("blur",this._validServicePho);
+    		$("#password").on("focus",this._passShow);
     		$("#password").on("blur",this._validServicePaw);
     		$("#pictureVitenfy").on("blur",this._validServicePic);
     		$("#BTN_REGISTER").on("click",this._validServicePho);
@@ -68,7 +70,7 @@ define('app/register/register', function (require, exports, module) {
                  $("#PHONE_IDENTIFY").attr("disabled", true);
                  var _res = setInterval(function(){
                      $("#PHONE_IDENTIFY").attr("disabled", true);//设置disabled属性
-                     $('#PHONE_IDENTIFY').val('重新发送'+step);
+                     $('#PHONE_IDENTIFY').val(step+'s后重新发送');
                      step-=1;
                      if(step <= 0){
                      $("#PHONE_IDENTIFY").removeAttr("disabled"); //移除disabled属性
@@ -161,8 +163,13 @@ define('app/register/register', function (require, exports, module) {
 				return false;
 			}
     	},
+    	_passShow: function(){
+    		$('#showPM').text("6~14个字符，数字、字母、符号组合，不包含空格");
+			$("#errorShowPM").attr("style","display:block");
+    	},
     	//校验密码
     	_validServicePaw:function(){
+    		$("#errorShowPM").attr("style","display:none");
     		$("#errorPawMsg").attr("style","display:none");
     		var password = $('#password').val();
     		if(password==""){

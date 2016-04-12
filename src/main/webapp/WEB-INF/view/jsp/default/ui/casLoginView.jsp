@@ -17,7 +17,7 @@ request.setAttribute("_base", _base);
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width; initial-scale=0.8;  user-scalable=0;" />
-    <title>统一登录认证系统</title>
+    <title>登录亚信云计费</title>
     <link href="${_baasBase }/css/bootstrap.css" rel="stylesheet" type="text/css">
 	<link href="${_baasBase }/css/font-awesome.css" rel="stylesheet" type="text/css">
 	<link href="${_baasBase }/css/global.css" rel="stylesheet" type="text/css">

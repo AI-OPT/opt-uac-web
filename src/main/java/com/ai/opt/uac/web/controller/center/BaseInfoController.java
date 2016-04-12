@@ -107,7 +107,12 @@ public class BaseInfoController {
             IAccountManageSV iAccountManageSV = DubboConsumerFactory.getService("iAccountManageSV");
             ITenantManageSV iTenantManageSV = DubboConsumerFactory.getService("iTenantManageSV");
             AccountBaseModifyRequest accountBase =new AccountBaseModifyRequest();
-            accountBase.setNickName(data.getNickName());
+            if(!StringUtil.isBlank(data.getNickName())){
+                accountBase.setNickName(data.getNickName());
+              //修改客户端存储的昵称、tenantID
+                userClient.setNickName(data.getNickName());
+                request.getSession().setAttribute(SSOClientConstants.USER_SESSION_KEY, userClient);
+            }
             accountBase.setUpdateAccountId(data.getAccountId());
             accountBase.setAccountId(data.getAccountId());
             iAccountManageSV.updateBaseInfo(accountBase);
@@ -118,11 +123,12 @@ public class BaseInfoController {
                 tenant.setTenantName(data.getTenantName());
                 tenant.setUpdateAccountId(userClient.getAccountId());
                 TenantInsertResponse re= iTenantManageSV.insertTenantInfo(tenant);
+              //修改客户端存储的昵称、tenantID
+                userClient.setNickName(data.getNickName());
                 userClient.setTenantId(re.getTenantId());
+                request.getSession().setAttribute(SSOClientConstants.USER_SESSION_KEY, userClient);
             }
-            //修改客户端存储的昵称、tenantID
-            userClient.setNickName(data.getNickName());
-            request.getSession().setAttribute(SSOClientConstants.USER_SESSION_KEY, userClient);
+           
             responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "成功",
                         null);
         } catch (Exception e) {

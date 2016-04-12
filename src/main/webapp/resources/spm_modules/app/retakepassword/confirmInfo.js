@@ -38,14 +38,6 @@ define('app/retakepassword/confirmInfo', function (require, exports, module) {
     	setup: function () {
     		ConfirmInfoPager.superclass.setup.call(this);
     		//加载数据
-    		this.accountData = {
-    			"phone":function(){
-    				return $("#phoneValue").val();
-    			},
-    			"email":function(){
-    				return $("#emailValue").val();
-    			}
-    		};
     		this._renderAccountInfo();
     	},
     	
@@ -60,8 +52,8 @@ define('app/retakepassword/confirmInfo', function (require, exports, module) {
 		//控制身份认证方式的界面属性
 		_controlConfirmTypeAttr:function(){
 			var _this = this;
-			var email = _this.accountData.email;
-			if(email == null || email == undefined){
+			var email =$("#emailValue").val();
+			if(email == null || email == undefined || email==""){
 				$("#confirmTypeDiv").attr("style","display:none");
 			}else{
 				$("#confirmTypeDiv").removeAttr("style");
@@ -69,17 +61,15 @@ define('app/retakepassword/confirmInfo', function (require, exports, module) {
 		},
 		//初始化展示页面
 		_initShowView:function(){
-			var _this = this;
-			var phone = _this.accountData.phone;
+			var phone = $("#phoneValue").val();
 			$("#checkTypeName").html("手机号码");
 			$("#checkTypeValue").html(phone);
 			$("#verifyName").html("短信验证码");
 		},
 		//身份认证方式改变触发事件
 		_changeShowViewByType:function(){
-			var _this = this;
-			var email = _this.accountData.email;
-			var phone = _this.accountData.phone;
+			var email = $("#emailValue").val();
+			var phone = $("#phoneValue").val();
 			var confirmType=$('#confirmType option:selected').val();
 			if(confirmType == "1"){
 				$("#checkTypeName").html("手机号码");

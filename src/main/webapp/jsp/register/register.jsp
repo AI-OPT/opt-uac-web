@@ -121,6 +121,10 @@ return;
 		         		<i class="icon-caret-left"></i>
 		         		<img src="${_base}/theme/baas/images/error.png"><span id="showPawMsg"></span>
 		         	</span>
+		         	<span class="regsiter-note" id="errorShowPM">
+		         		<i class="icon-caret-left"></i>
+		         		<img src="${_base}/theme/baas/images/correct.png"><span id="showPM"></span>
+		         	</span>
 		         	<div class="regsiter-set-password" style="display:none">
 				          <p class="low" id="strength_L">
 					          <span class="f00" id=""></span>
