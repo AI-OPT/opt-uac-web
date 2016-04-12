@@ -48,7 +48,8 @@
 -moz-box-shadow:0 0 14px rgba(218, 218, 218, .7);  
 box-shadow:0 0 14px rgba(218,218, 218, .7);  }
 
-.regsiter-wrapper-cnt ul li .regsiter-note{position:absolute; top:8px; left:100%; background:#def3f7; color:#098cdc; margin-left:15px; padding:4px 10px; min-width:400px;}
+.regsiter-wrapper-cnt ul li .regsiter-note{background:#def3f7; color:#098cdc; padding:4px 10px; display: inline-table; max-width:400px;}
+.regsiter-wrapper-cnt ul li .regsiter-po{position:absolute; top:8px; left:100%; margin-left:15px; width:100%; float:left; }
 .regsiter-wrapper-cnt ul li .regsiter-note i{ color:#def3f7; width:auto; margin-top:0; position:absolute; left:-8px; top:2px; font-size:24px; border:none;}
 .regsiter-wrapper-cnt ul li .regsiter-note img{ float:left; margin-right:6px; margin-top:1px;}
 .regsiter-wrapper-cnt ul{ width:440px; margin:0 auto;}
@@ -73,7 +74,7 @@ box-shadow:0 0 14px rgba(218,218, 218, .7);  }
 .regsiter-wrapper-cnt ul .identifying span{ margin-right:2px;}
 .regsiter-wrapper-cnt ul .identifying a{ color:##1c9aec; line-height:40px;}
 .regsiter-wrapper-cnt ul .identifying a:hover{ color:#043a86;}
-.int-xlarge-identifying{width:226px; float:left; height:46px; border: none; line-height:48px; font-size:14px; background:#fff; padding-left:6px; color:#666;border:1px solid #e4e4e4;}
+.int-xlarge-identifying{width:170px; float:left; height:46px; border: none; line-height:48px; font-size:14px; background:#fff; padding-left:6px; color:#666;border:1px solid #e4e4e4;}
 .int-xlarge-identifying:hover{ border:1px solid #0697ef;}
 
 /**注册表单**/
