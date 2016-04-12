@@ -81,8 +81,6 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 			var tenantName = $("#tenantName").val();
 			var industryType = $("#indutry").val();
 			var bk = $("#setnick").is(":visible");
-			alert(tenantName);
-			alert(industryType);
 			var isindus = $("#allInfo").is(":visible");
 			$("#errorNickNameMsg").attr("style","display:none");
 			if(nickNmae==""&&bk){
@@ -93,7 +91,9 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 			}
 			if(nickNmae!=""&&(bk)){
 				if(/^\S*$/.test(nickNmae)){
-					if(/^\S{4,40}/.test(nickNmae)){
+					var aa = nickNmae.replace(/[^\x00-\xff]/g,"aa").length
+					if(aa>=4 && aa<=40){
+						$("#errorNickNameMsg").attr("style","display:none");
 						$("#flag").val("1");
 					}else{
 						$('#showNickNameMsg').text("4~40位字符，不能包含空格");
@@ -119,14 +119,17 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 				}
 				if(tenantName!=""){
 					if(/^\S*$/.test(tenantName)){
-						 if(/^\S{4,40}/.test(tenantName)){
-								$("#flag").val("1");
-							}else{
-								$('#showTenMsg').text("4~40位字符，不能包含空格");
-				    			$("#errorTenMsg").attr("style","display:block");
-								$("#flag").val("0");
-								return false;
-							}
+						var aa = tenantName.replace(/[^\x00-\xff]/g,"aa").length
+						if(aa>=4 && aa<=40){
+							$("#errorTenMsg").attr("style","display:none");
+							$("#flag").val("1");
+						}else{
+							$('#showTenMsg').text("4~40位字符，不能包含空格");
+			    			$("#errorTenMsg").attr("style","display:block");
+							$("#flag").val("0");
+							return false;
+						}
+						
 					}else{
 						$('#showTenMsg').text("4~40位字符，不能包含空格");
 		    			$("#errorTenMsg").attr("style","display:block");
