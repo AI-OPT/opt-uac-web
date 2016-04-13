@@ -116,6 +116,15 @@ public class BaseInfoController {
                 BaseResponse base =  iAccountManageSV.updateBaseInfo(accountBase);
                 if(base.getResponseHeader().getResultCode().equals(ResultCode.SUCCESS_CODE)){
                   //修改客户端存储的昵称
+                   String nickName = data.getNickName();
+                   String shortname="";
+                   if(nickName.length()>6){
+                       shortname =  nickName.substring(0, 5);
+                       shortname=shortname+"....";
+                   }else{
+                       shortname = nickName;
+                   }
+                    userClient.setShortNickName(shortname);
                     userClient.setNickName(data.getNickName());
                     request.getSession().setAttribute(SSOClientConstants.USER_SESSION_KEY, userClient);
                 }

@@ -73,7 +73,7 @@ dependencies {
 	compile 'com.ai.opt.uac:sso:1.0.0-SNAPSHOT'
 	compile 'com.ai.opt.xss.filter:opt-xss-firewall:1.0-SNAPSHOT'
 	compile 'com.ai.opt.uni.session:opt-uni-session:1.0-SNAPSHOT'
-	compile 'com.ai.opt.sso.client:opt-sso-client:1.0-SNAPSHOT'
+	compile 'com.ai.opt.sso.client:opt-sso-client:1.0.1-SNAPSHOT'
 	
 	compile 'com.ai.opt.uac:account:1.0.0-SNAPSHOT'
 	compile 'com.ai.opt.uac:register:1.0.0-SNAPSHOT'
