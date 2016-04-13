@@ -40,9 +40,11 @@ define('app/register/register', function (require, exports, module) {
     	_bindHandle: function(){
     		$("#randomImg").on("click",this._refrashVitentify);
     		$("#refresh").on("click",this._refrashVitentify);
+    		$("#phone").on("focus",this._hidePhoneError);
     		$("#phone").on("blur",this._validServicePho);
     		$("#password").on("focus",this._passShow);
     		$("#password").on("blur",this._validServicePaw);
+    		$("#pictureVitenfy").on("focus",this._hidePicError);
     		$("#pictureVitenfy").on("blur",this._validServicePic);
     		$("#BTN_REGISTER").on("click",this._validServicePho);
     		$("#BTN_REGISTER").on("click",this._validServicePaw);
@@ -117,7 +119,14 @@ define('app/register/register', function (require, exports, module) {
 			$("#pictureVitenfy").html("");
 			$("#randomImg").attr("src",_base+"/reg/getImageVerifyCode?timestamp="+timestamp);
     	},
-    	
+    	//隐藏手机提示信息
+    	_hidePhoneError: function(){
+    		$("#errorPhoneMsg").attr("style","display:none");
+    	},
+    	//隐藏图片验证提示信息
+    	_hidePicError: function(){
+    		$("#errorPicMsg").attr("style","display:none");
+    	},
     	//校验手机
     	_validServicePho: function(){
     		$("#errorPhoneMsg").attr("style","display:none");
