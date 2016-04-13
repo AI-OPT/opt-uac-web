@@ -3,6 +3,11 @@
 <head>
 <%@ include file="/inc/inc.jsp"%>
 <title>注册成功</title>
+<link href="${_base}/theme/baas/css/bootstrap.css" rel="stylesheet" type="text/css">
+<link href="${_base}/theme/baas/css/font-awesome.css" rel="stylesheet" type="text/css">
+<link href="${_base}/theme/baas/css/global.css" rel="stylesheet" type="text/css">
+<link href="${_base}/theme/baas/css/login-regsiter.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="${_base}/theme/baas/js/comp.js" ></script>
  <script type="text/javascript">
 (function () {
 	seajs.use('app/register/register-success', function (RegisterSucessPager) {
