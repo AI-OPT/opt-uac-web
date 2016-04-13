@@ -6,6 +6,15 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width; initial-scale=0.8;  user-scalable=0;" />
     <title>绑定邮箱-成功</title>
+ <script type="text/javascript">
+	$(document).ready(function() { 
+		//左侧菜单显示样式
+   		$("#setEmail").addClass("current");
+   		//标题显示
+   		$("#set_title_id").html("绑定邮箱");
+	}); 
+
+</script>
 </head>
 
 <body>

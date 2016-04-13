@@ -52,6 +52,8 @@ define('app/center/password/confirmInfo', function (require, exports, module) {
 		_initShowView:function(){
 			 //左侧菜单显示样式
 	   		$("#updatePassword").addClass("current");
+	   		//标题显示
+	   		$("#set_title_id").html("修改密码");
 			$("#confirmType").val("1");
 			$("#confirmTypeName").html("已验证手机");
 			$("#verifyName").html("短信校验码");

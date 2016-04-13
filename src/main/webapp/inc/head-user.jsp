@@ -4,7 +4,7 @@
 	<div class="breadcrumb">
 	    <ul>
 	     <li>账户中心</li><!--这个以后用参数传-->
-	     <li><i class="icon-angle-right"></i>基本信息</li>
+	     <li><i class="icon-angle-right"></i><span id="set_title_id"></span></li>
 	    </ul>
    </div>
 

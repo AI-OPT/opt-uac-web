@@ -31,7 +31,14 @@ define('app/center/password/setPassword', function (require, exports, module) {
     	//重写父类
     	setup: function () {
     		UpdatePasswordPager.superclass.setup.call(this);
+    		this._initShowView();
     	},
+    	_initShowView:function(){
+			 //左侧菜单显示样式
+	   		$("#updatePassword").addClass("current");
+	   		//标题显示
+	   		$("#set_title_id").html("修改密码");
+		},
     	//判断输入密码的类型  
 		_CharMode: function(iN){  
 			if (iN>=48 && iN <=57) //数字  

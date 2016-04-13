@@ -31,6 +31,7 @@ define('app/center/phone/setPhone', function (require, exports, module) {
     	//重写父类
     	setup: function () {
     		UpdatePhonePager.superclass.setup.call(this);
+    		this._initShowView();
     	},
     	_checkPhone: function(){
     		var isOk = this._checkPhoneFormat();
@@ -58,6 +59,13 @@ define('app/center/phone/setPhone', function (require, exports, module) {
 				return false;
 			}
     	},
+    	//初始化展示页面
+		_initShowView:function(){
+			 //左侧菜单显示样式
+	   		$("#updatePhone").addClass("current");
+	   		//标题显示
+	   		$("#set_title_id").html("修改手机号");
+		},
     	//检查新邮箱与原邮箱不同 不重复
     	_checkPhoneValue: function(){
 			var _this = this;

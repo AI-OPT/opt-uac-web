@@ -56,6 +56,7 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 	   		 $("#errorTypeMsg").attr("style","display:none");
 	   		 //左侧菜单显示样式
 	   		$("#baseInfo").addClass("current");
+	   		$("#set_title_id").html("基本信息");
 		},
 		_hideErroText: function(){
 			var _this = this;

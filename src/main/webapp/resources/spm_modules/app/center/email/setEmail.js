@@ -46,6 +46,8 @@ define('app/center/email/setEmail', function (require, exports, module) {
     	_showClass: function(){
     		 //左侧菜单显示样式
 	   		$("#updateEmail").addClass("current");
+	   		//标题显示
+	   		$("#set_title_id").html("修改邮箱");
     	},
     	//检查新密码格式
 		_checkEmail: function(){

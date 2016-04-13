@@ -50,6 +50,8 @@ define('app/center/bandemail/confirmInfo', function (require, exports, module) {
 		_initShowView:function(){
 			 //左侧菜单显示样式
 	   		$("#setEmail").addClass("current");
+	   		//标题显示
+	   		$("#set_title_id").html("绑定邮箱");
 			$("#confirmType").val("1");
 			$("#confirmTypeName").html("已验证手机");
 			$("#verifyName").html("短信校验码");

@@ -29,7 +29,14 @@ define('app/center/password/success', function (require, exports, module) {
     	setup: function () {
     		SuccessPager.superclass.setup.call(this);
     		this._autoGotoLogin();
+    		this._initShowView();
     	},
+    	_initShowView:function(){
+			 //左侧菜单显示样式
+	   		$("#updatePassword").addClass("current");
+	   		//标题显示
+	   		$("#set_title_id").html("修改密码");
+		},
     	_autoGotoLogin:function(){
     		var _this = this;
     		var step = 4;

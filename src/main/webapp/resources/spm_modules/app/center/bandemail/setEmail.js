@@ -46,6 +46,8 @@ define('app/center/bandemail/setEmail', function (require, exports, module) {
     	_showClass: function(){
     		 //左侧菜单显示样式
 	   		$("#setEmail").addClass("current");
+	   		//标题显示
+	   		$("#set_title_id").html("绑定邮箱");
     	},
     	_checkEmail:function(){
     		var isOk = this._checkEmailFormat();
