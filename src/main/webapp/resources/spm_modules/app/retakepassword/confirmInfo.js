@@ -82,6 +82,9 @@ define('app/retakepassword/confirmInfo', function (require, exports, module) {
 			}
 		},
 		_getImageRandomCode:function(){
+			//隐藏错误提示
+			this._controlMsgText("pictureVerifyMsg","");
+			this._controlMsgAttr("pictureVerifyMsgDiv",1);
 			var timestamp = (new Date()).valueOf();
 			$("#pictureVerifyCode").val("");
 			$("#random_img").attr("src",_base+"/retakePassword/getImageVerifyCode?timestamp="+timestamp);

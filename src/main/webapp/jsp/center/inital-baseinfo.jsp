@@ -2,7 +2,7 @@
 <html >
 <head>
 <%@ include file="/inc/inc.jsp"%>
-    <title>无标题文档</title>
+    <title>基本信息</title>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <script type="text/javascript">
 (function () {
@@ -15,6 +15,7 @@
 </head>
 
 <body>
+
   <%@ include file="/inc/head-user.jsp"%>
   <%@ include file="/inc/head-logonav.jsp"%>
   <div class="wrapper">

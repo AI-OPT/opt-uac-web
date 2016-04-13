@@ -2,7 +2,7 @@
 <html lang="zh-cn">
 <head>
 <%@ include file="/inc/inc.jsp"%>
-    <title>无标题文档</title>
+    <title>修改密码-身份验证</title>
 </head>
 
 <body>

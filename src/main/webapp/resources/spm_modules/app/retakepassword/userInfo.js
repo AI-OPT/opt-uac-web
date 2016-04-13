@@ -39,6 +39,8 @@ define('app/retakepassword/userInfo', function (require, exports, module) {
     		this._hideErrorInfo();
     	},
     	_getImageRandomCode:function(){
+    		//隐藏错误提示
+    		$("#verifyCodeMsgDiv").attr("style","display:none");
 			var timestamp = (new Date()).valueOf();
 			$("#pictureVerifyCode").val("");
 			$("#random_img").attr("src",_base+"/retakePassword/getUserImageVerifyCode?timestamp="+timestamp);

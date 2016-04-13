@@ -3,7 +3,7 @@
 <head>
     <%@ include file="/inc/inc.jsp"%>
     <meta charset="utf-8">
-    <title>无标题文档</title>
+    <title>找回密码-重置密码</title>
 </head>
 
 <body>
@@ -32,7 +32,7 @@
 		      <div class="round"><i class="icon-pencil"></i></div>
 		      <div class="bar"></div>
 		    </div>
-		    <label>3.设置新密码</label>
+		    <label>3.重置密码</label>
 	  	</div>
   		<div class="todo"><!--圆圈灰色 todo-->
 		    <div class="wrap">

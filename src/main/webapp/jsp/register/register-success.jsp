@@ -2,7 +2,7 @@
 <html>
 <head>
 <%@ include file="/inc/inc.jsp"%>
-<title>注册成功</title>
+<title>注册-成功</title>
  <script type="text/javascript">
 (function () {
 	seajs.use('app/register/register-success', function (RegisterSucessPager) {

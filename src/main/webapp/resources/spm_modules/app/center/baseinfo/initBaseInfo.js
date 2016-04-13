@@ -85,7 +85,7 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 			$("#errorNickNameMsg").attr("style","display:none");
 			if(nickNmae==""&&bk){
 				$('#showNickNameMsg').text("请输入昵称");
-    			$("#errorNickNameMsg").attr("style","display:block");
+    			$("#errorNickNameMsg").attr("style","display:");
 				$("#flag").val("0");
 				return false;
 			}
@@ -97,13 +97,13 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 						$("#flag").val("1");
 					}else{
 						$('#showNickNameMsg').text("4~20位字符，不能包含空格");
-		    			$("#errorNickNameMsg").attr("style","display:block");
+		    			$("#errorNickNameMsg").attr("style","display:");
 						$("#flag").val("0");
 						return false;
 					}
 				}else{
 					$('#showNickNameMsg').text("4~20位字符，不能包含空格");
-	    			$("#errorNickNameMsg").attr("style","display:block");
+	    			$("#errorNickNameMsg").attr("style","display:");
 					$("#flag").val("0");
 					return false;
 				}
@@ -113,7 +113,7 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 				$("#errorTypeMsg").attr("style","display:none");
 				if(tenantName=="" && industryType!="00"){
 					$('#showTenMsg').text("请输入企业名称");
-	    			$("#errorTenMsg").attr("style","display:block");
+	    			$("#errorTenMsg").attr("style","display:");
 					$("#flag").val("0");
 					return false;
 				}
@@ -125,21 +125,21 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 							$("#flag").val("1");
 						}else{
 							$('#showTenMsg').text("4~40位字符，不能包含空格");
-			    			$("#errorTenMsg").attr("style","display:block");
+			    			$("#errorTenMsg").attr("style","display:");
 							$("#flag").val("0");
 							return false;
 						}
 						
 					}else{
 						$('#showTenMsg').text("4~40位字符，不能包含空格");
-		    			$("#errorTenMsg").attr("style","display:block");
+		    			$("#errorTenMsg").attr("style","display:");
 						$("#flag").val("0");
 						return false;
 					}
 				}
 				 if(industryType=="00" && tenantName!=""){
 						$('#showTypeMsg').text("请选择企业类型");
-		    			$("#errorTypeMsg").attr("style","display:block");
+		    			$("#errorTypeMsg").attr("style","display:");
 						$("#flag").val("0");
 						return false;
 				 }

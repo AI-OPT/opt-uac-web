@@ -1,17 +1,25 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 
+ <div class="header">
+	<div class="breadcrumb">
+	    <ul>
+	     <li>账户中心</li><!--这个以后用参数传-->
+	     <li><i class="icon-angle-right"></i>基本信息</li>
+	    </ul>
+   </div>
+
    <div class="user">
     <div class="msg" style="display:none;"><a href="#"><i class="icon-bell-alt"></i><span class="badge">4</span></a></div>
     <div class="user-cnt">
      <p><img src="${_baasBase }/images/login_user.png"><span>${sessionScope.user_session_key.shortNickName}</span><i class="icon-angle-down"></i></p>
      <ul style="display:none;">
-      <li><a href="${_base}/center/baseInfo/getAccountInfo">个人中心${sessionScope.user_session_key.shortNickName}</a></li>
+      <li><a href="${_base}/center/baseInfo/getAccountInfo">个人中心</a></li>
       <li><a href="${_base}/center/password/confirminfo">修改密码</a></li>
       <li><a href="${_base}/ssologout">退出</a></li>
      </ul>
     </div>
    </div>
-   
+ </div>  
    <!--右侧弹出框-->
 <div class="msg-cnt">
  <div class="p">
