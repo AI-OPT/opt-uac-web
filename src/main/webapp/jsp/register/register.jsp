@@ -109,7 +109,7 @@ return;
 		         <li class="user">
 		         	<input type="text" name="phone" id="phone"class="int-xxlarge-user" placeholder="手机号码">
 		         	<p class="regsiter-po">
-			         	<span class="regsiter-note" id="errorPhoneMsg">
+			         	<span class="regsiter-note" id="errorPhoneMsg" style="display: none;">
 			         		<i class="icon-caret-left"></i>
 			         		<img src="${_base}/theme/baas/images/error.png">
 			         		<span id="showPhoneMsg" ></span>
@@ -121,13 +121,13 @@ return;
 		         	<input type="password" name="password" id="password"class="int-xxlarge" placeholder="密码"><!-- onKeyUp=pwStrength(this.value) onBlur=pwStrength(this.value) -->
 		         	<i class="icon-eye-open" id="togglePassword"></i>
 		         	<p class="regsiter-po">
-		         	<span class="regsiter-note" id="errorPawMsg">
+		         	<span class="regsiter-note" id="errorPawMsg" style="display: none;">
 		         		<i class="icon-caret-left"></i>
 		         		<img src="${_base}/theme/baas/images/error.png"><span id="showPawMsg"></span>
 		         	</span>
 		         	</p>
 		         	<p class="regsiter-po">
-		         	<span class="regsiter-note" id="errorShowPM">
+		         	<span class="regsiter-note" id="errorShowPM" style="display: none;">
 		         		<i class="icon-caret-left"></i>
 		         		<img src="${_base}/theme/baas/images/correct.png"><span id="showPM"></span>
 		         	</span>
@@ -153,7 +153,7 @@ return;
 		         	<span ><A ><img src="${_base}/reg/getImageVerifyCode" id="randomImg"></A></span>
 		         	<span ><a id="refresh">看不清?换一个</a></span>
 		         	<p class="regsiter-po">
-			         	<span class="regsiter-note" id="errorPicMsg">
+			         	<span class="regsiter-note" id="errorPicMsg" style="display: none;">
 			         		<i class="icon-caret-left"></i>
 			         		<img src="${_base}/theme/baas/images/error.png">
 			         		<span id="showPicMsg" ></span>
@@ -166,7 +166,7 @@ return;
 		         	 	<input class="button"id="PHONE_IDENTIFY"  type="button" value="获取验证码" >
 		         	 </span>
 		         		
-		         	<span class="regsiter-note" id="errorSmsMsg">
+		         	<span class="regsiter-note" id="errorSmsMsg" style="display: none;">
 		         		<i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
 		         		<span id="showSmsMsg"></span>
 		         	</span>
