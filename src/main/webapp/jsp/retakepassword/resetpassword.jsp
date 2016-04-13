@@ -51,10 +51,13 @@
           <li class="user">
 	          <p class="word">新密码</p>
 	          <p><input type="password"class="int-medium" id="newPassword">
-	          <span class="regsiter-note" id="newPwdMsgDiv" style="display:none">
-			     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
-			     <span id="newPwdMsg"></span>
-			  </span><p>
+		          <p class="regsiter-po">
+			          <span class="regsiter-note" id="newPwdMsgDiv" style="display:none">
+					     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
+					     <span id="newPwdMsg"></span>
+					  </span>
+				  </p>
+			  <p>
 			  <div class="Set-password" style="display:none">
 				          <p class="low" id="strength_L">
 					          <span class="f00"></span>
