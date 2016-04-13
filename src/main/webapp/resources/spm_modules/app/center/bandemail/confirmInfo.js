@@ -52,6 +52,7 @@ define('app/center/bandemail/confirmInfo', function (require, exports, module) {
 	   		$("#setEmail").addClass("current");
 	   		//标题显示
 	   		$("#set_title_id").html("绑定邮箱");
+	   		$("#updateEmail").addClass("current");
 			$("#confirmType").val("1");
 			$("#confirmTypeName").html("已验证手机");
 			$("#verifyName").html("短信校验码");

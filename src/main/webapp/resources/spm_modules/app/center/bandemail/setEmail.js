@@ -48,6 +48,7 @@ define('app/center/bandemail/setEmail', function (require, exports, module) {
 	   		$("#setEmail").addClass("current");
 	   		//标题显示
 	   		$("#set_title_id").html("绑定邮箱");
+	   		$("#updateEmail").addClass("current");
     	},
     	_checkEmail:function(){
     		var isOk = this._checkEmailFormat();
