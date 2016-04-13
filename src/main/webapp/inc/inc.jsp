@@ -26,6 +26,7 @@
  <link href="${_base}/theme/baas/css/frame.css" rel="stylesheet" type="text/css">
  <link href="${_base}/theme/baas/css/global.css" rel="stylesheet" type="text/css">
  <link href="${_base}/theme/baas/css/modular.css" rel="stylesheet" type="text/css">
+ <link href="${_base}/theme/baas/css/login-regsiter.css" rel="stylesheet" type="text/css"> 
  <script type="text/javascript" src="${_base}/theme/baas/js/jquery-1.11.1.min.js" ></script>
  <script type="text/javascript" src="${_base}/theme/baas/js/bootstrap.js" ></script>
  <script type="text/javascript" src="${_base}/theme/baas/js/frame.js" ></script>
