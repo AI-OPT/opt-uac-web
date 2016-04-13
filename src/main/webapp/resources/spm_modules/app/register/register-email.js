@@ -116,7 +116,7 @@ define('app/register/register-email', function (require, exports, module) {
                 $("#getIdentify").attr("disabled", true);
                 var _res = setInterval(function(){
                     $("#getIdentify").attr("disabled", true);//设置disabled属性
-                    $('#getIdentify').val('重新发送'+step);
+                    $('#getIdentify').val(step+'s后重新发送');
                     step-=1;
                     if(step <= 0){
                     $("#getIdentify").removeAttr("disabled"); //移除disabled属性

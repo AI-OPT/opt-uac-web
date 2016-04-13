@@ -82,7 +82,7 @@ define('app/center/bandemail/confirmInfo', function (require, exports, module) {
 				            $("#sendVerify").attr("disabled", true);
 				            var _res = setInterval(function(){
 				                $("#sendVerify").attr("disabled", true);//设置disabled属性
-				                $('#sendVerify').val('重新发送'+step);
+				                $('#sendVerify').val(step+'s后重新发送');
 				                step-=1;
 				                if(step <= 0){
 				                $("#sendVerify").removeAttr("disabled"); //移除disabled属性

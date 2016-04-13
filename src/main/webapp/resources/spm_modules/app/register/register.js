@@ -115,6 +115,8 @@ define('app/register/register', function (require, exports, module) {
     	},
     	//刷新验证码
     	_refrashVitentify: function(){
+    		//隐藏错误提示
+    		$("#errorPicMsg").attr("style","display:none");
     		var timestamp = (new Date()).valueOf();
 			$("#pictureVitenfy").html("");
 			$("#randomImg").attr("src",_base+"/reg/getImageVerifyCode?timestamp="+timestamp);
