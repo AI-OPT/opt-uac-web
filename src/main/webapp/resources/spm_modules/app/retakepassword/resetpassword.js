@@ -26,7 +26,7 @@ define('app/retakepassword/resetpassword', function (require, exports, module) {
     		"click [id='submitBtn']":"_resetPassword",
     		"blur [id='newPassword']":"_checkNewPassword",
     		"blur [id='confirmPassword']":"_checkConfirmPassword",
-    		"keyup [id='newPassword']":"_pwStrength"
+    		//"keyup [id='newPassword']":"_pwStrength"
         },
     	//重写父类
     	setup: function () {

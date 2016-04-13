@@ -26,7 +26,7 @@ define('app/center/password/setPassword', function (require, exports, module) {
     		"click [id='submitBtn']":"_updatePassword",
     		"blur [id='password']":"_checkNewPassword",
     		"blur [id='confirmPassword']":"_checkConfirmPassword",
-    		"keyup [id='password']":"_pwStrength"
+    		//"keyup [id='password']":"_pwStrength"
         },
     	//重写父类
     	setup: function () {
@@ -182,14 +182,15 @@ define('app/center/password/setPassword', function (require, exports, module) {
 							var url = data.data;
 							window.location.href = _base+url;
 						}else {
-							var msg = data.statusInfo;
+							/*var msg = data.statusInfo;
 							if(status == "100003"){
+								alert("kkkkl");
 								_this._controlMsgText("newPwdMsg",msg);
 								_this._controlMsgAttr("newPwdMsgDiv",2);
-							}else{
+							}else{*/
 								_this._controlMsgText("newPwdMsg","");
 								_this._controlMsgAttr("newPwdMsgDiv",1);
-							}
+							//}
 						}
 					},
 					error : function(){

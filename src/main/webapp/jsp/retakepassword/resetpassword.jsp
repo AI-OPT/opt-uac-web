@@ -64,7 +64,7 @@
 			     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
 			     <span id="newPwdMsg"></span>
 			  </span><p>
-			  <div class="Set-password">
+			  <div class="Set-password" style="display:none">
 				          <p class="low" id="strength_L">
 					          <span class="f00"></span>
 					          <span>低</span>

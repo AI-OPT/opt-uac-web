@@ -359,16 +359,16 @@ public class UpdatePasswordController {
 			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "身份认证失效", "/center/password/confirminfo");
 			responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.USER_INFO_NULL, "认证身份失效");
 		} else {
-			ILoginSV iLoginSV = DubboConsumerFactory.getService("iLoginSV");
-			UserLoginResponse userLoginResponse = iLoginSV.queryAccountByUserName(userClient.getPhone());
-			String accountPassword = userLoginResponse.getAccountPassword();
+			//ILoginSV iLoginSV = DubboConsumerFactory.getService("iLoginSV");
+			//UserLoginResponse userLoginResponse = iLoginSV.queryAccountByUserName(userClient.getPhone());
+			//String accountPassword = userLoginResponse.getAccountPassword();
 			String encodePassword = Md5Encoder.encodePassword(password);
-			if(encodePassword.equals(accountPassword)){
+			/*if(encodePassword.equals(accountPassword)){
 				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "新密码不能与旧密码相同，请重新输入", null);
 				responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.PASSWORD_ERROR, "新密码不能与旧密码相同，请重新输入");
 				responseData.setResponseHeader(responseHeader);
 				return responseData;
-			}
+			}*/
 			// 更新密码
 			IAccountSecurityManageSV accountSecurityManageSV = DubboConsumerFactory.getService("iAccountSecurityManageSV");
 			AccountPasswordRequest accountPasswordRequest = new AccountPasswordRequest();

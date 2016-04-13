@@ -172,6 +172,13 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 		_submit:function(){
 			var flag = $("#flag").val();
 			if(flag!="0"){
+				var nick = $("#nickName").val();
+				var tenantName = $("#tenantName").val();
+				var industry = $("#indutry").val();
+				if(nick==""&&tenantName=="" && industry=="00"){
+					alert("保存成功");
+					return false;
+				}
 				var _this = this;
 				var	param={
 						nickName:	$("#nickName").val(),  
