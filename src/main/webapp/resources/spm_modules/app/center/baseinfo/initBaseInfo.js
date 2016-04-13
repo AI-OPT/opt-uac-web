@@ -92,17 +92,17 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 			if(nickNmae!=""&&(bk)){
 				if(/^\S*$/.test(nickNmae)){
 					var aa = nickNmae.replace(/[^\x00-\xff]/g,"aa").length
-					if(aa>=4 && aa<=40){
+					if(aa>=4 && aa<=20){
 						$("#errorNickNameMsg").attr("style","display:none");
 						$("#flag").val("1");
 					}else{
-						$('#showNickNameMsg').text("4~40位字符，不能包含空格");
+						$('#showNickNameMsg').text("4~20位字符，不能包含空格");
 		    			$("#errorNickNameMsg").attr("style","display:block");
 						$("#flag").val("0");
 						return false;
 					}
 				}else{
-					$('#showNickNameMsg').text("4~40位字符，不能包含空格");
+					$('#showNickNameMsg').text("4~20位字符，不能包含空格");
 	    			$("#errorNickNameMsg").attr("style","display:block");
 					$("#flag").val("0");
 					return false;

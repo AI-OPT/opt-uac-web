@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ai.net.xss.util.StringUtil;
 import com.ai.opt.base.vo.BaseInfo;
+import com.ai.opt.base.vo.BaseResponse;
 import com.ai.opt.base.vo.ResponseHeader;
 import com.ai.opt.sdk.util.DubboConsumerFactory;
 import com.ai.opt.sdk.web.model.ResponseData;
@@ -30,6 +31,7 @@ import com.ai.opt.uac.api.account.param.IndustryQueryResponse;
 import com.ai.opt.uac.api.account.param.TenantInfoRequest;
 import com.ai.opt.uac.api.account.param.TenantInsertResponse;
 import com.ai.opt.uac.api.account.param.TenantQueryResponse;
+import com.ai.opt.uac.web.constants.Constants.ResultCode;
 import com.ai.opt.uac.web.model.baseinfo.AccountInfoData;
 
 @RequestMapping("/center/baseInfo")
@@ -109,24 +111,29 @@ public class BaseInfoController {
             AccountBaseModifyRequest accountBase =new AccountBaseModifyRequest();
             if(!StringUtil.isBlank(data.getNickName())){
                 accountBase.setNickName(data.getNickName());
-              //修改客户端存储的昵称、tenantID
+              //修改客户端存储的昵称
                 userClient.setNickName(data.getNickName());
-                request.getSession().setAttribute(SSOClientConstants.USER_SESSION_KEY, userClient);
+                accountBase.setUpdateAccountId(data.getAccountId());
+                accountBase.setAccountId(data.getAccountId());
+                BaseResponse base =  iAccountManageSV.updateBaseInfo(accountBase);
+                if(base.getResponseHeader().getResultCode().equals(ResultCode.SUCCESS_CODE)){
+                    request.getSession().setAttribute(SSOClientConstants.USER_SESSION_KEY, userClient);
+                }
             }
-            accountBase.setUpdateAccountId(data.getAccountId());
-            accountBase.setAccountId(data.getAccountId());
-            iAccountManageSV.updateBaseInfo(accountBase);
+            
             if((!StringUtil.isBlank(data.getTenantName())) && (!data.getIndustryCode().equals("00"))){
                 TenantInfoRequest tenant = new TenantInfoRequest();
                 tenant.setAccountId(data.getAccountId());
                 tenant.setIndustryCode(data.getIndustryCode());
                 tenant.setTenantName(data.getTenantName());
                 tenant.setUpdateAccountId(userClient.getAccountId());
-                TenantInsertResponse re= iTenantManageSV.insertTenantInfo(tenant);
-              //修改客户端存储的昵称、tenantID
-                userClient.setNickName(data.getNickName());
-                userClient.setTenantId(re.getTenantId());
-                request.getSession().setAttribute(SSOClientConstants.USER_SESSION_KEY, userClient);
+                TenantInsertResponse re = iTenantManageSV.insertTenantInfo(tenant);
+                if(re.getResponseHeader().getResultCode().equals(ResultCode.SUCCESS_CODE)){
+                  //修改客户端存储的tenantName、tenantID
+                    userClient.setTenantName(data.getTenantName());
+                    userClient.setTenantId(re.getTenantId());
+                    request.getSession().setAttribute(SSOClientConstants.USER_SESSION_KEY, userClient); 
+                }
             }
            
             responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "成功",
