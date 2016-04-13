@@ -45,7 +45,7 @@ define('app/center/bandemail/setEmail', function (require, exports, module) {
 		},
     	_showClass: function(){
     		 //左侧菜单显示样式
-	   		$("#setEmail").addClass("current");
+	   		$("#updateEmail").addClass("current");
     	},
     	_checkEmail:function(){
     		var isOk = this._checkEmailFormat();

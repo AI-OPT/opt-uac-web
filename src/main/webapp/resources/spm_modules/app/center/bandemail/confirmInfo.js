@@ -49,7 +49,7 @@ define('app/center/bandemail/confirmInfo', function (require, exports, module) {
 		//初始化展示页面
 		_initShowView:function(){
 			 //左侧菜单显示样式
-	   		$("#setEmail").addClass("current");
+	   		$("#updateEmail").addClass("current");
 			$("#confirmType").val("1");
 			$("#confirmTypeName").html("已验证手机");
 			$("#verifyName").html("短信校验码");
