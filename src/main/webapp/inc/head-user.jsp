@@ -11,13 +11,17 @@
    <div class="user">
     <div class="msg" style="display:none;"><a href="#"><i class="icon-bell-alt"></i><span class="badge">4</span></a></div>
     <div class="user-cnt">
-    <c:if test="${sessionScope.user_session_key.shortNickName==''}">
-    	 <p><img src="${_baasBase }/images/login_user.png"><span>${sessionScope.user_session_key.nickName}</span><i class="icon-angle-down"></i></p>
-    </c:if>
-    <c:if test="${sessionScope.user_session_key.shortNickName!=''}">
-    	 <p><img src="${_baasBase }/images/login_user.png"><span>${sessionScope.user_session_key.shortNickName}</span><i class="icon-angle-down"></i></p>
-    </c:if>
-    
+    <c:choose>
+	    <c:when test="${sessionScope.user_session_key.shortNickName==''}">
+	      <p><img src="${_baasBase }/images/login_user.png"><span>${sessionScope.user_session_key.nickName}</span><i class="icon-angle-down"></i></p>
+	    </c:when>
+	    <c:when test="${sessionScope.user_session_key.shortNickName==null}">
+	        <p><img src="${_baasBase }/images/login_user.png"><span>${sessionScope.user_session_key.nickName}</span><i class="icon-angle-down"></i></p>
+	    </c:when>
+	    <c:otherwise>
+	         <p><img src="${_baasBase }/images/login_user.png"><span>${sessionScope.user_session_key.shortNickName}</span><i class="icon-angle-down"></i></p>
+	    </c:otherwise>
+	</c:choose>
      <ul style="display:none;">
       <li><a href="${_base}/center/baseInfo/getAccountInfo">个人中心</a></li>
       <li><a href="${_base}/center/password/confirminfo">修改密码</a></li>
