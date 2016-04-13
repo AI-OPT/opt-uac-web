@@ -111,12 +111,12 @@ public class BaseInfoController {
             AccountBaseModifyRequest accountBase =new AccountBaseModifyRequest();
             if(!StringUtil.isBlank(data.getNickName())){
                 accountBase.setNickName(data.getNickName());
-              //修改客户端存储的昵称
-                userClient.setNickName(data.getNickName());
                 accountBase.setUpdateAccountId(data.getAccountId());
                 accountBase.setAccountId(data.getAccountId());
                 BaseResponse base =  iAccountManageSV.updateBaseInfo(accountBase);
                 if(base.getResponseHeader().getResultCode().equals(ResultCode.SUCCESS_CODE)){
+                  //修改客户端存储的昵称
+                    userClient.setNickName(data.getNickName());
                     request.getSession().setAttribute(SSOClientConstants.USER_SESSION_KEY, userClient);
                 }
             }
