@@ -91,7 +91,7 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 			}
 			if(nickNmae!=""&&(bk)){
 				if(/^\S*$/.test(nickNmae)){
-					var aa = nickNmae.replace(/[^\x00-\xff]/g,"aa").length
+					var aa = nickNmae.replace(/[^\x00-\xff]/g,"aaa").length
 					if(aa>=4 && aa<=20){
 						$("#errorNickNameMsg").attr("style","display:none");
 						$("#flag").val("1");
