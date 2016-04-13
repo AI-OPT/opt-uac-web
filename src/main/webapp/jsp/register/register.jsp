@@ -7,6 +7,7 @@
 <link href="${_base}/theme/baas/css/font-awesome.css" rel="stylesheet" type="text/css">
 <link href="${_base}/theme/baas/css/global.css" rel="stylesheet" type="text/css">
 <link href="${_base}/theme/baas/css/login-regsiter.css" rel="stylesheet" type="text/css">
+<link href="${_base}/theme/baas/css/opt-uac.css" rel="stylesheet" type="text/css">
 <script type="text/javascript" src="${_base}/theme/baas/js/jquery.toggle-password.js" ></script> 
 <script type="text/javascript" src="${_base}/theme/baas/js/comp.js" ></script>
 
@@ -107,24 +108,30 @@ return;
 		         <li class="regsiter-title">账户注册</li>
 		         <li class="user">
 		         	<input type="text" name="phone" id="phone"class="int-xxlarge-user" placeholder="手机号码">
-		         	
-		         	<span class="regsiter-note" id="errorPhoneMsg">
-		         		<i class="icon-caret-left"></i>
-		         		<img src="${_base}/theme/baas/images/error.png"><span id="showPhoneMsg"></span>
-		         	</span>
+		         	<p class="regsiter-po">
+			         	<span class="regsiter-note" id="errorPhoneMsg">
+			         		<i class="icon-caret-left"></i>
+			         		<img src="${_base}/theme/baas/images/error.png">
+			         		<span id="showPhoneMsg" ></span>
+			         	</span>
+		         	</p>
 		         </li>
 		         
 		         <li class="password">
 		         	<input type="password" name="password" id="password"class="int-xxlarge" placeholder="密码"><!-- onKeyUp=pwStrength(this.value) onBlur=pwStrength(this.value) -->
 		         	<i class="icon-eye-open" id="togglePassword"></i>
+		         	<p class="regsiter-po">
 		         	<span class="regsiter-note" id="errorPawMsg">
 		         		<i class="icon-caret-left"></i>
 		         		<img src="${_base}/theme/baas/images/error.png"><span id="showPawMsg"></span>
 		         	</span>
+		         	</p>
+		         	<p class="regsiter-po">
 		         	<span class="regsiter-note" id="errorShowPM">
 		         		<i class="icon-caret-left"></i>
 		         		<img src="${_base}/theme/baas/images/correct.png"><span id="showPM"></span>
 		         	</span>
+		         	</p>
 		         	<div class="regsiter-set-password" style="display:none">
 				          <p class="low" id="strength_L">
 					          <span class="f00" id=""></span>
@@ -142,13 +149,16 @@ return;
 		         </li>
 		         	
 		         <li class="identifying">
-		         	<input type="text" class="int-xlarge-identifying" placeholder="图形验证码" id="pictureVitenfy">
+		         	<input type="text" class="int-xlarge-identifying" style="width:176px;" placeholder="图形验证码" id="pictureVitenfy">
 		         	<span ><A ><img src="${_base}/reg/getImageVerifyCode" id="randomImg"></A></span>
 		         	<span ><a id="refresh">看不清?换一个</a></span>
-		         	<span class="regsiter-note" id="errorPicMsg">
-		         		<i class="icon-caret-left"></i>
-		         		<img src="${_base}/theme/baas/images/error.png"><span id="showPicMsg"></span>
-		         	</span>
+		         	<p class="regsiter-po">
+			         	<span class="regsiter-note" id="errorPicMsg">
+			         		<i class="icon-caret-left"></i>
+			         		<img src="${_base}/theme/baas/images/error.png">
+			         		<span id="showPicMsg" ></span>
+			         	</span>
+		         	</p>
 		         </li>
 		         <li class="SMSidentifying">
 		         	<input type="text" class="int-xlarge-SMSidentifying" placeholder="短信验证码" id="phoneVerifyCode">

@@ -3,13 +3,6 @@
 <head>
 <%@ include file="/inc/inc.jsp"%>
     <title>无标题文档</title>
-     <link href="${_base}/theme/baas/css/bootstrap.css" rel="stylesheet" type="text/css">
-     <link href="${_base}/theme/baas/css/font-awesome.css" rel="stylesheet" type="text/css">
-     <link href="${_base}/theme/baas/css/frame.css" rel="stylesheet" type="text/css">
-     <link href="${_base}/theme/baas/css/global.css" rel="stylesheet" type="text/css">
-     <link href="${_base}/theme/baas/css/modular.css" rel="stylesheet" type="text/css">
-     <script type="text/javascript" src="${_base}/theme/baas/js/frame.js" ></script>
-     <script type="text/javascript" src="${_base}/theme/baas/js/comp.js" ></script>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <script type="text/javascript">
 (function () {

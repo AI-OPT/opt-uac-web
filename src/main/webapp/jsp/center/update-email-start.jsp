@@ -8,15 +8,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width; initial-scale=0.8;  user-scalable=0;" />
     <title>无标题文档</title>
-     <link href="${_base}/theme/baas/css/bootstrap.css" rel="stylesheet" type="text/css">
-     <link href="${_base}/theme/baas/css/font-awesome.css" rel="stylesheet" type="text/css">
-     <link href="${_base}/theme/baas/css/frame.css" rel="stylesheet" type="text/css">
-     <link href="${_base}/theme/baas/css/global.css" rel="stylesheet" type="text/css">
-     <link href="${_base}/theme/baas/css/modular.css" rel="stylesheet" type="text/css">
-     <script type="text/javascript" src="${_base}/theme/baas/js/jquery-1.11.1.min.js" ></script>
-     <script type="text/javascript" src="${_base}/theme/baas/js/bootstrap.js" ></script>
-     <script type="text/javascript" src="${_base}/theme/baas/js/frame.js" ></script>
-     <script type="text/javascript" src="${_base}/theme/baas/js/comp.js" ></script>
 </head>
 
 <body>

@@ -9,7 +9,7 @@
 		}
 	});
 	
-	seajs.use(["bootstrap/dist/css/bootstrap.css",
+	/*seajs.use(["bootstrap/dist/css/bootstrap.css",
 	           "centaurus/css/libs/nanoscroller.css",
 	           "centaurus/css/libs/font-awesome.css",
 	           "centaurus/css/compiled/theme_styles.css",
@@ -26,5 +26,5 @@
 		       "jsoneditor/5.1.5/jsoneditor.min.css",
 			   "arale-validator/0.10.2/alice.components.ui-button-orange-1.3-full.css",
 			   "arale-validator/0.10.2/alice.components.ui-form-1.0-src.css"
-	]);
+	]);*/
 })();

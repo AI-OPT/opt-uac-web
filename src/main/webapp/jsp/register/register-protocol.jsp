@@ -4,10 +4,6 @@
 <%@ include file="/inc/inc.jsp"%>
 
 <title></title>
-<link href="${_base}/theme/baas/css/bootstrap.css" rel="stylesheet" type="text/css">
-<link href="${_base}/theme/baas/css/font-awesome.css" rel="stylesheet" type="text/css">
-<link href="${_base}/theme/baas/css/global.css" rel="stylesheet" type="text/css">
-<link href="${_base}/theme/baas/css/login-regsiter.css" rel="stylesheet" type="text/css">
 </head>
 <body>
 <div style="text-align: center; ">
