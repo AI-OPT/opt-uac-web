@@ -35,7 +35,10 @@
           <span class="yzm">
 			     <input id="getIdentify"  type="button"  class="button" value="获取验证码" >
           </span>
-          
+           <span class="regsiter-note" id="errorEMsg">
+         		<i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
+         		<span  id="showErroeEMsg"></span>
+		   </span>
          </li>
           <li class="user">
           <p class="word">邮箱验证码</p>

@@ -41,6 +41,7 @@ define('app/register/register-email', function (require, exports, module) {
     	},
     	_hideInfo: function(){
     		 $("#errorEmIdentifyMsg").attr("style","display:none");
+    		 $("#errorEMsg").attr("style","display:none");
     	},
     	_validServiceEmail: function(){
     		$("#errorEmIdentifyMsg").attr("style","display:none");
@@ -60,12 +61,12 @@ define('app/register/register-email', function (require, exports, module) {
         		        message: "正在加载数据..",
         		        success: function (data) {
         		        	if(data.responseHeader.resultCode=="10004"){
-        		        		$("#showErroeEmIdentify").html("邮箱已被其他账户绑定 ");
-    		    				$("#errorEmIdentifyMsg").attr("style","display:block");
+        		        		$("#showErroeEMsg").html("邮箱已被其他账户绑定 ");
+    		    				$("#errorEMsg").attr("style","display:");
     		    				$("#flag").val("0");
     		    				return false;
     			        	}else if(data.responseHeader.resultCode=="000000"){
-    			        		$("#errorEmIdentifyMsg").attr("style","display:none");
+    			        		$("#errorEMsg").attr("style","display:none");
     		    				$("#flag").val("1");
         		        	}
         		        },
@@ -76,14 +77,14 @@ define('app/register/register-email', function (require, exports, module) {
         					   }
         		    }); 
     			}else{
-    				$("#showErroeEmIdentify").text("邮箱地址格式错误 ");
-    				$("#errorEmIdentifyMsg").attr("style","display:block");
+    				$("#showErroeEMsg").text("邮箱地址格式错误 ");
+    				$("#errorEMsg").attr("style","display:");
     				$("#flag").val("0");
     				return false;
     			}
     		}else{
-    			$("#showErroeEmIdentify").text("请输入邮箱地址 ");
-				$("#errorEmIdentifyMsg").attr("style","display:block");
+    			$("#showErroeEMsg").text("请输入邮箱地址 ");
+				$("#errorEMsg").attr("style","display:");
 				$("#flag").val("0");
 				return false;
     			
@@ -93,7 +94,7 @@ define('app/register/register-email', function (require, exports, module) {
     		var emailIdenty = $('#identifyCode').val();
 			if(emailIdenty==""){
 				$("#showErroeEmIdentify").text("请输入邮箱验证码 ");
-				$("#errorEmIdentifyMsg").attr("style","display:block");
+				$("#errorEmIdentifyMsg").attr("style","display:");
 				$("#flag").val("0");
 				return false;
 			}else{
@@ -104,8 +105,8 @@ define('app/register/register-email', function (require, exports, module) {
     	_getIdentify: function(){
     		var emailCode = $('#email').val();
     		if(emailCode==""){
-    			$("#showErroeEmIdentify").text("请输入邮箱地址 ");
-				$("#errorEmIdentifyMsg").attr("style","display:block");
+    			$("#showErroeEMsg").text("请输入邮箱地址 ");
+				$("#errorEMsg").attr("style","display:");
 				$("#flag").val("0");
 				return false;
     		}

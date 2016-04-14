@@ -88,11 +88,11 @@ box-shadow:0 0 14px rgba(218,218, 218, .7);  }
 
 
 /**注册邮箱绑定**/
-.regsiter-email-cnt{ width:550px; height:357px; margin:0 auto; background:#fff; margin-top:42px;
+.regsiter-email-cnt{ width:800px; height:374px; margin:0 auto; background:#fff; margin-top:42px;
 -webkit-box-shadow:0 0 14px rgba(218, 218, 218, .7);  
 -moz-box-shadow:0 0 14px rgba(218, 218, 218, .7);  
 box-shadow:0 0 14px rgba(218,218, 218, .7);  }
-.regsiter-email-cnt ul{ width:470px; margin:0 auto;}
+.regsiter-email-cnt ul{ width:620px; margin:0 auto;}
 .regsiter-email-cnt ul li{ float:left; margin-top:24px; position:relative;}
 .regsiter-email-cnt ul .user{ width:100%; float:left; height:40px;}
 .regsiter-email-cnt ul .user{ width:100%; float:left; }

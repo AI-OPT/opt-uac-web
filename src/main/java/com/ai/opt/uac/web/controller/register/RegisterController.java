@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.ai.net.xss.util.StringUtil;
+
 import com.ai.opt.base.vo.BaseResponse;
 import com.ai.opt.base.vo.ResponseHeader;
 import com.ai.opt.sdk.cache.factory.CacheClientFactory;
@@ -27,6 +27,7 @@ import com.ai.opt.sdk.configcenter.factory.ConfigCenterFactory;
 import com.ai.opt.sdk.util.DubboConsumerFactory;
 import com.ai.opt.sdk.util.Md5Encoder;
 import com.ai.opt.sdk.util.RandomUtil;
+import com.ai.opt.sdk.util.StringUtil;
 import com.ai.opt.sdk.util.UUIDUtil;
 import com.ai.opt.sdk.web.model.ResponseData;
 import com.ai.opt.sso.client.filter.SSOClientUtil;
@@ -548,26 +549,27 @@ public class RegisterController {
 		ICacheClient iCacheClient = CacheClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
 		// 获取accountkey
 		String accountId = iCacheClient.get(accountIdKey);
-		IAccountManageSV iAccountManageSV = DubboConsumerFactory.getService("iAccountManageSV");
-		AccountQueryRequest accountRequest = new AccountQueryRequest();
-		accountRequest.setAccountId(Long.valueOf(accountId));
-		AccountQueryResponse account = iAccountManageSV.queryBaseInfo(accountRequest);
-		ILoginSV iloginSV = DubboConsumerFactory.getService("iLoginSV");
-		UserLoginResponse logaccout = iloginSV.queryAccountByUserName(account.getPhone());
-		// String uuid = request.getParameter(Constants.UUID.KEY_NAME);
-		// 删除缓存
-		CacheUtil.deletCache(accountIdKey, Register.CACHE_NAMESPACE);
-		String phone = account.getPhone();
-		String accountPassword = logaccout.getAccountPassword();
-		LoginUser loginUser = new LoginUser(phone, accountPassword);
-		String newuuid = UUIDUtil.genId32();
-		CacheUtil.setValue(newuuid, Constants.UUID.OVERTIME, loginUser, Constants.LoginConstant.CACHE_NAMESPACE);
-		// localhost:8080/uac/registerLogin?k=UUID&service=URL
 		String service_url = "";
+		String newuuid ="";
 		if (StringUtil.isBlank(accountId)) {
 			// 跳转到登录页面
 			service_url = SSOClientUtil.getCasServerLoginUrlRuntime(request);
 		} else {
+		    IAccountManageSV iAccountManageSV = DubboConsumerFactory.getService("iAccountManageSV");
+	        AccountQueryRequest accountRequest = new AccountQueryRequest();
+	        accountRequest.setAccountId(Long.valueOf(accountId));
+	        AccountQueryResponse account = iAccountManageSV.queryBaseInfo(accountRequest);
+	        ILoginSV iloginSV = DubboConsumerFactory.getService("iLoginSV");
+	        UserLoginResponse logaccout = iloginSV.queryAccountByUserName(account.getPhone());
+	        // String uuid = request.getParameter(Constants.UUID.KEY_NAME);
+	        // 删除缓存
+	        CacheUtil.deletCache(accountIdKey, Register.CACHE_NAMESPACE);
+	        String phone = account.getPhone();
+	        String accountPassword = logaccout.getAccountPassword();
+	        LoginUser loginUser = new LoginUser(phone, accountPassword);
+	        newuuid = UUIDUtil.genId32();
+	        CacheUtil.setValue(newuuid, Constants.UUID.OVERTIME, loginUser, Constants.LoginConstant.CACHE_NAMESPACE);
+	        // localhost:8080/uac/registerLogin?k=UUID&service=URL
 			// 从配置中心读取跳转地址
 			service_url = ConfigCenterFactory.getConfigCenterClient().get(Constants.URLConstant.INDEX_URL_KEY);
 		}
