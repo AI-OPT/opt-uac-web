@@ -261,34 +261,45 @@ public class RegisterController {
 			// 获取缓存中的验证码
 			ICacheClient iCacheClient = CacheClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
 			String emailAddidentify = iCacheClient.get(Constants.Register.REGISTER_EMAIL_KEY + session.getId());
-			String emialIden[] = emailAddidentify.split(";");
-			String email = emialIden[0];
-			String identify = emialIden[1];
 			ResponseHeader header = new ResponseHeader();
-			header.setIsSuccess(false);
-			if (!request.getEmail().equals(email)) {
-				header.setResultCode(Register.REGISTER_EMAIL_NOTSAME_ERROR);
-				header.setResultMessage("发送邮箱与验证邮箱不一致");
-				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "发送邮箱与验证邮箱不一致", null);
-				responseData.setResponseHeader(header);
-				return responseData;
+            header.setIsSuccess(false);
+			if(StringUtil.isBlank(emailAddidentify)){
+			 // 跳转到注册页面
+                header.setResultCode(Register.UUID_INVIAL_ERROR);
+                header.setResultMessage("uuid失效");
+                responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "uuid失效", null);
+                responseData.setResponseHeader(header);
+                return responseData;
+			}else{
+			    String emialIden[] = emailAddidentify.split(";");
+	            String email = emialIden[0];
+	            String identify = emialIden[1];
+	            
+	            if (!request.getEmail().equals(email)) {
+	                header.setResultCode(Register.REGISTER_EMAIL_NOTSAME_ERROR);
+	                header.setResultMessage("发送邮箱与验证邮箱不一致");
+	                responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "发送邮箱与验证邮箱不一致", null);
+	                responseData.setResponseHeader(header);
+	                return responseData;
+	            }
+	            // 校验邮箱验证码是否失效
+	            if (StringUtil.isBlank(identify)) {
+	                header.setResultCode(Register.REGISTER_EMAIL_OVERTIME_ERROR);
+	                header.setResultMessage("邮箱验证码失效");
+	                responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "邮箱验证码失效", null);
+	                responseData.setResponseHeader(header);
+	                return responseData;
+	            }
+	            // 校验邮箱验证码是否正确
+	            if (!inputIdentify.equals(identify)) {
+	                header.setResultCode(Register.REGISTER_EMAIL_ERROR);
+	                header.setResultMessage("邮箱验证码错误");
+	                responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "验证码不正确", null);
+	                responseData.setResponseHeader(header);
+	                return responseData;
+	            }
 			}
-			// 校验邮箱验证码是否失效
-			if (StringUtil.isBlank(identify)) {
-				header.setResultCode(Register.REGISTER_EMAIL_OVERTIME_ERROR);
-				header.setResultMessage("邮箱验证码失效");
-				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "邮箱验证码失效", null);
-				responseData.setResponseHeader(header);
-				return responseData;
-			}
-			// 校验邮箱验证码是否正确
-			if (!inputIdentify.equals(identify)) {
-				header.setResultCode(Register.REGISTER_EMAIL_ERROR);
-				header.setResultMessage("邮箱验证码错误");
-				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "验证码不正确", null);
-				responseData.setResponseHeader(header);
-				return responseData;
-			}
+			
 			IAccountSecurityManageSV iAccountSecurityManageSV = DubboConsumerFactory.getService("iAccountSecurityManageSV");
 			AccountEmailRequest req = new AccountEmailRequest();
 			// 从缓存获取账号ID
