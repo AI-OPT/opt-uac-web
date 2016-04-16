@@ -42,14 +42,26 @@ define("opt-paging/aiopt.pagination", [], function(require, exports, module){
             this.$element.unbind('page');
             return this;
         },
-        
+        isArray: function(obj) {
+        	return Object.prototype.toString.call(obj) === '[object Array]';
+        },
         loadData: function(currentPage) {
         	var _this = this;
         	var opt = _this.options;
         	var data = opt.data?opt.data:{};
-        	var pageSize = opt.pageSize?opt.pageSize:10;
-        	data.pageSize = pageSize;
-        	data.pageNo = currentPage;
+        	var currentPageSize = opt.pageSize?opt.pageSize:10;
+        	var _pagesize={name:"pageSize",value: currentPageSize};
+    		var _pageno={name:"pageNo",value: currentPage};
+        	if(_this.isArray(data)){
+        		//如果参数是数组
+        		data.push(_pagesize);
+        		data.push(_pageno);
+        	}
+        	else{     
+        		//如果参数是对象
+        		data.pageSize = currentPageSize;
+        		data.pageNo = currentPage;        		
+        	}
         	ajaxController.ajax({
         		url: opt.url,
  	 			method: opt.method,
@@ -66,6 +78,12 @@ define("opt-paging/aiopt.pagination", [], function(require, exports, module){
  	                _this.setupTwbsPagination(d.pageCount);
  	            }
         	});
+        	
+        	if(_this.isArray(data)){
+         		//如果参数是数组，则移除最后连个对象（pageSize、pageNo）
+	           		data.pop();//移除pageSize
+	           		data.pop();//移除pageNo
+	        }
         },
         
         setupTwbsPagination: function(totalPages){
