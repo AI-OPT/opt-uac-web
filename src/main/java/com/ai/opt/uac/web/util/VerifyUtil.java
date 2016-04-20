@@ -19,10 +19,11 @@ import com.ai.opt.sdk.mail.EmailTemplateUtil;
 import com.ai.opt.sdk.util.DubboConsumerFactory;
 import com.ai.opt.sdk.util.RandomUtil;
 import com.ai.opt.sdk.web.model.ResponseData;
+import com.ai.opt.uac.api.account.interfaces.IAccountManageSV;
+import com.ai.opt.uac.api.account.param.AccountQueryRequest;
+import com.ai.opt.uac.api.account.param.AccountQueryResponse;
 import com.ai.opt.uac.api.seq.interfaces.ICreateSeqSV;
 import com.ai.opt.uac.api.seq.param.PhoneMsgSeqResponse;
-import com.ai.opt.uac.api.sso.interfaces.ILoginSV;
-import com.ai.opt.uac.api.sso.param.UserLoginResponse;
 import com.ai.opt.uac.web.constants.Constants;
 import com.ai.opt.uac.web.constants.VerifyConstants;
 import com.ai.opt.uac.web.constants.VerifyConstants.PictureVerifyConstants;
@@ -222,10 +223,12 @@ public class VerifyUtil {
 		ResponseData<String> responseData = null;
 		ResponseHeader header = null;
 		try {
-			ILoginSV loginService = DubboConsumerFactory.getService("iLoginSV");
-			UserLoginResponse userLoginResponse = loginService.queryAccountByUserName(phone);
-			if (userLoginResponse != null) {
-				String resultCode = userLoginResponse.getResponseHeader().getResultCode();
+		    IAccountManageSV iAccountManageSV = DubboConsumerFactory.getService("iAccountManageSV");
+            AccountQueryRequest accountReq = new AccountQueryRequest();
+            accountReq.setPhone(phone);
+            AccountQueryResponse accountQueryResponse = iAccountManageSV.queryByPhone(accountReq);
+			if (accountQueryResponse != null) {
+				String resultCode = accountQueryResponse.getResponseHeader().getResultCode();
 				if (resultCode.equals(ResultCodeConstants.SUCCESS_CODE)) {
 					header = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.PHONE_ERROR, "该手机号码已经注册");
 					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "该手机号码已经注册", null);
@@ -252,10 +255,12 @@ public class VerifyUtil {
 		ResponseData<String> responseData = null;
 		ResponseHeader header = null;
 		try {
-			ILoginSV loginService = DubboConsumerFactory.getService("iLoginSV");
-			UserLoginResponse userLoginResponse = loginService.queryAccountByUserName(email);
-			if (userLoginResponse != null) {
-				String resultCode = userLoginResponse.getResponseHeader().getResultCode();
+		    IAccountManageSV iAccountManageSV = DubboConsumerFactory.getService("iAccountManageSV");
+            AccountQueryRequest accountReq = new AccountQueryRequest();
+            accountReq.setEmail(email);
+            AccountQueryResponse accountQueryResponse = iAccountManageSV.queryByEmail(accountReq);
+			if (accountQueryResponse != null) {
+				String resultCode = accountQueryResponse.getResponseHeader().getResultCode();
 				if (resultCode.equals(ResultCodeConstants.SUCCESS_CODE)) {
 					header = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.EMAIL_ERROR, "该邮箱已经注册");
 					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "该邮箱已经注册", null);
