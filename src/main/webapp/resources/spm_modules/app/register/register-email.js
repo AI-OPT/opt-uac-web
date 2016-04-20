@@ -63,11 +63,11 @@ define('app/register/register-email', function (require, exports, module) {
         		        	if(data.responseHeader.resultCode=="10004"){
         		        		$("#showErroeEMsg").html("邮箱已被其他账户绑定 ");
     		    				$("#errorEMsg").attr("style","display:");
-    		    				$("#flag").val("0");
+    		    				$("#emailFlag").val("0");
     		    				return false;
     			        	}else if(data.responseHeader.resultCode=="000000"){
     			        		$("#errorEMsg").attr("style","display:none");
-    		    				$("#flag").val("1");
+    		    				$("#emailFlag").val("1");
         		        	}
         		        },
         		        error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -79,13 +79,13 @@ define('app/register/register-email', function (require, exports, module) {
     			}else{
     				$("#showErroeEMsg").text("邮箱地址格式错误 ");
     				$("#errorEMsg").attr("style","display:");
-    				$("#flag").val("0");
+    				$("#emailFlag").val("0");
     				return false;
     			}
     		}else{
     			$("#showErroeEMsg").text("请输入邮箱地址 ");
 				$("#errorEMsg").attr("style","display:");
-				$("#flag").val("0");
+				$("#emailFlag").val("0");
 				return false;
     			
     		}
@@ -95,11 +95,11 @@ define('app/register/register-email', function (require, exports, module) {
 			if(emailIdenty==""){
 				$("#showErroeEmIdentify").text("请输入邮箱验证码 ");
 				$("#errorEmIdentifyMsg").attr("style","display:");
-				$("#flag").val("0");
+				$("#identifyFlag").val("0");
 				return false;
 			}else{
 				$("#errorEmIdentifyMsg").attr("style","display:none");
-				$("#flag").val("1");
+				$("#identifyFlag").val("1");
 			}
     	},
     	_getIdentify: function(){
@@ -110,7 +110,7 @@ define('app/register/register-email', function (require, exports, module) {
 				$("#flag").val("0");
 				return false;
     		}
-    		var flag = $("#flag").val();
+    		var flag = $("#emailFlag").val();
     		if(flag!="0"){
     			var step = 59;
                 $('#getIdentify').val('重新发送60');
@@ -167,8 +167,9 @@ define('app/register/register-email', function (require, exports, module) {
     	},
     	
     	_bindEmail: function(){
-    		var flag = $("#flag").val();
-    		if(flag!="0"){
+    		var flag = $("#emailFlag").val();
+    		var identiFlag = $("#identifyFlag").val();
+    		if(flag!="0"&& identiFlag!="0"){
     			var	param={
     					email:	$("#email").val(),
     					accountIdKey:$("#accountIdKey").val(),

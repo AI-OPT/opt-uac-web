@@ -190,10 +190,12 @@ public class RegisterController {
 		ResponseHeader header = new ResponseHeader();
 		header.setIsSuccess(true);
 		try {
-			ILoginSV loginService = DubboConsumerFactory.getService("iLoginSV");
-			UserLoginResponse userLoginResponse = loginService.queryAccountByUserName(request.getPhone());
-			if (userLoginResponse != null) {
-				if (userLoginResponse.getResponseHeader().getResultCode().equals(ResultCodeConstants.SUCCESS_CODE)) {
+		    IAccountManageSV iAccountManageSV = DubboConsumerFactory.getService("iAccountManageSV");
+		    AccountQueryRequest accountReq = new AccountQueryRequest();
+		    accountReq.setPhone(request.getPhone());
+		    AccountQueryResponse accountQueryResponse = iAccountManageSV.queryByPhone(accountReq);
+			if (accountQueryResponse != null) {
+				if (accountQueryResponse.getResponseHeader().getResultCode().equals(ResultCodeConstants.SUCCESS_CODE)) {
 					header.setResultCode(Register.PHONE_NOTONE_ERROR);
 					header.setResultMessage("手机已经注册");
 					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "手机已经注册", null);
@@ -220,10 +222,12 @@ public class RegisterController {
 		ResponseHeader header = new ResponseHeader();
 		header.setIsSuccess(true);
 		try {
-			ILoginSV loginService = DubboConsumerFactory.getService("iLoginSV");
-			UserLoginResponse userLoginResponse = loginService.queryAccountByUserName(request.getEmail());
-			if (userLoginResponse != null) {
-				if (userLoginResponse.getResponseHeader().getResultCode().equals(ResultCodeConstants.SUCCESS_CODE)) {
+		    IAccountManageSV iAccountManageSV = DubboConsumerFactory.getService("iAccountManageSV");
+            AccountQueryRequest accountReq = new AccountQueryRequest();
+            accountReq.setEmail(request.getEmail());
+            AccountQueryResponse accountQueryResponse = iAccountManageSV.queryByEmail(accountReq);
+			if (accountQueryResponse != null) {
+				if (accountQueryResponse.getResponseHeader().getResultCode().equals(ResultCodeConstants.SUCCESS_CODE)) {
 					header.setResultCode(Register.EMAIL_NOTONE_ERROR);
 					header.setResultMessage("邮箱已经注册");
 					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "邮箱已经注册", null);

@@ -30,7 +30,8 @@
           <li class="user">
           <span><p class="word">邮箱地址</p></span>
           	<input type="text" class="int-medium" placeholder="" id="email" name="email">
-          	<input type="hidden" id="flag">
+          	<input type="hidden" id="emailFlag">
+          	<input type="hidden" id="identifyFlag">
           	<input type="hidden" name="accountIdKey" id="accountIdKey" value="${requestScope.accountIdKey}"/>
           <span class="yzm">
 			     <input id="getIdentify"  type="button"  class="button" value="获取验证码" >
