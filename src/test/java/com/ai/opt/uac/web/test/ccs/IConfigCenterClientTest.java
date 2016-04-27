@@ -52,7 +52,7 @@ public class IConfigCenterClientTest {
         bu.append("{								");
         bu.append("  \"uacRedisHost\":                     ");
         bu.append("  {                                      ");
-        bu.append("		  \"mcsHost\":\"10.1.130.84:16379\",     ");
+        bu.append("		  \"mcsHost\":\"10.1.130.158:16379\",     ");
         //bu.append("		  \"mcsHost\":\"localhost:6379\",     ");
         bu.append("	  	\"mcsMaxtotal\":\"200\",            ");
         bu.append("		  \"mcsMaxIdle\":\"10\",              ");
@@ -140,7 +140,7 @@ public class IConfigCenterClientTest {
      @Test
      public void addUrlConfig(){
     	 System.out.println("url config ... start");
-    	 String indexUrl = "http://10.1.235.245:14115/uac";
+    	 String indexUrl = "http://10.1.235.245:14101/baas-pt";
     	 if (!client.exists(Constants.URLConstant.INDEX_URL_KEY)) {
              client.add(Constants.URLConstant.INDEX_URL_KEY, indexUrl);
          } else {
