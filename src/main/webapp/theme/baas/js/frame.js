@@ -1,9 +1,9 @@
-$(document).ready(function(){
+/*$(document).ready(function(){
 $(".logo").click(function () {
    $(".subnav").animate({height:'toggle'},100);
    $(".wrapper").toggleClass("wrappera");
 });
-});
+});*/
 
 
 $(function(){
