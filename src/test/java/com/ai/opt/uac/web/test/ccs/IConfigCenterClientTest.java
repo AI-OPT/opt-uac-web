@@ -52,7 +52,7 @@ public class IConfigCenterClientTest {
         bu.append("{								");
         bu.append("  \"uacRedisHost\":                     ");
         bu.append("  {                                      ");
-        bu.append("		  \"mcsHost\":\"10.1.130.158:16379\",     ");
+        bu.append("		  \"mcsHost\":\"10.1.130.84:16379\",     ");
         //bu.append("		  \"mcsHost\":\"localhost:6379\",     ");
         bu.append("	  	\"mcsMaxtotal\":\"200\",            ");
         bu.append("		  \"mcsMaxIdle\":\"10\",              ");
@@ -98,45 +98,6 @@ public class IConfigCenterClientTest {
     }
 
     
-
-    /**
-     * DBS配置
-     */
-     @Test
-    public void addDbConfInfo() {
-        System.out.println("DBConf config ... start");
-        StringBuilder sb = new StringBuilder();
-
-        sb.append("{																																																				");
-        sb.append("		\"opt-uac-db\":                                                                                   ");
-        sb.append("		{                                                                                                     ");
-        sb.append("			\"driverClassName\":\"com.mysql.jdbc.Driver\",                                                          ");
-        sb.append("			\"jdbcUrl\":\"jdbc:mysql://10.1.235.245:31306/dev_baas_uacdb1?useUnicode=true&characterEncoding=UTF-8\",   ");
-        sb.append("			\"username\":\"uacusr01\",                                                                         ");
-        sb.append("			\"password\":\"uacusr01_123\",                                                                         ");
-
-//        sb.append("			\"jdbcUrl\":\"jdbc:mysql://127.0.0.1:3306/system?useUnicode=true&characterEncoding=UTF-8\",   ");
-//        sb.append("			\"username\":\"root\",                                                                         ");
-//        sb.append("			\"password\":\"123456\",                                                                         ");
-
-        
-        sb.append("			\"autoCommit\":\"true\",                                                                                ");
-        sb.append("			\"connectionTimeout\":\"30000\",                                                                        ");
-        sb.append("			\"idleTimeout\":\"600000\",                                                                             ");
-        sb.append("			\"maxLifetime\":\"1800000\",                                                                            ");
-        sb.append("			\"maximumPoolSize\":\"10\"                                                                              ");
-        sb.append("		}                                                                                                     ");
-        sb.append("}                                                                                                        ");
-
-        if (!client.exists(SDKConstants.DB_CONF_PATH)) {
-            client.add(SDKConstants.DB_CONF_PATH, sb.toString());
-        } else {
-            client.modify(SDKConstants.DB_CONF_PATH, sb.toString());
-        }
-
-        System.out.println("DBConf config ... end");
-    }
-     
      @Test
      public void addUrlConfig(){
     	 System.out.println("url config ... start");

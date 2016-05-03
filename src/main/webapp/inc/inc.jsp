@@ -1,3 +1,5 @@
+<%@page import="com.ai.opt.uac.web.constants.Constants"%>
+<%@page import="com.ai.opt.sdk.configcenter.factory.ConfigCenterFactory"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -10,6 +12,10 @@
     
     String _baasBase=_base+"/theme/baas";
     request.setAttribute("_baasBase", _baasBase);
+%>
+<%
+String baas_pt_index_url = ConfigCenterFactory.getConfigCenterClient().get(Constants.URLConstant.INDEX_URL_KEY);
+request.setAttribute("baas_pt_index_url",baas_pt_index_url );
 %>
 <script>
     var _base = "${_base}";

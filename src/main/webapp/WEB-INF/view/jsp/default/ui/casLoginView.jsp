@@ -1,4 +1,6 @@
 <!DOCTYPE html>
+<%@page import="com.ai.opt.uac.web.constants.Constants"%>
+<%@page import="com.ai.opt.sdk.configcenter.factory.ConfigCenterFactory"%>
 <%@page import="java.net.URLDecoder"%>
 <%@ page pageEncoding="UTF-8" %>
 <%@ page contentType="text/html; charset=UTF-8" %>
@@ -12,6 +14,11 @@ String _base = request.getContextPath();
 String _baasBase=_base+"/theme/baas";
 request.setAttribute("_baasBase", _baasBase);
 request.setAttribute("_base", _base);
+%>
+
+<%
+String baas_pt_index_url = ConfigCenterFactory.getConfigCenterClient().get(Constants.URLConstant.INDEX_URL_KEY);
+request.setAttribute("baas_pt_index_url",baas_pt_index_url );
 %>
 <head>
     <meta charset="utf-8">
@@ -116,7 +123,7 @@ request.setAttribute("_base", _base);
 
   <div class="login-header"><!--登录头部-->
      <div class="login-header-cnt">
-       <div class="login-header-cnt-logo"><img src="${_baasBase }/images/logo.png"></div>
+       <div class="login-header-cnt-logo"><a href="${baas_pt_index_url }"><img src="${_baasBase }/images/logo.png"></a></div>
        <div class="login-header-cnt-mail">账户登录</div>
        </div>
      
