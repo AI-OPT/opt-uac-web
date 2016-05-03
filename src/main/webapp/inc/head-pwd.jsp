@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
   <div class="header">
    <div class="logo-no">
-    <a href="#">LOGO</a>
+    <a href="${baas_pt_index_url }">LOGO</a>
    
    </div>
    
