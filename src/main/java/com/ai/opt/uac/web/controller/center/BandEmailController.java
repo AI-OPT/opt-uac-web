@@ -68,6 +68,10 @@ public class BandEmailController {
 				return new ModelAndView("jsp/center/band-email-start");
 			}
 		}
+		@RequestMapping("/confirminfo2")
+		public ModelAndView bandEmailStart2(HttpServletRequest request) {
+				return new ModelAndView("jsp/center/bandemail");
+		}
 
 		@RequestMapping("/getImageVerifyCode")
 		@ResponseBody

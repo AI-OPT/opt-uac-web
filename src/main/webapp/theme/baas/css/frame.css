@@ -23,7 +23,7 @@
 .msg{ width:60px; float:left; text-align:center; position:relative; padding-top:24px;}
 .msg i{ font-size:24px; color:#666;}
 .msg span{ color:#fff; background:#fcb322; position:absolute; left:27px; top:15px; font-size:12px;} 
-.user-cnt{ width:240px; float:left; position:relative;}
+.user-cnt{ width:300px; float:left; position:relative;}
 .user-cnt p{ width:100%; float:left; height:80px; padding:12px 0 0 15px; cursor:pointer; margin-bottom:0;}
 .user-cnt p.pbg{ background:#f1f1f1;}
 .user-cnt p img{ width:45px; height:45px; border-radius:50%;}

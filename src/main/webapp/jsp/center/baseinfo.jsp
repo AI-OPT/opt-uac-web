@@ -11,7 +11,7 @@
 
 <body>
   <%@ include file="/inc/head-user.jsp"%>
-  <%@ include file="/inc/head-logonav.jsp"%>
+  <%@ include file="/inc/left-menu.jsp"%>
   <div class="wrapper">
       
       <div class="Basic-information">

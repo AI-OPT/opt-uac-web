@@ -11,9 +11,9 @@ import com.ai.opt.sdk.web.model.ResponseData;
 import com.ai.opt.sso.client.filter.SSOClientConstants;
 import com.ai.opt.sso.client.filter.SSOClientUser;
 
-@RequestMapping("/headLogoNav")
+@RequestMapping("/leftMenu")
 @Controller
-public class HeadLogoNavController {
+public class LeftMenuController {
 
 	/**
 	 * 当前用户是否含有邮箱信息

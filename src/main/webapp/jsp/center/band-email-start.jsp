@@ -11,11 +11,12 @@
 
 <body>
   <%@ include file="/inc/head-user.jsp"%>
-  <%@ include file="/inc/head-logonav.jsp"%>
+  <div class="box">
+  <%@ include file="/inc/left-menu.jsp"%>
   <div class="wrapper">
   <div class="Retrieve-password">
     
-         <div class="Retrieve-steps">
+         <div class="Retrieve-steps newsteps">
          <div class="Retrieve-steps-round">
   <div class="finished"><!--蓝色圆圈带蓝线 finished-->
     <div class="wrap">
@@ -56,10 +57,11 @@
           <p><input type="text" class="int-medium" placeholder="" id="pictureVerifyCode"></p>
           <p><img id="random_img" src="${_base}/center/bandEmail/getImageVerifyCode"></p>
           <p><A id="changeImage">看不清?换一换</A>
-          <span class="regsiter-note" id="pictureVerifyMsgDiv" style="display:none">
+          <%-- <span class="regsiter-note" id="pictureVerifyMsgDiv" style="display:none">
 			     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
 			     <span id="pictureVerifyMsg"></span>
-		  </span>
+		  </span> --%>
+		  <span id="pictureVerifyMsg" class="regsiter-note"></span>
 		  </p>
          </li>
          <li class="user">
@@ -67,10 +69,11 @@
 	          <p><input type="text" class="int-medium" id="verifyCode"></p>
 	          <p class="huoqu">
 		          <input id="sendVerify"  type="button" class="send-button" value="获取校验码" >
-		          <span class="regsiter-note" id="verifyCodeMsgDiv" style="display:none">
+		          <%-- <span class="regsiter-note" id="verifyCodeMsgDiv" style="display:none">
 				     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
 				     <span id="verifyCodeMsg"></span>
-				  </span>
+				  </span> --%>
+				  <span id="verifyCodeMsg" class="regsiter-note"></span>
 			  </p>
          </li>
          
@@ -79,7 +82,7 @@
           </ul>
         </div>
     
-    
+    </div>
     
     </div>
    
