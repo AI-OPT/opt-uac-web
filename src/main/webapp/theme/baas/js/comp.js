@@ -106,14 +106,81 @@ $(".regsiter-wrapper-cnt .int-xlarge-identifying").click(function () {
 });});
 
 
-
-
-
 $(document).ready(function(){
 $(".ctn-a").click(function(){
   $(".ctn-b").show();
   $(this).hide();
 });
-
-
 });
+
+
+
+	$(function(){
+//			$("img").lazyload({
+//				placeholder : "images/loading.gif",
+//				effect: "fadeIn"
+//			});
+			$('#dowebok').fullpage({
+//             sectionsColor: ['#0581B2', '#4BBFC3', '#7BAABE','#daa520'],
+//                //设置每一屏幕的背景颜色
+				scrollingSpeed:1000,
+				// 设置滚动的花费时间
+				easingcss3:'ease-in-out',
+				//运动曲线
+				continuousVertical: true,
+				//到达最后一屏后，是否回到首屏
+				'navigation': true,
+				// 右侧显示小圆点
+
+				/*顶部导航栏*/
+				anchors:['page1','page2','page3','page4'],
+				// 值为绑定菜单的类名或ID名，需先设置achors才能生效
+				menu:'#menu',
+				/*控制首屏*/
+				afterLoad: function(anchorLink, index){
+					if(index==1){
+						$('.section1').removeClass('comeout');
+					}
+				},
+
+				//来判断当前的屏幕
+				onLeave: function(index, nextIndex, direction){
+					if(index==1){
+						$('.section1 .twotp').animate({marginRight:'0'},700,function(){$('.section1 .two-nr').animate({marginLeft:'0'},500);});
+					}
+					else if(index==2){
+						$('.section2 .three-nr').animate({marginRight:'0'},1000);
+						$('.section2 .threetp').animate({marginLeft:'0'},1000);
+					}
+					else if(index==3){
+						$('.section3 .two-nr').animate({marginLeft:'0'},700,function(){$('.section3 .twotp').animate({marginRight:'0'},500);});
+					}
+					else if(index==4){
+						$('.section4');
+					}
+					else if(index==5){
+						$('.section5');
+					}
+					if(nextIndex==0){ 
+						$('.section5');
+					}
+					else if(nextIndex==2){
+						$('.section1 .twotp').animate({marginRight:'0'},700,function(){$('.section1 .two-nr').animate({marginLeft:'0'},500);});
+					}
+					else if(nextIndex==3){
+						$('.section2 .three-nr').animate({marginRight:'0'},1000);
+						$('.section2 .threetp').animate({marginLeft:'0'},1000);
+					}
+					else if(nextIndex==4){
+						$('.section3 .two-nr').animate({marginLeft:'0'},700,function(){$('.section3 .twotp').animate({marginRight:'0'},500);});
+					}
+					else if(nextIndex==5){
+						$('.section4');
+					}
+				},
+
+
+
+			
+			});
+		});
