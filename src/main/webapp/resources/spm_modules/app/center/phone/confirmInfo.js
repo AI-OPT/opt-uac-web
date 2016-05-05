@@ -98,7 +98,7 @@ define('app/center/phone/confirmInfo', function (require, exports, module) {
 		_getImageRandomCode:function(){
 			//隐藏错误提示
 			this._controlMsgText("pictureVerifyMsg","");
-			this._controlMsgAttr("pictureVerifyMsgDiv",1);
+			this._controlMsgAttr("pictureVerifyMsg",1);
 			var timestamp = (new Date()).valueOf();
 			$("#pictureVerifyCode").val("");
 			$("#random_img").attr("src",_base+"/center/phone/getImageVerifyCode?timestamp="+timestamp);
@@ -139,10 +139,10 @@ define('app/center/phone/confirmInfo', function (require, exports, module) {
 						}
 						if(data.responseHeader.resultCode=="100002"){
 							_this._controlMsgText("verifyCodeMsg",data.statusInfo);
-							_this._controlMsgAttr("verifyCodeMsgDiv",2);
+							_this._controlMsgAttr("verifyCodeMsg",2);
 			        	}else{
 			        		_this._controlMsgText("verifyCodeMsg","");
-			        		_this._controlMsgAttr("verifyCodeMsgDiv",1);
+			        		_this._controlMsgAttr("verifyCodeMsg",1);
 			        	}
 					}
 				},
@@ -159,11 +159,11 @@ define('app/center/phone/confirmInfo', function (require, exports, module) {
 			var verifyCode = jQuery.trim($("#verifyCode").val());
 			if(verifyCode == "" || verifyCode == null || verifyCode == undefined){
 	    		this._controlMsgText("verifyCodeMsg","请输入验证码");
-				this._controlMsgAttr("verifyCodeMsgDiv",2);
+				this._controlMsgAttr("verifyCodeMsg",2);
 				return false;
 			}else{
 				this._controlMsgText("verifyCodeMsg","");
-				this._controlMsgAttr("verifyCodeMsgDiv",1);
+				this._controlMsgAttr("verifyCodeMsg",1);
 				return true;
 			}
 		},
@@ -172,11 +172,11 @@ define('app/center/phone/confirmInfo', function (require, exports, module) {
 			var verifyCode = jQuery.trim($("#pictureVerifyCode").val());
 			if(verifyCode == "" || verifyCode == null || verifyCode == undefined){
 				this._controlMsgText("pictureVerifyMsg","请输入图形验证码");
-				this._controlMsgAttr("pictureVerifyMsgDiv",2);
+				this._controlMsgAttr("pictureVerifyMsg",2);
 				return false;
 			}else{
 				this._controlMsgText("pictureVerifyMsg","");
-				this._controlMsgAttr("pictureVerifyMsgDiv",1);
+				this._controlMsgAttr("pictureVerifyMsg",1);
 				return true;
 			}
 		},
@@ -219,18 +219,18 @@ define('app/center/phone/confirmInfo', function (require, exports, module) {
 						//验证码
 						if(status == "100002"){
 							_this._controlMsgText("verifyCodeMsg",msg);
-							_this._controlMsgAttr("verifyCodeMsgDiv",2);
+							_this._controlMsgAttr("verifyCodeMsg",2);
 						}else{
 							_this._controlMsgText("verifyCodeMsg","");
-							_this._controlMsgAttr("verifyCodeMsgDiv",1);
+							_this._controlMsgAttr("verifyCodeMsg",1);
 						}
 						//图片验证码
 						if(status == "100001"){
 							_this._controlMsgText("pictureVerifyMsg",msg);
-							_this._controlMsgAttr("pictureVerifyMsgDiv",2);
+							_this._controlMsgAttr("pictureVerifyMsg",2);
 						}else{
 							_this._controlMsgText("pictureVerifyMsg","");
-							_this._controlMsgAttr("pictureVerifyMsgDiv",1);
+							_this._controlMsgAttr("pictureVerifyMsg",1);
 						}
 					}
 				},

@@ -20,12 +20,13 @@
 
 <body>
   <%@ include file="/inc/head-user.jsp"%>
+  <div class="box">
   <%@ include file="/inc/left-menu.jsp"%>
   
   <div class="wrapper">
    <div class="Retrieve-password">
     
-         <div class="Retrieve-steps">
+         <div class="Retrieve-steps newsteps">
          <div class="Retrieve-steps-round">
   <div class="finished"><!--蓝色圆圈带蓝线 finished-->
     <div class="wrap">
@@ -55,7 +56,7 @@
        <div class="password-success">恭喜您，邮箱修改成功！</div>
     
     
-    
+    </div>
     </div>
   </div>
   <%@ include file="/inc/foot.jsp"%>

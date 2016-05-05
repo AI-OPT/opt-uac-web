@@ -11,12 +11,13 @@
 
 <body>
   <%@ include file="/inc/head-user.jsp"%>
+  <div class="box">
   <%@ include file="/inc/left-menu.jsp"%>
   
   <div class="wrapper">
    <div class="Retrieve-password">
     
-         <div class="Retrieve-steps">
+         <div class="Retrieve-steps newsteps">
          <div class="Retrieve-steps-round">
   <div class="finished"><!--蓝色圆圈带蓝线 finished-->
     <div class="wrap">
@@ -48,23 +49,28 @@
          <ul>
          <li class="user">
           <p class="word">手机号码</p>
-          <p><input class="int-medium" placeholder="" id="phone">
-          	<span class="regsiter-note" id="phoneMsgDiv" style="display:none">
+          <p>
+          	<input class="int-medium" placeholder="" id="phone">
+          	<span id="phoneMsg" class="regsiter-note" style="display:none"></span>
+          	<%-- <span class="regsiter-note" id="phoneMsgDiv" style="display:none">
 			     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
 			     <span id="phoneMsg"></span>
-		  	</span>
+		  	</span> --%>
           </p>
           </li>
           
           <li class="user">
           <p class="word">短信校验码</p>
-          <p><input class="int-medium" placeholder="" id="verifyCode"></p>
+          <p>
+          	<input class="int-medium" placeholder="" id="verifyCode">
+          	<span id="verifyCodeMsg" class="regsiter-note" style="display:none"></span>
+          </p>
            <p class="huoqu">
            	   <input id="sendPhoneBtn"  type="button" class="send-button" value="获取短信校验码" >
-	           <span class="regsiter-note" id="verifyCodeMsgDiv" style="display:none">
+	           <%-- <span class="regsiter-note" id="verifyCodeMsgDiv" style="display:none">
 				     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
 				     <span id="verifyCodeMsg"></span>
-			   </span>
+			   </span> --%>
            </p>
           </li>
        
@@ -78,7 +84,7 @@
         </div>
     
     
-    
+    </div>
     </div>
   </div>
   <%@ include file="/inc/foot.jsp"%>

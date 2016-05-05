@@ -51,11 +51,11 @@ define('app/center/phone/setPhone', function (require, exports, module) {
     		}
     		if(msg == ""){
 				this._controlMsgText("phoneMsg","");
-				this._controlMsgAttr("phoneMsgDiv",1);
+				this._controlMsgAttr("phoneMsg",1);
 				return true;
 			}else{
 				this._controlMsgText("phoneMsg",msg);
-				this._controlMsgAttr("phoneMsgDiv",2);
+				this._controlMsgAttr("phoneMsg",2);
 				return false;
 			}
     	},
@@ -91,11 +91,11 @@ define('app/center/phone/setPhone', function (require, exports, module) {
 					}else{
 						if(resultCode=="100005"){
 				        	_this._controlMsgText("phoneMsg",data.statusInfo);
-							_this._controlMsgAttr("phoneMsgDiv",2);
+							_this._controlMsgAttr("phoneMsg",2);
 							isOk = false;
 				        }else{
 				        	_this._controlMsgText("phoneMsg","");
-				        	_this._controlMsgAttr("phoneMsgDiv",1);
+				        	_this._controlMsgAttr("phoneMsg",1);
 				        	isOk = true;
 				        }
 					}
@@ -111,11 +111,11 @@ define('app/center/phone/setPhone', function (require, exports, module) {
 			var verifyCode = jQuery.trim($("#verifyCode").val());
 			if(verifyCode == "" || verifyCode == null || verifyCode == undefined){
 				this._controlMsgText("verifyCodeMsg","请输入验证码");
-				this._controlMsgAttr("verifyCodeMsgDiv",2);
+				this._controlMsgAttr("verifyCodeMsg",2);
 				return false;
 			}else{
 				this._controlMsgText("verifyCodeMsg","");
-				this._controlMsgAttr("verifyCodeMsgDiv",1);
+				this._controlMsgAttr("verifyCodeMsg",1);
 				return true;
 			}
 		},
@@ -175,10 +175,10 @@ define('app/center/phone/setPhone', function (require, exports, module) {
 						}
 						if(resultCode=="100002"){
 							_this._controlMsgText("verifyCodeMsg",data.statusInfo);
-							_this._controlMsgAttr("verifyCodeMsgDiv",2);
+							_this._controlMsgAttr("verifyCodeMsg",2);
 			        	}else{
 			        		_this._controlMsgText("verifyCodeMsg","");
-							_this._controlMsgAttr("verifyCodeMsgDiv",1);
+							_this._controlMsgAttr("verifyCodeMsg",1);
 			        	}
 					}
 				},
@@ -214,17 +214,17 @@ define('app/center/phone/setPhone', function (require, exports, module) {
 						var msg = data.statusInfo;
 						if(statusCode == "100002"){
 							_this._controlMsgText("verifyCodeMsg",msg);
-							_this._controlMsgAttr("verifyCodeMsgDiv",2);
+							_this._controlMsgAttr("verifyCodeMsg",2);
 						}else{
 							_this._controlMsgText("verifyCodeMsg","");
-							_this._controlMsgAttr("verifyCodeMsgDiv",1);
+							_this._controlMsgAttr("verifyCodeMsg",1);
 						}
 						if(statusCode == "100005"){
 							_this._controlMsgText("phoneMsg",msg);
-							_this._controlMsgAttr("phoneMsgDiv",2);
+							_this._controlMsgAttr("phoneMsg",2);
 						}else{
 							_this._controlMsgText("phoneMsg","");
-							_this._controlMsgAttr("phoneMsgDiv",1);
+							_this._controlMsgAttr("phoneMsg",1);
 						}
 					}
 				},

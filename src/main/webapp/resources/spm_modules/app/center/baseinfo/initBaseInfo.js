@@ -51,9 +51,9 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 			
 		},
 		_hideInfo: function(){
-	   		 $("#errorNickNameMsg").attr("style","display:none");
-	   		 $("#errorTenMsg").attr("style","display:none");
-	   		 $("#errorTypeMsg").attr("style","display:none");
+//	   		 $("#errorNickNameMsg").attr("style","display:none");
+//	   		 $("#errorTenMsg").attr("style","display:none");
+//	   		 $("#errorTypeMsg").attr("style","display:none");
 	   		 //左侧菜单显示样式
 	   		$("#baseInfo").addClass("current");
 	   		$("#set_title_id").html("基本信息");
@@ -83,10 +83,10 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 			var industryType = $("#indutry").val();
 			var bk = $("#setnick").is(":visible");
 			var isindus = $("#allInfo").is(":visible");
-			$("#errorNickNameMsg").attr("style","display:none");
+			$("#showNickNameMsg").attr("style","display:none");
 			if(nickNmae==""&&bk){
 				$('#showNickNameMsg').text("请输入昵称");
-    			$("#errorNickNameMsg").attr("style","display:");
+    			$("#showNickNameMsg").attr("style","display:");
 				$("#flag").val("0");
 				return false;
 			}
@@ -94,27 +94,27 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 				if(/^\S*$/.test(nickNmae)){
 					var aa = nickNmae.replace(/[^\x00-\xff]/g,"aaa").length
 					if(aa>=4 && aa<=20){
-						$("#errorNickNameMsg").attr("style","display:none");
+						$("#showNickNameMsg").attr("style","display:none");
 						$("#flag").val("1");
 					}else{
 						$('#showNickNameMsg').text("4~20位字符，不能包含空格");
-		    			$("#errorNickNameMsg").attr("style","display:");
+		    			$("#showNickNameMsg").attr("style","display:");
 						$("#flag").val("0");
 						return false;
 					}
 				}else{
 					$('#showNickNameMsg').text("4~20位字符，不能包含空格");
-	    			$("#errorNickNameMsg").attr("style","display:");
+	    			$("#showNickNameMsg").attr("style","display:");
 					$("#flag").val("0");
 					return false;
 				}
 			}
 			if(isindus){
-				$("#errorTenMsg").attr("style","display:none");
-				$("#errorTypeMsg").attr("style","display:none");
+				$("#showTenMsg").attr("style","display:none");
+				$("#showTypeMsg").attr("style","display:none");
 				if(tenantName=="" && industryType!="00"){
 					$('#showTenMsg').text("请输入企业名称");
-	    			$("#errorTenMsg").attr("style","display:");
+	    			$("#showTenMsg").attr("style","display:");
 					$("#flag").val("0");
 					return false;
 				}
@@ -122,25 +122,25 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 					if(/^\S*$/.test(tenantName)){
 						var aa = tenantName.replace(/[^\x00-\xff]/g,"aa").length
 						if(aa>=4 && aa<=40){
-							$("#errorTenMsg").attr("style","display:none");
+							$("#showTenMsg").attr("style","display:none");
 							$("#flag").val("1");
 						}else{
 							$('#showTenMsg').text("4~40位字符，不能包含空格");
-			    			$("#errorTenMsg").attr("style","display:");
+			    			$("#showTenMsg").attr("style","display:");
 							$("#flag").val("0");
 							return false;
 						}
 						
 					}else{
 						$('#showTenMsg').text("4~40位字符，不能包含空格");
-		    			$("#errorTenMsg").attr("style","display:");
+		    			$("#showTenMsg").attr("style","display:");
 						$("#flag").val("0");
 						return false;
 					}
 				}
 				 if(industryType=="00" && tenantName!=""){
 						$('#showTypeMsg').text("请选择企业类型");
-		    			$("#errorTypeMsg").attr("style","display:");
+		    			$("#showTypeMsg").attr("style","display:");
 						$("#flag").val("0");
 						return false;
 				 }

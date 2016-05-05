@@ -11,12 +11,13 @@
 
 <body>
   <%@ include file="/inc/head-user.jsp"%>
+  <div class="box">
   <%@ include file="/inc/left-menu.jsp"%>
   
   <div class="wrapper">
    <div class="Retrieve-password">
     
-         <div class="Retrieve-steps">
+         <div class="Retrieve-steps newsteps">
          <div class="Retrieve-steps-round">
   <div class="finished"><!--蓝色圆圈带蓝线 finished-->
     <div class="wrap">
@@ -55,24 +56,30 @@
          </li>
          <li class="user">
           <p class="word">图形验证码</p>
-          <p><input type="text" class="int-medium" placeholder="" id="pictureVerifyCode"></p>
+          <p>
+          	<input type="text" class="int-medium" placeholder="" id="pictureVerifyCode">
+          	<span id="pictureVerifyMsg" class="regsiter-note" style="display:none"></span>
+          </p>
           <p><img id="random_img" src="${_base}/center/email/getImageVerifyCode"></p>
           <p><A id="changeImage">看不清?换一换</A>
-          <span class="regsiter-note" id="pictureVerifyMsgDiv" style="display:none">
+          <%-- <span class="regsiter-note" id="pictureVerifyMsgDiv" style="display:none">
 			     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
 			     <span id="pictureVerifyMsg"></span>
-		  </span>
+		  </span> --%>
 		  </p>
          </li>
          <li class="user">
 	          <p class="word" id="verifyName">短信校验码</p>
-	          <p><input type="text" class="int-medium" id="verifyCode"></p>
+	          <p>
+	          	<input type="text" class="int-medium" id="verifyCode">
+	          	<span id="verifyCodeMsg" class="regsiter-note" style="display:none"></span>
+	          </p>
 	          <p class="huoqu">
 		          <input id="sendVerify"  type="button" class="send-button" value="获取校验码" >
-		          <span class="regsiter-note" id="verifyCodeMsgDiv" style="display:none">
+		          <%-- <span class="regsiter-note" id="verifyCodeMsgDiv" style="display:none">
 				     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
 				     <span id="verifyCodeMsg"></span>
-				  </span>
+				  </span> --%>
 			  </p>
          </li>
          
@@ -82,7 +89,7 @@
      </div>
     
     
-    
+    </div>
     </div>
   </div>
   <%@ include file="/inc/foot.jsp"%>

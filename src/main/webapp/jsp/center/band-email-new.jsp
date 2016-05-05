@@ -12,12 +12,13 @@
 
 <body>
   <%@ include file="/inc/head-user.jsp"%>
+  <div class="box">
   <%@ include file="/inc/left-menu.jsp"%>
   
   <div class="wrapper">
   <div class="Retrieve-password">
     
-         <div class="Retrieve-steps">
+         <div class="Retrieve-steps newsteps">
          <div class="Retrieve-steps-round">
   <div class="finished"><!--蓝色圆圈带蓝线 finished-->
     <div class="wrap">
@@ -50,22 +51,26 @@
          <li class="user">
           <p class="word">邮箱地址</p>
           <p><input class="int-medium" id="email">
-          	<span class="regsiter-note" id="emailMsgDiv" style="display:none">
+          	<span id="emailMsg" class="regsiter-note" style="display:none"></span>
+          	<%-- <span class="regsiter-note" id="emailMsgDiv" style="display:none">
 			     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
 			     <span id="emailMsg"></span>
-		     </span>
+		     </span> --%>
           </p>
           </li>
           
           <li class="user">
           <p class="word">邮箱校验码</p>
-          <p><input class="int-medium" id="verifyCode"></p>
+          <p>
+          	<input class="int-medium" id="verifyCode">
+          	<span id="verifyCodeMsg" class="regsiter-note" style="display:none"></span>
+          </p>
           <p class="huoqu">
           	<input id="sendEmailBtn"  type="button" class="send-button" value="获取校验码" >
-          	<span class="regsiter-note" id="verifyCodeMsgDiv" style="display:none">
+          	<%-- <span class="regsiter-note" id="verifyCodeMsgDiv" style="display:none">
 			     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
 			     <span id="verifyCodeMsg"></span>
-		     </span>
+		     </span> --%>
           </p>
           </li>
        
@@ -75,7 +80,7 @@
         </div>
     
     </div>
-   
+   </div>
   </div>
   <%@ include file="/inc/foot.jsp"%>
   <script type="text/javascript">

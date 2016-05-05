@@ -68,11 +68,11 @@ define('app/center/email/setEmail', function (require, exports, module) {
 			}
 			if(msg == ""){
 				this._controlMsgText("emailMsg","");
-				this._controlMsgAttr("emailMsgDiv",1);
+				this._controlMsgAttr("emailMsg",1);
 				return true;
 			}else{
 				this._controlMsgText("emailMsg",msg);
-				this._controlMsgAttr("emailMsgDiv",2);
+				this._controlMsgAttr("emailMsg",2);
 				return false;
 			}
 		},
@@ -101,11 +101,11 @@ define('app/center/email/setEmail', function (require, exports, module) {
 					}else{
 						if(resultCode=="100006"){
 				        	_this._controlMsgText("emailMsg",data.statusInfo);
-							_this._controlMsgAttr("emailMsgDiv",2);
+							_this._controlMsgAttr("emailMsg",2);
 							isOk = false;
 				        }else{
 				        	_this._controlMsgText("emailMsg","");
-				        	_this._controlMsgAttr("emailMsgDiv",1);
+				        	_this._controlMsgAttr("emailMsg",1);
 				        	isOk = true;
 				        }
 					}
@@ -121,11 +121,11 @@ define('app/center/email/setEmail', function (require, exports, module) {
 			var verifyCode = jQuery.trim($("#verifyCode").val());
 			if(verifyCode == "" || verifyCode == null || verifyCode == undefined){
 				this._controlMsgText("verifyCodeMsg","请输入验证码");
-				this._controlMsgAttr("verifyCodeMsgDiv",2);
+				this._controlMsgAttr("verifyCodeMsg",2);
 				return false;
 			}else{
 				this._controlMsgText("verifyCodeMsg","");
-				this._controlMsgAttr("verifyCodeMsgDiv",1);
+				this._controlMsgAttr("verifyCodeMsg",1);
 				return true;
 			}
 		},
@@ -186,10 +186,10 @@ define('app/center/email/setEmail', function (require, exports, module) {
 						}
 						if(resultCode=="100002"){
 							_this._controlMsgText("verifyCodeMsg",data.statusInfo);
-							_this._controlMsgAttr("verifyCodeMsgDiv",2);
+							_this._controlMsgAttr("verifyCodeMsg",2);
 			        	}else{
 			        		_this._controlMsgText("verifyCodeMsg","");
-			        		_this._controlMsgAttr("verifyCodeMsgDiv",1);
+			        		_this._controlMsgAttr("verifyCodeMsg",1);
 			        	}
 					}
 				},
@@ -225,17 +225,17 @@ define('app/center/email/setEmail', function (require, exports, module) {
 						var msg = data.statusInfo;
 						if(statusCode == "100002"){
 							_this._controlMsgText("verifyCodeMsg",msg);
-							_this._controlMsgAttr("verifyCodeMsgDiv",2);
+							_this._controlMsgAttr("verifyCodeMsg",2);
 						}else{
 							_this._controlMsgText("verifyCodeMsg","");
-							_this._controlMsgAttr("verifyCodeMsgDiv",1);
+							_this._controlMsgAttr("verifyCodeMsg",1);
 						}
 						if(statusCode == "100006"){
 							_this._controlMsgText("emailMsg",msg);
-							_this._controlMsgAttr("emailMsgDiv",2);
+							_this._controlMsgAttr("emailMsg",2);
 						}else{
 							_this._controlMsgText("emailMsg","");
-							_this._controlMsgAttr("emailMsgDiv",1);
+							_this._controlMsgAttr("emailMsg",1);
 						}
 					}
 				},

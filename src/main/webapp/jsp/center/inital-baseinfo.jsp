@@ -20,6 +20,7 @@
 <body>
 
   <%@ include file="/inc/head-user.jsp"%>
+  <div class="box">
   <%@ include file="/inc/left-menu.jsp"%>
   <div class="wrapper">
       
@@ -55,11 +56,12 @@
           </p>
           <p class="ctn-b" style=" display:none;" id="setnick">
           	<input type="text" id="nickName" class="int-medium" placeholder="">
+          	<span id="showNickNameMsg" class="regsiter-note" style="display:none"></span>
           </p>
-          <span  id="errorNickNameMsg">
+          <%-- <span  id="errorNickNameMsg">
 		     <i class="icon-caret-left"></i>
 		     <img src="${_base}/theme/baas/images/error.png"><span id="showNickNameMsg"></span>
-		  </span>
+		  </span> --%>
           </li>
           
            <li class="user">
@@ -105,11 +107,12 @@
 		          <p class="word">企业名称</p>
 		          <p>
 		          	<input type="text" class="int-medium" placeholder="" id="tenantName">
+		          	<span id="showTenMsg" class="regsiter-note" style="display:none"></span>
 		          </p>
-		          <span  id="errorTenMsg">
+		          <%-- <span  id="errorTenMsg">
 		         		<i class="icon-caret-left"></i>
 		         		<img src="${_base}/theme/baas/images/error.png"><span id="showTenMsg"></span>
-		         	</span>
+		         	</span> --%>
 		          </li>
 		          
 		          <li class="user">
@@ -117,11 +120,12 @@
 		          <p>
 		          	<select class="select-medium" id="indutry">
 		          	</select>
+		          	<span id="showTypeMsg" class="regsiter-note" style="display:none"></span>
 		          </p>
-		          <span  id="errorTypeMsg">
+		         <%--  <span  id="errorTypeMsg">
 		         		<i class="icon-caret-left"></i>
 		         		<img src="${_base}/theme/baas/images/error.png"><span id="showTypeMsg"></span>
-		         	</span>
+		         	</span> --%>
 		          </li>
 	   			</div>
 	   			<div id="oneInfo">
@@ -156,7 +160,7 @@
         </div>
         
     
-  
+  	</div>
    </div>
   </div>
   <%@ include file="/inc/foot.jsp"%>

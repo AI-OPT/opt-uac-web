@@ -11,12 +11,13 @@
 
 <body>
   <%@ include file="/inc/head-user.jsp"%>
+  <div class="box">
   <%@ include file="/inc/left-menu.jsp"%>
   
   <div class="wrapper">
    <div class="Retrieve-password">
     
-         <div class="Retrieve-steps">
+         <div class="Retrieve-steps newsteps">
          <div class="Retrieve-steps-round">
   <div class="finished"><!--蓝色圆圈带蓝线 finished-->
     <div class="wrap">
@@ -45,7 +46,7 @@
          
     <div class="password-success"><b id="message">恭喜您，密码修改成功！</b><a id="gotoLogin">立即登录</a></div>
     
-    
+    </div>
     </div>
   </div>
   <%@ include file="/inc/foot.jsp"%>

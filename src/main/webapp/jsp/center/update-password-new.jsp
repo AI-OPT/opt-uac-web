@@ -11,12 +11,13 @@
 
 <body>
   <%@ include file="/inc/head-user.jsp"%>
+  <div class="box">
   <%@ include file="/inc/left-menu.jsp"%>
   
   <div class="wrapper">
    <div class="Retrieve-password">
     
-         <div class="Retrieve-steps">
+         <div class="Retrieve-steps newsteps">
          <div class="Retrieve-steps-round">
   <div class="finished"><!--蓝色圆圈带蓝线 finished-->
     <div class="wrap">
@@ -48,13 +49,15 @@
           <ul>
          <li class="user">
           <p class="word">新密码</p>
-          <p><input type="password"class="int-medium" placeholder="" id="password">
-             <span class="regsiter-note" id="newPwdMsgDiv" style="display:none">
+          <p>
+          	<input type="password"class="int-medium" placeholder="" id="password">
+          	<span id="newPwdMsg" class="regsiter-note" style="display:none"></span>
+             <%-- <span class="regsiter-note" id="newPwdMsgDiv" style="display:none">
 			     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
 			     <span id="newPwdMsg"></span>
-		     </span>
+		     </span> --%>
 		  </p>
-		  <div class="Set-password" style="display:none">
+		  <!-- <div class="Set-password" style="display:none">
 				          <p class="low" id="strength_L">
 					          <span class="f00"></span>
 					          <span>低</span>
@@ -67,16 +70,18 @@
 					          <span class="green"></span>
 					          <span>高</span>
 				          </p>
-	          			</div>	
+	          			</div>	 -->
           </li>
           
           <li class="user">
           <p class="word">确认密码</p>
-          <p><input type="password" class="int-medium" placeholder="" id="confirmPassword">
-          	  <span class="regsiter-note" id="confirmPwdMsgDiv" style="display:none">
+          <p>
+          	<input type="password" class="int-medium" placeholder="" id="confirmPassword">
+          	<span id="confirmPwdMsg" class="regsiter-note" style="display:none"></span>
+          	  <%-- <span class="regsiter-note" id="confirmPwdMsgDiv" style="display:none">
 			     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
 			     <span id="confirmPwdMsg"></span>
-			  </span>
+			  </span> --%>
           </p>
           </li>
        
@@ -89,7 +94,7 @@
         </div>
     
     
-    
+    </div>
     </div>
   </div>
   <%@ include file="/inc/foot.jsp"%>

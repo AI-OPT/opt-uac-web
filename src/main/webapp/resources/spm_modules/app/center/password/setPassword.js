@@ -123,11 +123,11 @@ define('app/center/password/setPassword', function (require, exports, module) {
 			}
 			if(msg == ""){
 				this._controlMsgText("newPwdMsg","");
-				this._controlMsgAttr("newPwdMsgDiv",1);
+				this._controlMsgAttr("newPwdMsg",1);
 				return true;
 			}else{
 				this._controlMsgText("newPwdMsg",msg);
-				this._controlMsgAttr("newPwdMsgDiv",2);
+				this._controlMsgAttr("newPwdMsg",2);
 				return false;
 			}
 		},
@@ -141,15 +141,15 @@ define('app/center/password/setPassword', function (require, exports, module) {
 			var newPassword = $("#password").val();
 			if(confirmPassword == "" || confirmPassword == null || confirmPassword == undefined){
 				this._controlMsgText("confirmPwdMsg","请输入确认密码");
-				this._controlMsgAttr("confirmPwdMsgDiv",2);
+				this._controlMsgAttr("confirmPwdMsg",2);
 				return false;
 			}else if(newPassword != confirmPassword){
 				this._controlMsgText("confirmPwdMsg","两次输入的密码不匹配");
-				this._controlMsgAttr("confirmPwdMsgDiv",2);
+				this._controlMsgAttr("confirmPwdMsg",2);
 				return false;
 			}else{
 				this._controlMsgText("confirmPwdMsg","");
-				this._controlMsgAttr("confirmPwdMsgDiv",1);
+				this._controlMsgAttr("confirmPwdMsg",1);
 				return true;
 			}
 		},
@@ -193,10 +193,10 @@ define('app/center/password/setPassword', function (require, exports, module) {
 							if(status == "100003"){
 								alert("kkkkl");
 								_this._controlMsgText("newPwdMsg",msg);
-								_this._controlMsgAttr("newPwdMsgDiv",2);
+								_this._controlMsgAttr("newPwdMsg",2);
 							}else{*/
 								_this._controlMsgText("newPwdMsg","");
-								_this._controlMsgAttr("newPwdMsgDiv",1);
+								_this._controlMsgAttr("newPwdMsg",1);
 							//}
 						}
 					},
