@@ -35,6 +35,8 @@ request.setAttribute("baas_pt_index_url",baas_pt_index_url );
  <link href="${_base}/theme/baas/css/login-regsiter.css" rel="stylesheet" type="text/css"> 
  <script type="text/javascript" src="${_base}/theme/baas/js/jquery-1.11.1.min.js" ></script>
  <script type="text/javascript" src="${_base}/theme/baas/js/bootstrap.js" ></script>
+  <script type="text/javascript" src="${_base}/theme/baas/js/jquery.fullPage.min.js" ></script>
+ 
  <script type="text/javascript" src="${_base}/theme/baas/js/frame.js" ></script>
  <script type="text/javascript" src="${_base}/theme/baas/js/comp.js" ></script>
 <!-- UED style end -->

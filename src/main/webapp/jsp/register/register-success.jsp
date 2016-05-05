@@ -22,7 +22,7 @@
      <div class="regsiter-wrapper-bg">
         <div class="regsiter-success-cnt">
          
-         <p><img src="/theme/baas/images/logins.gif"><input type="hidden" name="accountIdKey" id="accountIdKey" value="${requestScope.accountIdKey}"/></p>
+         <p><img src="${_base}/theme/baas/images/logins.gif"><input type="hidden" name="accountIdKey" id="accountIdKey" value="${requestScope.accountIdKey}"/></p>
          <p>注册成功！<span id="jumpTo">5</span>秒后我将载着你回到  <a href="#">首页>></a></p>
         
         </div>
