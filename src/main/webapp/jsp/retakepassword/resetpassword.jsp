@@ -11,6 +11,7 @@
 
 <body>
   <%@ include file="/inc/head-pwd.jsp"%>
+  <div class="box">
   <div class="wrappera">
       <!-- 步骤开始 -->
    <div class="Retrieve-password">
@@ -53,13 +54,15 @@
           <ul>
           <li class="user">
 	          <p class="word">新密码</p>
-	          <p><input type="password"class="int-medium" id="newPassword">
-			          <span class="regsiter-note" id="newPwdMsgDiv" style="display:none">
+	          <p>
+	          	<input type="password"class="int-medium" id="newPassword"/>
+	          	<span id="newPwdMsg" class="regsiter-note" style="display:none"></span>
+			          <%-- <span class="regsiter-note" id="newPwdMsgDiv" style="display:none">
 					     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
 					     <span id="newPwdMsg"></span>
-					  </span>
+					  </span> --%>
 			  <p>
-			  <div class="Set-password" style="display:none">
+			  <!-- <div class="Set-password" style="display:none">
 				          <p class="low" id="strength_L">
 					          <span class="f00"></span>
 					          <span>低</span>
@@ -72,28 +75,30 @@
 					          <span class="green"></span>
 					          <span>高</span>
 				          </p>
-	          			</div>	
+	          			</div>	 -->
           </li>
           
           <li class="user">
 	          <p class="word">确认密码</p>
-	          <p><input type="password" class="int-medium" id="confirmPassword">
-	          <span class="regsiter-note" id="confirmPwdMsgDiv" style="display:none">
+	          <p>
+	          	<input type="password" class="int-medium" id="confirmPassword"/>
+	          	<span id="confirmPwdMsg" class="regsiter-note" style="display:none"></span>
+	          <%-- <span class="regsiter-note" id="confirmPwdMsgDiv" style="display:none">
 			     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
 			     <span id="confirmPwdMsg"></span>
-			  </span>
+			  </span> --%>
 			  </p>
           </li>
        
          
-          <li><input type="button" class="Submit-btn" value="提  交" id="submitBtn"></li>
+          <li><input type="button" class="Submit-btn" value="提  交" id="submitBtn"/></li>
        
           </ul>
         
         </div>
     
     
-    
+    </div>
     </div>
   </div>
   <%@ include file="/inc/foot.jsp"%>

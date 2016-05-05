@@ -11,6 +11,7 @@
 
 <body>
   <%@ include file="/inc/head-pwd.jsp"%>
+  <div class="box">
   <div class="wrappera">
       <!-- 步骤开始 -->
    <div class="Retrieve-password">
@@ -50,7 +51,7 @@
          
       <div class="password-success"><b id="message">恭喜您，密码重设成功！</b><a id="gotoLogin">立即登录</a></div>
     
-    
+    </div>
     </div>
   </div>
   <%@ include file="/inc/foot.jsp"%>

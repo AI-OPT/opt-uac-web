@@ -12,6 +12,7 @@
 
 <body>
   <%@ include file="/inc/head-pwd.jsp"%>
+  <div class="box">
   <div class="wrappera">
    <!-- 步骤开始 -->
    <div class="Retrieve-password">
@@ -54,33 +55,38 @@
           <ul>
          <li class="user">
           <p class="word">用户名</p>
-          <p><input type="text" class="int-medium" id="userName">
-          <span class="regsiter-note" id="userNameMsgDiv" style="display:none">
+          <p>
+          	<input type="text" class="int-medium" id="userName"/>
+          	<span id="userNameMsg" class="regsiter-note" style="display:none"></span>
+          <%-- <span class="regsiter-note" id="userNameMsgDiv" style="display:none">
 		     <i class="icon-caret-left"></i>
 		     <img src="${_base}/theme/baas/images/error.png">
 		     <span id="userNameMsg"></span>
-		  </span>
+		  </span> --%>
 		  </p>
          </li>
          <li class="user">
           <p class="word">图形验证码</p>
-          <p><input type="text" class="int-medium" id="pictureVerifyCode"></p>
-          <p><img id="random_img" src="${_base}/retakePassword/getUserImageVerifyCode"></p>
-          <p><A id="changeImage">看不清?换一换</A>
-          <span class="regsiter-note" id="verifyCodeMsgDiv" style="display:none">
+          <p>
+          	<input type="text" class="int-medium" id="pictureVerifyCode"/>
+          	<span id="verifyCodeMsg" class="regsiter-note" style="display:none"></span>
+          </p>
+          <p><img id="random_img" src="${_base}/retakePassword/getUserImageVerifyCode"/></p>
+          <p><a id="changeImage">看不清?换一换</a>
+          <%-- <span class="regsiter-note" id="verifyCodeMsgDiv" style="display:none">
 		     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
 		     <span id="verifyCodeMsg"></span>
-		  </span>
+		  </span> --%>
 		  </p>
          </li>
-         <li><input id="submitBtn" type="button" class="Submit-btn" value="提  交"></li>
+         <li><input id="submitBtn" type="button" class="Submit-btn" value="提  交"/></li>
        
           </ul>
         
         </div>
     
     
-    
+    </div>
     </div>
   </div>
   <%@ include file="/inc/foot.jsp"%>

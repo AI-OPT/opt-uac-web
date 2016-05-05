@@ -11,6 +11,7 @@
 
 <body>
   <%@ include file="/inc/head-pwd.jsp"%>
+  <div class="box">
   <div class="wrappera">
    <!-- 步骤开始 -->
    <div class="Retrieve-password">
@@ -50,8 +51,8 @@
          
      <!--表单验证-->
     <div class="Retrieve-cnt" id="confirmInfo">
-    	  <input id="phoneValue" type="hidden" value="${confirmInfo.phone}">  
-    	  <input id="emailValue" type="hidden" value="${confirmInfo.email}">  
+    	  <input id="phoneValue" type="hidden" value="${confirmInfo.phone}"/>  
+    	  <input id="emailValue" type="hidden" value="${confirmInfo.email}"/>  
           <ul>
           <li class="user" id="confirmTypeDiv">
 	          <p class="word">选择身份验证方式</p>
@@ -68,29 +69,35 @@
           </li>
           <li class="user">
 	          <p class="word">图形验证码</p>
-	          <p><input type="text" class="int-medium" id="pictureVerifyCode"></p>
-	          <p><img id="random_img" src="${_base}/retakePassword/getImageVerifyCode"></p>
-	          <p><A id="changeImage">看不清?换一换</A>
-	          <span class="regsiter-note" id="pictureVerifyMsgDiv" style="display:none">
+	          <p>
+	          	<input type="text" class="int-medium" id="pictureVerifyCode"/>
+	          	<span id="pictureVerifyMsg" class="regsiter-note" style="display:none"></span>
+	          </p>
+	          <p><img id="random_img" src="${_base}/retakePassword/getImageVerifyCode"/></p>
+	          <p><a id="changeImage">看不清?换一换</a>
+	          <%-- <span class="regsiter-note" id="pictureVerifyMsgDiv" style="display:none">
 			     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
 			     <span id="pictureVerifyMsg"></span>
-			  </span>
+			  </span> --%>
 			  </p>
           </li>
           <li class="user">
 	          <p class="word" id="verifyName">短信验证码</p>
-	          <p><input type="text" class="int-medium" id="verifyCode"></p>
+	          <p>
+	          	<input type="text" class="int-medium" id="verifyCode"/>
+	          	<span id="ssmVerifyCodeMsg" class="regsiter-note" style="display:none"></span>
+	          </p>
 	          <p class="huoqu">
-	          	  <input id="sendVerify"  type="button" class="send-button" value="获取验证码" >
-			      <span class="regsiter-note" id="ssmVerifyCodeMsgDiv" style="display:none">
+	          	  <input id="sendVerify"  type="button" class="send-button" value="获取验证码"/>
+			      <%-- <span class="regsiter-note" id="ssmVerifyCodeMsgDiv" style="display:none">
 				     <i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
 				     <span id="ssmVerifyCodeMsg"></span>
-				  </span>
+				  </span> --%>
 			  </p>
           </li>
-       	  <li><input id="submitBtn" type="button" class="Submit-btn" value="提  交"></li>
+       	  <li><input id="submitBtn" type="button" class="Submit-btn" value="提  交"/></li>
           </ul>
-        
+        </div>
         </div>
     </div>
   </div>
