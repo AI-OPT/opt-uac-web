@@ -49,10 +49,10 @@
           
           <li class="user">
           <p class="word">昵称</p>
-          <p class="ctn-a">
+          <p class="ctn-a" id="initNickName">
           ${accountInfo.nickName}
           <input type="hidden" value="${accountInfo.nickName}" id="nk">
-          <a href="#"><i class="icon-edit"></i></a>
+          <a href="javascript:void(0);"><i class="icon-edit"></i></a>
           </p>
           <p class="ctn-b" style=" display:none;" id="setnick">
           	<input type="text" id="nickName" class="int-medium" placeholder="">

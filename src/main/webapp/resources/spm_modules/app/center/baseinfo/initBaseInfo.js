@@ -23,7 +23,7 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
     	//事件代理
     	events: {
     		//key的格式: 事件+空格+对象选择器;value:事件方法
-    		//"click [id='submitBtn']":"_confirmInfo",
+    		//"blur [id='nickName']":"_cancelNickName",
     		
         },
         init: function(){
@@ -40,6 +40,7 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
     	_bindHandle: function(){
     		$("#submitBtn").on("click",this._validInfo);
     		$("#submitBtn").on("click",this._submit);
+    		$("#nickName").on("blur",this._cancelNickName);
     		
     	},
     	//加载账户数据、业务类型
@@ -76,6 +77,10 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 			}else{
 				$("#allInfo").attr("style","display:none");
 			}
+		},
+		_cancelNickName: function(){
+			$("#setnick").attr("style","display:none");	
+			$("#initNickName").attr("style","display:");	
 		},
 		_validInfo: function(){
 			var nickNmae = $("#nickName").val();
@@ -177,7 +182,12 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 				var tenantName = $("#tenantName").val();
 				var industry = $("#indutry").val();
 				if(nick==""&&tenantName=="" && industry=="00"){
-					alert("保存成功");
+					var msgDialog = Dialog({
+						title: '提示',
+						content: "保存成功"
+					});
+	      			msgDialog.showModal();
+
 					return false;
 				}
 				var _this = this;
