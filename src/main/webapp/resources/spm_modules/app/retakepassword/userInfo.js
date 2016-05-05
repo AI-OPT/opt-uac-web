@@ -40,26 +40,26 @@ define('app/retakepassword/userInfo', function (require, exports, module) {
     	},
     	_getImageRandomCode:function(){
     		//隐藏错误提示
-    		$("#verifyCodeMsgDiv").attr("style","display:none");
+    		$("#verifyCodeMsg").attr("style","display:none");
 			var timestamp = (new Date()).valueOf();
 			$("#pictureVerifyCode").val("");
 			$("#random_img").attr("src",_base+"/retakePassword/getUserImageVerifyCode?timestamp="+timestamp);
 		},
 		//隐藏错误信息
 		_hideErrorInfo: function(){
-   		 $("#userNameMsgDiv").attr("style","display:none");
-   		 $("#verifyCodeMsgDiv").attr("style","display:none");
+   		 $("#userNameMsg").attr("style","display:none");
+   		 $("#verifyCodeMsg").attr("style","display:none");
 		},
 		//检查用户名格式
 		_checkUserName: function(){
 			var userName = jQuery.trim($("#userName").val());
 			if(userName == "" || userName == null || userName == undefined){
 	    		this._controlMsgText("userNameMsg","请输入用户名");
-				this._controlMsgAttr("userNameMsgDiv",2);
+				this._controlMsgAttr("userNameMsg",2);
 				return false;
 			}else{
 				this._controlMsgText("userNameMsg","");
-				this._controlMsgAttr("userNameMsgDiv",1);
+				this._controlMsgAttr("userNameMsg",1);
 				return true;
 			}
 		},
@@ -68,11 +68,11 @@ define('app/retakepassword/userInfo', function (require, exports, module) {
 			var verifyCode = jQuery.trim($("#pictureVerifyCode").val());
 			if(verifyCode == "" || verifyCode == null || verifyCode == undefined){
 				this._controlMsgText("verifyCodeMsg","请输入图形验证码");
-				this._controlMsgAttr("verifyCodeMsgDiv",2);
+				this._controlMsgAttr("verifyCodeMsg",2);
 				return false;
 			}else{
 				this._controlMsgText("verifyCodeMsg","");
-				this._controlMsgAttr("verifyCodeMsgDiv",1);
+				this._controlMsgAttr("verifyCodeMsg",1);
 				return true;
 			}
 		},
@@ -122,18 +122,18 @@ define('app/retakepassword/userInfo', function (require, exports, module) {
 						//用户名
 						if(status == "100004"){
 							_this._controlMsgText("userNameMsg",msg);
-							_this._controlMsgAttr("userNameMsgDiv",2);
+							_this._controlMsgAttr("userNameMsg",2);
 						}else{
 							_this._controlMsgText("userNameMsg","");
-							_this._controlMsgAttr("userNameMsgDiv",1);
+							_this._controlMsgAttr("userNameMsg",1);
 						}
 						//图片验证码
 						if(status == "100001"){
 							_this._controlMsgText("verifyCodeMsg",msg);
-							_this._controlMsgAttr("verifyCodeMsgDiv",2);
+							_this._controlMsgAttr("verifyCodeMsg",2);
 						}else{
 							_this._controlMsgText("verifyCodeMsg","");
-							_this._controlMsgAttr("verifyCodeMsgDiv",1);
+							_this._controlMsgAttr("verifyCodeMsg",1);
 						}
 					}
 				},
