@@ -9,29 +9,12 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <html lang="zh-cn">
-<%
-String _base = request.getContextPath();
-String _baasBase=_base+"/theme/baas";
-request.setAttribute("_baasBase", _baasBase);
-request.setAttribute("_base", _base);
-%>
-
-<%
-String baas_pt_index_url = ConfigCenterFactory.getConfigCenterClient().get(Constants.URLConstant.INDEX_URL_KEY);
-request.setAttribute("baas_pt_index_url",baas_pt_index_url );
-%>
 <head>
+<%@ include file="/inc/inc.jsp"%>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width; initial-scale=0.8;  user-scalable=0;" />
     <title>登录亚信云计费</title>
-    <link href="${_baasBase }/css/bootstrap.css" rel="stylesheet" type="text/css">
-	<link href="${_baasBase }/css/font-awesome.css" rel="stylesheet" type="text/css">
-	<link href="${_baasBase }/css/global.css" rel="stylesheet" type="text/css">
-	<link href="${_baasBase }/css/login-regsiter.css" rel="stylesheet" type="text/css">
-	<script type="text/javascript" src="${_baasBase }/js/jquery-1.11.1.min.js" ></script>
-	<script type="text/javascript" src="${_baasBase }/js/bootstrap.js" ></script>
-	<script type="text/javascript" src="${_baasBase }/js/comp.js" ></script>
 	<script type="text/javascript" src="${_baasBase }/js/md5.js" ></script>
 	<script type="text/javascript" src="${_baasBase }/js/datacheck.js" ></script>
 	
@@ -122,7 +105,7 @@ request.setAttribute("baas_pt_index_url",baas_pt_index_url );
 <body>
    <div class="login-header"><!--登录头部-->
      <div class="login-header-cnt">
-       <div class="login-header-cnt-logo"><img src="${_base}/theme/baas/images/about.png"></div>
+       <div class="login-header-cnt-logo"><a href="${baas_pt_index_url }"><img src="${_base}/theme/baas/images/about.png"></a></div>
        <div class="login-header-cnt-mail">帐户登录</div>
        </div>
      
@@ -152,10 +135,7 @@ request.setAttribute("baas_pt_index_url",baas_pt_index_url );
        
     </div>
 
-   <div class="login-foot">
-   ©2016 版权所有 亚信集团股份有限公司 京ICP备11005544号-15 京公网安备110108007119号
-   
-   </div>
+   <div class="footer-index">©2016 版权所有 亚信集团股份有限公司 京ICP备11005544号-15 京公网安备110108007119号</div>
 
 </body>
 </html>

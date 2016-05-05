@@ -2,7 +2,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <div class="header">
   <div class="head-auto">
-   	<div class="logo"><a href="#"><img src="${_baasBase }/images/about.png"></a></div>
+   	<div class="logo"><a href="${baas_pt_index_url }"><img src="${_baasBase }/images/about.png"></a></div>
    	<div class="breadcrumb">
    		<ul>
 			<li><span id="set_title_id"></span></li>
