@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html>
 <head>
 <%@ include file="/inc/inc.jsp"%>
@@ -89,17 +88,10 @@ return;
 </head>
 
 <body>
-
-  <div class="login-header"><!--登录头部-->
-     <div class="login-header-cnt">
-       <div class="login-header-cnt-logo"><a href="${baas_pt_index_url }"><img src="${_base}/theme/baas/images/logo.png"></a></div>
-       <div class="login-header-cnt-mail">账户注册</div>
-       <div class="login-header-cnt-right">已有账号？ <a href="${_base}/login">立即登录>></a></div>
-       </div>
-     
-  </div>
+<%@ include file="/inc/head-rgister.jsp"%>
 
    <div class="regsiter-wrapper" id="register-form">
+     <div class="regsiter-box">
         <div class="regsiter-wrapper-cnt">
 	         <ul>
 		         <li class="regsiter-title">账户注册</li>
@@ -107,8 +99,6 @@ return;
 		         	<input type="text" name="phone" id="phone"class="int-xxlarge-user" placeholder="手机号码">
 		         	<p class="regsiter-po">
 			         	<span class="regsiter-note" id="errorPhoneMsg" style="display: none;">
-			         		<i class="icon-caret-left"></i>
-			         		<img src="${_base}/theme/baas/images/error.png">
 			         		<span id="showPhoneMsg" ></span>
 			         	</span>
 		         	</p>
@@ -119,14 +109,12 @@ return;
 		         	<i class="icon-eye-open" id="togglePassword"></i>
 		         	<p class="regsiter-po">
 		         	<span class="regsiter-note" id="errorPawMsg" style="display: none;">
-		         		<i class="icon-caret-left"></i>
-		         		<img src="${_base}/theme/baas/images/error.png"><span id="showPawMsg"></span>
+		         		<span id="showPawMsg"></span>
 		         	</span>
 		         	</p>
 		         	<p class="regsiter-po">
 		         	<span class="regsiter-note" id="errorShowPM" style="display: none;">
-		         		<i class="icon-caret-left"></i>
-		         		<img src="${_base}/theme/baas/images/correct.png"><span id="showPM"></span>
+		         		<span id="showPM"></span>
 		         	</span>
 		         	</p>
 		         	<div class="regsiter-set-password" style="display:none">
@@ -151,8 +139,6 @@ return;
 		         	<span ><a id="refresh">看不清?换一个</a></span>
 		         	<p class="regsiter-po">
 			         	<span class="regsiter-note" id="errorPicMsg" style="display: none;">
-			         		<i class="icon-caret-left"></i>
-			         		<img src="${_base}/theme/baas/images/error.png">
 			         		<span id="showPicMsg" ></span>
 			         	</span>
 		         	</p>
@@ -164,7 +150,6 @@ return;
 		         	 </span>
 		         		
 		         	<span class="regsiter-note" id="errorSmsMsg" style="display: none;">
-		         		<i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
 		         		<span id="showSmsMsg"></span>
 		         	</span>
 		         </li>
@@ -178,14 +163,10 @@ return;
 		         <li class="zuns">* 注册表示您同意遵守<A href="${_base }/reg/protocol" target="_blank">《亚信云计费服务条款》</A></li>
 	
 	         </ul>
+	         </div>
    		</div>
     </div>
-   <div class="login-foot">
-   ©2016 版权所有 亚信集团股份有限公司 京ICP备11005544号-15 京公网安备110108007119号
+    <%@ include file="/inc/foot.jsp"%>
    
-   </div>
-   
-  
-
 </body>
 </html>

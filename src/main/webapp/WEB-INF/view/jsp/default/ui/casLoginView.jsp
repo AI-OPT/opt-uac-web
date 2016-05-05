@@ -120,16 +120,15 @@ request.setAttribute("baas_pt_index_url",baas_pt_index_url );
 </head>
 
 <body>
-
-  <div class="login-header"><!--登录头部-->
+   <div class="login-header"><!--登录头部-->
      <div class="login-header-cnt">
-       <div class="login-header-cnt-logo"><a href="${baas_pt_index_url }"><img src="${_baasBase }/images/logo.png"></a></div>
-       <div class="login-header-cnt-mail">账户登录</div>
+       <div class="login-header-cnt-logo"><img src="${_base}/theme/baas/images/about.png"></div>
+       <div class="login-header-cnt-mail">帐户登录</div>
        </div>
      
      </div>
   
-   <div class="login-wrapper">
+   <div class="regsiter-wrapper">
    	   <form:form method="post" id="fm1" name="fm1" commandName="${commandName}" htmlEscape="true">
        <div class="login-wrapper-cnt">
          <div class="login-wrapper-cnt-section">

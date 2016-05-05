@@ -19,19 +19,13 @@
 
 <body>
 
-  <div class="login-header"><!--登录头部-->
-     <div class="login-header-cnt">
-       <div class="login-header-cnt-logo"><img src="${_base}/theme/baas/images/logo.png"></div>
-       <div class="login-header-cnt-mail">邮箱绑定</div>
-       </div>
-     
-     </div>
-  
+  <%@ include file="/inc/head-register-email.jsp"%>
    <div class="regsiter-wrapper">
+   	<div class="regsiter-box">
         <div class="regsiter-email-cnt">
           <ul>
           <li class="user">
-          <span><p class="word">邮箱地址</p></span>
+          <p class="word">邮箱地址</p>
           	<input type="text" class="int-medium" placeholder="" id="email" name="email">
           	<input type="hidden" id="emailFlag">
           	<input type="hidden" id="identifyFlag">
@@ -39,18 +33,23 @@
           <span class="yzm">
 			     <input id="getIdentify"  type="button"  class="button" value="获取验证码" >
           </span>
-           <span class="regsiter-note" id="errorEMsg">
-         		<i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
+          <label>
+          	<span class="regsiter-note" id="errorEMsg">
          		<span  id="showErroeEMsg"></span>
-		   </span>
+		    </span>
+           </label>
+           
          </li>
           <li class="user">
-          <p class="word">邮箱验证码</p>
-          <p><input type="text" class="int-medium" placeholder="" id="identifyCode"></p>
-         <span class="regsiter-note" id="errorEmIdentifyMsg">
-         		<i class="icon-caret-left"></i><img src="${_base}/theme/baas/images/error.png">
-         		<span  id="showErroeEmIdentify"></span>
-		   </span>
+	          <p class="word">邮箱验证码</p>
+	          <p><input type="text" class="int-medium" placeholder="" id="identifyCode"></p>
+	        <label>
+	        	<span class="regsiter-note" id="errorEmIdentifyMsg">
+	         		<span  id="showErroeEmIdentify"></span>
+			   </span>
+	        </label>
+	         	
+	       
          </li>
          <li class="reminder">
          <p><i class="icon-lightbulb"></i>温馨提示</p>
@@ -66,19 +65,11 @@
          	<input type="button" value="提交" class="next-btn next-btn-hover" id="BTN_SUBMIT" name="BTN_SUBMIT">
          </li>
           </ul>
-        
-        </div>
-       
-    
-     
+         </div>
+       </div>
     </div>
 
-   <div class="login-foot">
-   ©2016 版权所有 亚信集团股份有限公司 京ICP备11005544号-15 京公网安备110108007119号
+    <%@ include file="/inc/foot.jsp"%>
    
-   </div>
-   
-  
-
 </body>
 </html>

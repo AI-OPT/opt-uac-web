@@ -30,3 +30,7 @@
 
 /**基本信息错误提示**/
 .information-cnt ul li .regsiter-note{position:absolute; top:44px; left:120px; line-height:18px;  color:#d32222; font-size:12px; min-width:210px;}
+
+/**注册邮箱错误提示样式 **/
+.regsiter-email-cnt ul .user label{ font-size:12px;  color:red; position:absolute; left:145px; top:40px; }
+

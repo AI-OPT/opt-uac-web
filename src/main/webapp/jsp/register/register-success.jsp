@@ -17,36 +17,17 @@
 </head>
 
 <body>
-
-  <div class="login-header"><!--登录头部-->
-     <div class="login-header-cnt">
-       <div class="login-header-cnt-logo"><img src="${_base}/theme/baas/images/logo.png"></div>
-       <div class="login-header-cnt-mail">注册成功</div>
-       </div>
-     
-     </div>
+<%@ include file="/inc/head-register-success.jsp"%>
   
-   <div class="regsiter-wrapper">
+     <div class="regsiter-wrapper-bg">
         <div class="regsiter-success-cnt">
-         <p class="clts">恭喜您，注册成功！
-         		<input type="hidden" name="accountIdKey" id="accountIdKey" value="${requestScope.accountIdKey}"/>
-         </p>
-          <p>
-          	<span id="jumpTo">5</span>s后会自动跳转到首页。
-          </p>
-        <script type="text/javascript"></script>  
+         
+         <p><img src="/theme/baas/images/logins.gif"><input type="hidden" name="accountIdKey" id="accountIdKey" value="${requestScope.accountIdKey}"/></p>
+         <p>注册成功！<span id="jumpTo">5</span>秒后我将载着你回到  <a href="#">首页>></a></p>
+        
         </div>
        
-    
-     
     </div>
-
-   <div class="login-foot">
-   ©2016 版权所有 亚信集团股份有限公司 京ICP备11005544号-15 京公网安备110108007119号
-   
-   </div>
-   
-  
-
+   <%@ include file="/inc/foot.jsp"%>
 </body>
 </html>
