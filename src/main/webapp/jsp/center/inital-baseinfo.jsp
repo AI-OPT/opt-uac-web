@@ -14,7 +14,9 @@
 		pager.render();
 	});
 })(); 
-
+function jsmethod(){
+    document.getElementById("nickName").focus();
+}
 </script>
 </head>
 
@@ -53,10 +55,10 @@
           <p class="ctn-a" id="initNickName">
           ${accountInfo.nickName}
           <input type="hidden" value="${accountInfo.nickName}" id="nk">
-          <a href="javascript:void(0);"><i class="icon-edit" id="editNik"></i></a>
+          <a href="javascript:void(0);"><i class="icon-edit"></i></a>
           </p>
-          <p class="ctn-b" style=" display:none;" id="setnick">
-          	<input type="text" id="nickName" value="${accountInfo.nickName}" class="int-medium" >
+          <p class="ctn-b" style=" display:none;" id="setnick" >
+          	<input type="text" id="nickName" value="${accountInfo.nickName}" class="int-medium"  onmouseout="jsmethod()">
           	<span id="showNickNameMsg" class="regsiter-note" style="display:none"></span>
           </p>
           <%-- <span  id="errorNickNameMsg">
