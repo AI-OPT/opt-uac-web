@@ -106,7 +106,7 @@
    <div class="login-header"><!--登录头部-->
      <div class="login-header-cnt">
        <div class="login-header-cnt-logo"><a href="${baas_pt_index_url }"><img src="${_base}/theme/baas/images/about.png"></a></div>
-       <div class="login-header-cnt-mail">帐户登录</div>
+       <div class="login-header-cnt-mail">账户登录</div>
        </div>
      
      </div>
