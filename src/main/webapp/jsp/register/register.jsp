@@ -112,10 +112,8 @@ return;
 		         		<span id="showPawMsg"></span>
 		         	</span>
 		         	</p>
-		         	<p class="regsiter-po">
-		         	<span class="regsiter-note" id="errorShowPM" style="display: none;">
-		         		<span id="showPM"></span>
-		         	</span>
+		         	<p>
+		         		<label id="errorShowPM" style="display: none;">6~14个字符，数字、字母、符号组合，不包含空格</label>
 		         	</p>
 		         	<div class="regsiter-set-password" style="display:none">
 				          <p class="low" id="strength_L">

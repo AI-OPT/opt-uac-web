@@ -176,7 +176,7 @@ define('app/register/register', function (require, exports, module) {
     	},
     	_passShow: function(){
     		$("#errorPawMsg").attr("style","display:none");
-    		$('#showPM').text("6~14个字符，数字、字母、符号组合，不包含空格");
+    		//$('#showPM').text("6~14个字符，数字、字母、符号组合，不包含空格");
 			$("#errorShowPM").attr("style","display:");
     	},
     	//校验密码
