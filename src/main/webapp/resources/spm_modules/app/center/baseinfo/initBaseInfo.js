@@ -80,7 +80,11 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 		},
 		_cancelNickName: function(){
 			$("#setnick").attr("style","display:none");	
-			$("#initNickName").attr("style","display:");	
+			$("#initNickName").attr("style","display:");
+			//展示数据
+			var nik = $("#nickName").val();
+			$("#showNick").text(nik);
+			
 		},
 		_validInfo: function(){
 			var nickNmae = $("#nickName").val();

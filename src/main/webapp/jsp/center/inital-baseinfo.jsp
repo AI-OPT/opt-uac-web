@@ -53,7 +53,7 @@ function jsmethod(){
           <li class="user">
           <p class="word">昵称</p>
           <p class="ctn-a" id="initNickName">
-          ${accountInfo.nickName}
+         <span id="showNick">${accountInfo.nickName}</span> 
           <input type="hidden" value="${accountInfo.nickName}" id="nk">
           <a href="javascript:void(0);"><i class="icon-edit"></i></a>
           </p>
