@@ -37,7 +37,7 @@ public final class Constants {
 		private URLConstant(){}
 		
 		/**首页*/
-		public static final String INDEX_URL_KEY = "opt_uac_web_index_url";
+		public static final String INDEX_URL_KEY = "/opt_uac_web_index_url";
 	}
 	
 	public static final class RetakePassword{
