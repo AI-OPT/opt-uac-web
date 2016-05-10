@@ -1,5 +1,5 @@
 <%@page import="com.ai.opt.uac.web.constants.Constants"%>
-<%@page import="com.ai.opt.sdk.configcenter.factory.ConfigCenterFactory"%>
+<%@page import="com.ai.opt.sdk.components.mcs.MCSClientFactory"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
@@ -14,7 +14,7 @@
     request.setAttribute("_baasBase", _baasBase);
 %>
 <%
-String baas_pt_index_url = ConfigCenterFactory.getConfigCenterClient().get(Constants.URLConstant.INDEX_URL_KEY);
+String baas_pt_index_url = MCSClientFactory.getCacheClient(Constants.LoginConstant.CACHE_NAMESPACE).get(Constants.URLConstant.INDEX_URL_KEY);
 request.setAttribute("baas_pt_index_url",baas_pt_index_url );
 %>
 <script>

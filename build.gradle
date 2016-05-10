@@ -60,7 +60,7 @@ dependencies {
 		exclude group: 'org.springframework', module: 'spring'
 	}
 	
-	compile ('com.ai.opt.sdk:opt-sdk:1.0.6-SNAPSHOT'){
+	compile ('com.ai.opt.sdk:opt-sdk:2.0-SNAPSHOT'){
 		exclude group: 'org.springframework', module: 'spring'
 		exclude group: 'org.quartz-scheduler'
 	}
@@ -70,15 +70,15 @@ dependencies {
 	
 	//dubbo接口 系统管理
 	
-	compile 'com.ai.opt.uac:sso:1.0.0-SNAPSHOT'
+	compile 'com.ai.opt.uac:sso:2.0-SNAPSHOT'
 	compile 'com.ai.opt.xss.filter:opt-xss-firewall:1.0-SNAPSHOT'
-	compile 'com.ai.opt.uni.session:opt-uni-session:1.0-SNAPSHOT'
+	compile 'com.ai.opt.uni.session:opt-uni-session:2.0-SNAPSHOT'
 	compile 'com.ai.opt.sso.client:opt-sso-client:1.0.1-SNAPSHOT'
 	
-	compile 'com.ai.opt.uac:account:1.0.0-SNAPSHOT'
-	compile 'com.ai.opt.uac:register:1.0.0-SNAPSHOT'
-	compile 'com.ai.opt.uac:security:1.0.0-SNAPSHOT'
-	compile 'com.ai.opt.uac:seq:1.0.0-SNAPSHOT'
+	compile 'com.ai.opt.uac:account:2.0-SNAPSHOT'
+	compile 'com.ai.opt.uac:register:2.0-SNAPSHOT'
+	compile 'com.ai.opt.uac:security:2.0-SNAPSHOT'
+	compile 'com.ai.opt.uac:seq:2.0-SNAPSHOT'
 	
 	testCompile(
 		"org.springframework:spring-test:3.2.6.RELEASE",

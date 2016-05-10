@@ -17,7 +17,7 @@ import com.ai.net.xss.util.StringUtil;
 import com.ai.opt.base.vo.BaseInfo;
 import com.ai.opt.base.vo.BaseResponse;
 import com.ai.opt.base.vo.ResponseHeader;
-import com.ai.opt.sdk.util.DubboConsumerFactory;
+import com.ai.opt.sdk.dubbo.util.DubboConsumerFactory;
 import com.ai.opt.sdk.web.model.ResponseData;
 import com.ai.opt.sso.client.filter.SSOClientConstants;
 import com.ai.opt.sso.client.filter.SSOClientUser;

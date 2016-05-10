@@ -5,7 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.ai.opt.base.exception.RPCSystemException;
-import com.ai.opt.sdk.util.DubboConsumerFactory;
+import com.ai.opt.sdk.dubbo.util.DubboConsumerFactory;
 import com.ai.opt.sso.principal.BssCredentials;
 import com.ai.opt.uac.api.sso.interfaces.ILoginSV;
 import com.ai.opt.uac.api.sso.param.UserLoginResponse;

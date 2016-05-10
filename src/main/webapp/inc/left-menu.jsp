@@ -1,5 +1,5 @@
 <%@page import="com.ai.opt.uac.web.constants.Constants"%>
-<%@page import="com.ai.opt.sdk.configcenter.factory.ConfigCenterFactory"%>
+<%@page import="com.ai.opt.sdk.components.mcs.MCSClientFactory"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <div class="subnav" >
    <div class="nav" >

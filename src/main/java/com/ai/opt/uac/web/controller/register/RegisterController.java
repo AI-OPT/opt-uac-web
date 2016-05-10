@@ -22,9 +22,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ai.opt.base.vo.BaseResponse;
 import com.ai.opt.base.vo.ResponseHeader;
-import com.ai.opt.sdk.cache.factory.CacheClientFactory;
-import com.ai.opt.sdk.configcenter.factory.ConfigCenterFactory;
-import com.ai.opt.sdk.util.DubboConsumerFactory;
+import com.ai.opt.sdk.components.ccs.CCSClientFactory;
+import com.ai.opt.sdk.components.mcs.MCSClientFactory;
+import com.ai.opt.sdk.dubbo.util.DubboConsumerFactory;
 import com.ai.opt.sdk.util.Md5Encoder;
 import com.ai.opt.sdk.util.RandomUtil;
 import com.ai.opt.sdk.util.StringUtil;
@@ -55,6 +55,7 @@ import com.ai.opt.uac.web.model.register.UpdateEmailReq;
 import com.ai.opt.uac.web.util.CacheUtil;
 import com.ai.opt.uac.web.util.IPUtil;
 import com.ai.opt.uac.web.util.VerifyUtil;
+import com.ai.paas.ipaas.ccs.IConfigClient;
 import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
 import com.ai.runner.base.exception.CallerException;
 import com.ai.runner.center.mmp.api.manager.interfaces.SMSServices;
@@ -105,7 +106,7 @@ public class RegisterController {
 		request.setAccountPassword(password);
 		try {
 
-			ICacheClient iCacheClient = CacheClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
+			ICacheClient iCacheClient = MCSClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
 			String pictureCode = iCacheClient.get(Register.CACHE_KEY_VERIFY_PICTURE + session.getId());
 			ResponseHeader header = new ResponseHeader();
 			header.setIsSuccess(true);
@@ -263,7 +264,7 @@ public class RegisterController {
 			// 校验验证码是否正确
 			String inputIdentify = request.getIdentifyCode();
 			// 获取缓存中的验证码
-			ICacheClient iCacheClient = CacheClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
+			ICacheClient iCacheClient = MCSClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
 			String emailAddidentify = iCacheClient.get(Constants.Register.REGISTER_EMAIL_KEY + session.getId());
 			ResponseHeader header = new ResponseHeader();
             header.setIsSuccess(false);
@@ -359,7 +360,8 @@ public class RegisterController {
 	public ResponseData<String> sendEmail(UpdateEmailReq emailReq, HttpServletRequest request) {
 		ResponseData<String> responseData = null;
 		try {
-			ICacheClient iCacheClient = CacheClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
+			ICacheClient iCacheClient = MCSClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
+			IConfigClient defaultConfigClient = CCSClientFactory.getDefaultConfigClient();
 			IAccountManageSV iAccountManageSV = DubboConsumerFactory.getService("iAccountManageSV");
 			AccountQueryRequest req = new AccountQueryRequest();
 			String email = emailReq.getEmail();
@@ -392,7 +394,7 @@ public class RegisterController {
 					String identifyCode = RandomUtil.randomNum(EmailVerifyConstants.VERIFY_SIZE);
 					String[] tomails = new String[] { email };
 					// 超时时间
-					String overTimeStr = ConfigCenterFactory.getConfigCenterClient().get(EmailVerifyConstants.VERIFY_OVERTIME_KEY);
+					String overTimeStr = defaultConfigClient.get(EmailVerifyConstants.VERIFY_OVERTIME_KEY);
 					String overTime = ObjectUtils.toString(Integer.valueOf(overTimeStr) / 60);
 					String[] data = new String[] { nickName, identifyCode, overTime };
 					SendEmailRequest emailRequest = new SendEmailRequest();
@@ -406,7 +408,7 @@ public class RegisterController {
 					String key = Register.REGISTER_EMAIL_KEY + request.getSession().getId();
 					iCacheClient.setex(key, Integer.valueOf(overTimeStr), emailAddIdentify);
 					// 存发送次数到缓存
-					String maxTimeStr = ConfigCenterFactory.getConfigCenterClient().get(EmailVerifyConstants.SEND_VERIFY_MAX_TIME_KEY);
+					String maxTimeStr = defaultConfigClient.get(EmailVerifyConstants.SEND_VERIFY_MAX_TIME_KEY);
 					iCacheClient.setex(emailskey, Integer.valueOf(maxTimeStr), emailtimes);
 
 					ResponseHeader header = new ResponseHeader();
@@ -478,7 +480,8 @@ public class RegisterController {
 			// 获取ip发送次数
 			// String maxTimes =
 			// ConfigCenterFactory.getConfigCenterClient().get(PhoneVerifyConstants.SEND_VERIFY_IP_MAX_NO_KEY);
-			ICacheClient cacheClient = CacheClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
+			ICacheClient cacheClient = MCSClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
+			IConfigClient defaultConfigClient = CCSClientFactory.getDefaultConfigClient();
 			String times = cacheClient.get(smskey);
 			// String realIpTimes = cacheClient.get(ipkey);
 			if (StringUtil.isBlank(times)) {
@@ -493,7 +496,7 @@ public class RegisterController {
 				data.setTemplateId(PhoneVerifyConstants.TEMPLATE_REGISTER_ID);
 				String identifyCode = RandomUtil.randomNum(PhoneVerifyConstants.VERIFY_SIZE);
 				String codeContent = "${VERIFY}:" + identifyCode;
-				String overTimeStr = ConfigCenterFactory.getConfigCenterClient().get(PhoneVerifyConstants.VERIFY_OVERTIME_KEY);
+				String overTimeStr = defaultConfigClient.get(PhoneVerifyConstants.VERIFY_OVERTIME_KEY);
 				String timeContent = "^${VALIDMINS}:" + Integer.valueOf(overTimeStr) / 60;
 				data.setGsmContent(codeContent + timeContent);
 				dataList.add(data);
@@ -503,10 +506,10 @@ public class RegisterController {
 				// 存手機和验证码到缓存
 				String phoneAddIdentufy = sMDataReq.getPhone() + ";" + identifyCode;
 				String key = Register.REGISTER_PHONE_KEY + request.getSession().getId();
-				ICacheClient iCacheClient = CacheClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
+				ICacheClient iCacheClient = MCSClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
 				iCacheClient.setex(key, Integer.valueOf(overTimeStr), phoneAddIdentufy);
 				// 存发送次数到缓存
-				String maxTimeStr = ConfigCenterFactory.getConfigCenterClient().get(PhoneVerifyConstants.SEND_VERIFY_MAX_TIME_KEY);
+				String maxTimeStr = defaultConfigClient.get(PhoneVerifyConstants.SEND_VERIFY_MAX_TIME_KEY);
 				iCacheClient.setex(smskey, Integer.valueOf(maxTimeStr), smstimes);
 				// 存ip发送次数到缓存
 				// if(!StringUtil.isBlank(realIpTimes)){
@@ -561,38 +564,44 @@ public class RegisterController {
 	@RequestMapping("/login")
 	@ResponseBody
 	public ResponseData<String> autoLogin(@RequestParam(value = "accountIdKey", required = false) String accountIdKey, HttpServletRequest request, HttpServletResponse response) {
-		ICacheClient iCacheClient = CacheClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
-		// 获取accountkey
-		String accountId = iCacheClient.get(accountIdKey);
-		String service_url = "";
-		String newuuid ="";
-		if (StringUtil.isBlank(accountId)) {
-			// 跳转到登录页面
-			service_url = SSOClientUtil.getCasServerLoginUrlRuntime(request);
-		} else {
-		    IAccountManageSV iAccountManageSV = DubboConsumerFactory.getService("iAccountManageSV");
-	        AccountQueryRequest accountRequest = new AccountQueryRequest();
-	        accountRequest.setAccountId(Long.valueOf(accountId));
-	        AccountQueryResponse account = iAccountManageSV.queryBaseInfo(accountRequest);
-	        ILoginSV iloginSV = DubboConsumerFactory.getService("iLoginSV");
-	        UserLoginResponse logaccout = iloginSV.queryAccountByUserName(account.getPhone());
-	        // String uuid = request.getParameter(Constants.UUID.KEY_NAME);
-	        // 删除缓存
-	        CacheUtil.deletCache(accountIdKey, Register.CACHE_NAMESPACE);
-	        String phone = account.getPhone();
-	        String accountPassword = logaccout.getAccountPassword();
-	        LoginUser loginUser = new LoginUser(phone, accountPassword);
-	        newuuid = UUIDUtil.genId32();
-	        CacheUtil.setValue(newuuid, Constants.UUID.OVERTIME, loginUser, Constants.LoginConstant.CACHE_NAMESPACE);
-	        // localhost:8080/uac/registerLogin?k=UUID&service=URL
-			// 从配置中心读取跳转地址
-			service_url = ConfigCenterFactory.getConfigCenterClient().get(Constants.URLConstant.INDEX_URL_KEY);
+		ICacheClient iCacheClient = MCSClientFactory.getCacheClient(Register.CACHE_NAMESPACE);
+		IConfigClient defaultConfigClient = CCSClientFactory.getDefaultConfigClient();
+		ResponseData<String> responseData = null;
+		try{
+		 // 获取accountkey
+	        String accountId = iCacheClient.get(accountIdKey);
+	        String service_url = "";
+	        String newuuid ="";
+	        if (StringUtil.isBlank(accountId)) {
+	            // 跳转到登录页面
+	            service_url = SSOClientUtil.getCasServerLoginUrlRuntime(request);
+	        } else {
+	            IAccountManageSV iAccountManageSV = DubboConsumerFactory.getService("iAccountManageSV");
+	            AccountQueryRequest accountRequest = new AccountQueryRequest();
+	            accountRequest.setAccountId(Long.valueOf(accountId));
+	            AccountQueryResponse account = iAccountManageSV.queryBaseInfo(accountRequest);
+	            ILoginSV iloginSV = DubboConsumerFactory.getService("iLoginSV");
+	            UserLoginResponse logaccout = iloginSV.queryAccountByUserName(account.getPhone());
+	            // String uuid = request.getParameter(Constants.UUID.KEY_NAME);
+	            // 删除缓存
+	            CacheUtil.deletCache(accountIdKey, Register.CACHE_NAMESPACE);
+	            String phone = account.getPhone();
+	            String accountPassword = logaccout.getAccountPassword();
+	            LoginUser loginUser = new LoginUser(phone, accountPassword);
+	            newuuid = UUIDUtil.genId32();
+	            CacheUtil.setValue(newuuid, Constants.UUID.OVERTIME, loginUser, Constants.LoginConstant.CACHE_NAMESPACE);
+	            // localhost:8080/uac/registerLogin?k=UUID&service=URL
+	            // 从配置中心读取跳转地址
+	            service_url = defaultConfigClient.get(Constants.URLConstant.INDEX_URL_KEY);
+	        }
+	        String url = "/registerLogin?" + Constants.UUID.KEY_NAME + "=" + newuuid + "&service=" + service_url;
+	         responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "成功，跳转", url);
+	        ResponseHeader responseHeader = new ResponseHeader(true, Constants.RetakePassword.SUCCESS_CODE, null);
+	        responseData.setResponseHeader(responseHeader);
+	       
+		}catch(Exception e){
+		    LOG.error("跳转登录错误：" + e);
 		}
-		String url = "/registerLogin?" + Constants.UUID.KEY_NAME + "=" + newuuid + "&service=" + service_url;
-		ResponseData<String> responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "成功，跳转", url);
-		ResponseHeader responseHeader = new ResponseHeader(true, Constants.RetakePassword.SUCCESS_CODE, null);
-		responseData.setResponseHeader(responseHeader);
-		return responseData;
+		 return responseData;
 	}
-
 }

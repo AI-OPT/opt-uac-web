@@ -11,12 +11,11 @@ import org.slf4j.LoggerFactory;
 
 import com.ai.net.xss.util.StringUtil;
 import com.ai.opt.base.vo.ResponseHeader;
-import com.ai.opt.sdk.cache.factory.CacheClientFactory;
-import com.ai.opt.sdk.configcenter.client.IConfigCenterClient;
-import com.ai.opt.sdk.configcenter.factory.ConfigCenterFactory;
-import com.ai.opt.sdk.mail.EmailFactory;
-import com.ai.opt.sdk.mail.EmailTemplateUtil;
-import com.ai.opt.sdk.util.DubboConsumerFactory;
+import com.ai.opt.sdk.components.ccs.CCSClientFactory;
+import com.ai.opt.sdk.components.mail.EmailFactory;
+import com.ai.opt.sdk.components.mail.EmailTemplateUtil;
+import com.ai.opt.sdk.components.mcs.MCSClientFactory;
+import com.ai.opt.sdk.dubbo.util.DubboConsumerFactory;
 import com.ai.opt.sdk.util.RandomUtil;
 import com.ai.opt.sdk.web.model.ResponseData;
 import com.ai.opt.uac.api.account.interfaces.IAccountManageSV;
@@ -29,6 +28,7 @@ import com.ai.opt.uac.web.constants.VerifyConstants;
 import com.ai.opt.uac.web.constants.VerifyConstants.PictureVerifyConstants;
 import com.ai.opt.uac.web.constants.VerifyConstants.ResultCodeConstants;
 import com.ai.opt.uac.web.model.email.SendEmailRequest;
+import com.ai.paas.ipaas.ccs.IConfigClient;
 import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
 import com.ai.runner.center.mmp.api.manager.interfaces.SMSServices;
 import com.ai.runner.center.mmp.api.manager.param.SMDataInfoNotify;
@@ -54,36 +54,41 @@ public class VerifyUtil {
 		// 取随机产生的认证码
 		String verifyCode = RandomUtil.randomString(PictureVerifyConstants.VERIFY_SIZE);
 		// 将认证码存入缓存
-		ICacheClient cacheClient = CacheClientFactory.getCacheClient(namespace);
-		String overTimeStr = ConfigCenterFactory.getConfigCenterClient().get(PictureVerifyConstants.VERIFY_OVERTIME_KEY);
-		cacheClient.setex(cacheKey, Integer.valueOf(overTimeStr), verifyCode);
-		LOGGER.debug("cacheKey=" + cacheKey + ",verifyCode=" + verifyCode);
-		// 将认证码显示到图象中
-		g.setColor(new Color(0x10a2fb));
+		try{
+		    ICacheClient cacheClient = MCSClientFactory.getCacheClient(namespace);
+	        IConfigClient defaultConfigClient = CCSClientFactory.getDefaultConfigClient();
+	        String overTimeStr = defaultConfigClient.get(PictureVerifyConstants.VERIFY_OVERTIME_KEY);
+	        cacheClient.setex(cacheKey, Integer.valueOf(overTimeStr), verifyCode);
+	        LOGGER.debug("cacheKey=" + cacheKey + ",verifyCode=" + verifyCode);
+	        // 将认证码显示到图象中
+	        g.setColor(new Color(0x10a2fb));
 
-		g.setFont(new Font("Atlantic Inline", Font.PLAIN, 30));
-		String Str = verifyCode.substring(0, 1);
-		g.drawString(Str, 8, 25);
+	        g.setFont(new Font("Atlantic Inline", Font.PLAIN, 30));
+	        String Str = verifyCode.substring(0, 1);
+	        g.drawString(Str, 8, 25);
 
-		Str = verifyCode.substring(1, 2);
-		g.drawString(Str, 28, 30);
-		Str = verifyCode.substring(2, 3);
-		g.drawString(Str, 48, 27);
+	        Str = verifyCode.substring(1, 2);
+	        g.drawString(Str, 28, 30);
+	        Str = verifyCode.substring(2, 3);
+	        g.drawString(Str, 48, 27);
 
-		Str = verifyCode.substring(3, 4);
-		g.drawString(Str, 68, 32);
-		// 随机产生88个干扰点，使图象中的认证码不易被其它程序探测到
-		Random random = new Random();
-		for (int i = 0; i < 88; i++) {
-			int x = random.nextInt(width);
-			int y = random.nextInt(height);
-			g.drawOval(x, y, 0, 0);
+	        Str = verifyCode.substring(3, 4);
+	        g.drawString(Str, 68, 32);
+	        // 随机产生88个干扰点，使图象中的认证码不易被其它程序探测到
+	        Random random = new Random();
+	        for (int i = 0; i < 88; i++) {
+	            int x = random.nextInt(width);
+	            int y = random.nextInt(height);
+	            g.drawOval(x, y, 0, 0);
+	        }
+
+	        // 图象生效
+	        g.dispose();
+
+		}catch(Exception e){
+		    e.printStackTrace();
 		}
-
-		// 图象生效
-		g.dispose();
-		return image;
-
+		 return image;
 	}
 
 	/**
@@ -287,31 +292,37 @@ public class VerifyUtil {
 	public static ResponseData<String> checkIPSendPhoneCount(String namespace, String key) {
 		ResponseData<String> responseData = null;
 		ResponseHeader header = null;
-		ICacheClient cacheClient = CacheClientFactory.getCacheClient(namespace);
+		ICacheClient cacheClient = MCSClientFactory.getCacheClient(namespace);
 		String countStr = cacheClient.get(key);
-		IConfigCenterClient configCenterClient = ConfigCenterFactory.getConfigCenterClient();
-		String overTime = configCenterClient.get(VerifyConstants.PhoneVerifyConstants.IP_SEND_OVERTIME_KEY);
-		if (!StringUtil.isBlank(countStr)) {
-			String maxNoStr = configCenterClient.get(VerifyConstants.PhoneVerifyConstants.SEND_VERIFY_IP_MAX_NO_KEY);
-			int maxNo = Integer.valueOf(maxNoStr);
-			int count = Integer.valueOf(countStr);
-			count++;
-			if (count > maxNo) {
-				String message = "频繁发送手机验证码，已被禁止" + Integer.valueOf(overTime) / 60 + "分钟";
-				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, message);
-				header = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_VERIFY_ERROR, message);
-				responseData.setResponseHeader(header);
-				return responseData;
-			}else{
-				cacheClient.setex(key, Integer.valueOf(overTime), Integer.toString(count));
-			}
-		}else{
-			cacheClient.setex(key, Integer.valueOf(overTime), "1");
+		IConfigClient configCenterClient = CCSClientFactory.getDefaultConfigClient();
+		//IConfigCenterClient configCenterClient = ConfigCenterFactory.getConfigCenterClient();
+		try{
+		    String overTime = configCenterClient.get(VerifyConstants.PhoneVerifyConstants.IP_SEND_OVERTIME_KEY);
+	        if (!StringUtil.isBlank(countStr)) {
+	            String maxNoStr = configCenterClient.get(VerifyConstants.PhoneVerifyConstants.SEND_VERIFY_IP_MAX_NO_KEY);
+	            int maxNo = Integer.valueOf(maxNoStr);
+	            int count = Integer.valueOf(countStr);
+	            count++;
+	            if (count > maxNo) {
+	                String message = "频繁发送手机验证码，已被禁止" + Integer.valueOf(overTime) / 60 + "分钟";
+	                responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, message);
+	                header = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_VERIFY_ERROR, message);
+	                responseData.setResponseHeader(header);
+	                return responseData;
+	            }else{
+	                cacheClient.setex(key, Integer.valueOf(overTime), Integer.toString(count));
+	            }
+	        }else{
+	            cacheClient.setex(key, Integer.valueOf(overTime), "1");
+	        }
+	        responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, null);
+	        header = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.REGISTER_VERIFY_ERROR, null);
+	        responseData.setResponseHeader(header);
+	        return responseData;  
+		}catch(Exception e){
+		   e.printStackTrace(); 
 		}
-		responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, null);
-		header = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.REGISTER_VERIFY_ERROR, null);
-		responseData.setResponseHeader(header);
-		return responseData;
+		 return responseData;  
 	}
 	
 	/**
@@ -324,31 +335,37 @@ public class VerifyUtil {
 	public static ResponseData<String> checkIPSendEmailCount(String namespace, String key) {
 		ResponseData<String> responseData = null;
 		ResponseHeader header = null;
-		ICacheClient cacheClient = CacheClientFactory.getCacheClient(namespace);
+		ICacheClient cacheClient = MCSClientFactory.getCacheClient(namespace);
 		String countStr = cacheClient.get(key);
-		IConfigCenterClient configCenterClient = ConfigCenterFactory.getConfigCenterClient();
+		//IConfigCenterClient configCenterClient = ConfigCenterFactory.getConfigCenterClient();
+		IConfigClient configCenterClient = CCSClientFactory.getDefaultConfigClient();
 		//限制时间
-		String overTime = configCenterClient.get(VerifyConstants.EmailVerifyConstants.IP_SEND_OVERTIME_KEY);
-		if (!StringUtil.isBlank(countStr)) {
-			String maxNoStr = configCenterClient.get(VerifyConstants.EmailVerifyConstants.SEND_VERIFY_IP_MAX_NO_KEY);
-			int maxNo = Integer.valueOf(maxNoStr);
-			int count = Integer.valueOf(countStr);
-			count++;
-			if (count > maxNo) {
-				String message = "频繁发送邮箱验证码，已被禁止" + Integer.valueOf(overTime) / 60 + "分钟";
-				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, message);
-				header = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_VERIFY_ERROR, message);
-				responseData.setResponseHeader(header);
-				return responseData;
-			}else{
-				cacheClient.setex(key, Integer.valueOf(overTime), Integer.toString(count));
-			}
-		}else{
-			cacheClient.setex(key, Integer.valueOf(overTime), "1");
+		try{
+		    String overTime = configCenterClient.get(VerifyConstants.EmailVerifyConstants.IP_SEND_OVERTIME_KEY);
+	        if (!StringUtil.isBlank(countStr)) {
+	            String maxNoStr = configCenterClient.get(VerifyConstants.EmailVerifyConstants.SEND_VERIFY_IP_MAX_NO_KEY);
+	            int maxNo = Integer.valueOf(maxNoStr);
+	            int count = Integer.valueOf(countStr);
+	            count++;
+	            if (count > maxNo) {
+	                String message = "频繁发送邮箱验证码，已被禁止" + Integer.valueOf(overTime) / 60 + "分钟";
+	                responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, message);
+	                header = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.REGISTER_VERIFY_ERROR, message);
+	                responseData.setResponseHeader(header);
+	                return responseData;
+	            }else{
+	                cacheClient.setex(key, Integer.valueOf(overTime), Integer.toString(count));
+	            }
+	        }else{
+	            cacheClient.setex(key, Integer.valueOf(overTime), "1");
+	        }
+	        responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, null);
+	        header = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.REGISTER_VERIFY_ERROR, null);
+	        responseData.setResponseHeader(header);
+	        return responseData;
+		}catch(Exception e){
+		    e.printStackTrace();
 		}
-		responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, null);
-		header = new ResponseHeader(true, VerifyConstants.ResultCodeConstants.REGISTER_VERIFY_ERROR, null);
-		responseData.setResponseHeader(header);
-		return responseData;
+		 return responseData;
 	}
 }

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <%@page import="com.ai.opt.uac.web.constants.Constants"%>
-<%@page import="com.ai.opt.sdk.configcenter.factory.ConfigCenterFactory"%>
+<%@page import="com.ai.opt.sdk.components.mcs.MCSClientFactory"%>
 <%@page import="java.net.URLDecoder"%>
 <%@page import="java.util.Date"%>
 <%@ page pageEncoding="UTF-8" %>

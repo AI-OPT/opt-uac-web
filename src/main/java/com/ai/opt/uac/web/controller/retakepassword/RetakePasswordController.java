@@ -21,10 +21,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.ai.opt.base.vo.BaseResponse;
 import com.ai.opt.base.vo.ResponseHeader;
-import com.ai.opt.sdk.cache.factory.CacheClientFactory;
-import com.ai.opt.sdk.configcenter.factory.ConfigCenterFactory;
+import com.ai.opt.sdk.components.ccs.CCSClientFactory;
+import com.ai.opt.sdk.components.mcs.MCSClientFactory;
+import com.ai.opt.sdk.dubbo.util.DubboConsumerFactory;
 import com.ai.opt.sdk.util.BeanUtils;
-import com.ai.opt.sdk.util.DubboConsumerFactory;
+
 import com.ai.opt.sdk.util.Md5Encoder;
 import com.ai.opt.sdk.util.RandomUtil;
 import com.ai.opt.sdk.util.StringUtil;
@@ -50,6 +51,7 @@ import com.ai.opt.uac.web.model.retakepassword.SafetyConfirmData;
 import com.ai.opt.uac.web.util.CacheUtil;
 import com.ai.opt.uac.web.util.IPUtil;
 import com.ai.opt.uac.web.util.VerifyUtil;
+import com.ai.paas.ipaas.ccs.IConfigClient;
 import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
 import com.ai.runner.center.mmp.api.manager.param.SMData;
 import com.ai.runner.center.mmp.api.manager.param.SMDataInfoNotify;
@@ -97,7 +99,7 @@ public class RetakePasswordController {
 		ResponseData<String> responseData = null;
 		String cacheKey = Constants.RetakePassword.CACHE_KEY_VERIFY_PICTURE_USER + request.getSession().getId();
 		// 检查图片验证码
-		ICacheClient cacheClient = CacheClientFactory.getCacheClient(RetakePassword.CACHE_NAMESPACE);
+		ICacheClient cacheClient = MCSClientFactory.getCacheClient(RetakePassword.CACHE_NAMESPACE);
 		String pictureVerifyCodeCache = cacheClient.get(cacheKey);
 		ResponseData<String> pictureCheck = VerifyUtil.checkPictureVerifyCode(pictureVerifyCode, pictureVerifyCodeCache);
 		String resultCode = pictureCheck.getResponseHeader().getResultCode();
@@ -187,85 +189,91 @@ public class RetakePasswordController {
 		SSOClientUser userClient = (SSOClientUser) CacheUtil.getValue(uuid, Constants.RetakePassword.CACHE_NAMESPACE, SSOClientUser.class);
 		ResponseData<String> responseData = null;
 		String sessionId = request.getSession().getId();
-		if (userClient != null) {
-			if (RetakePassword.CHECK_TYPE_PHONE.equals(confirmType)) {
-				// 检查ip发送次数
-				ResponseData<String> checkIpSendPhone = VerifyUtil.checkIPSendPhoneCount(RetakePassword.CACHE_NAMESPACE, IPUtil.getIp(request)+RetakePassword.CACHE_KEY_IP_SEND_PHONE_NUM);
-				if(!checkIpSendPhone.getResponseHeader().isSuccess()){
-					return checkIpSendPhone;
-				}
-				// 发送手机验证码
-				String isSuccess = sendPhoneVerifyCode(sessionId, userClient);
-				if ("0000".equals(isSuccess)) {
-					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "短信验证码发送成功", null);
-					ResponseHeader header = new ResponseHeader();
-					header.setIsSuccess(true);
-					header.setResultCode(ResultCodeConstants.SUCCESS_CODE);
-					responseData.setResponseHeader(header);
-					return responseData;
-				} else if ("0002".equals(isSuccess)) {
-					String maxTimeStr = ConfigCenterFactory.getConfigCenterClient().get(PhoneVerifyConstants.SEND_VERIFY_MAX_TIME_KEY);
-					String errorMsg = Integer.valueOf(maxTimeStr)+"分钟内不可重复发送";
-					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, errorMsg, null);
-					ResponseHeader header = new ResponseHeader();
-					header.setIsSuccess(false);
-					header.setResultCode(ResultCodeConstants.REGISTER_VERIFY_ERROR);
-					header.setResultMessage(errorMsg);
-					responseData.setResponseHeader(header);
-					return responseData;
-				} else {
-					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "短信验证码发送失败", null);
-					ResponseHeader header = new ResponseHeader();
-					header.setIsSuccess(false);
-					header.setResultCode(ResultCodeConstants.ERROR_CODE);
-					responseData.setResponseHeader(header);
-					return responseData;
-				}
-			} else if (RetakePassword.CHECK_TYPE_EMAIL.equals(confirmType)) {
-				// 检查ip发送次数
-				ResponseData<String> checkIpSendEmail = VerifyUtil.checkIPSendEmailCount(RetakePassword.CACHE_NAMESPACE, IPUtil.getIp(request)+RetakePassword.CACHE_KEY_IP_SEND_EMAIL_NUM);
-				if(!checkIpSendEmail.getResponseHeader().isSuccess()){
-					return checkIpSendEmail;
-				}
-				// 发送邮件验证码
-				String resultCode = sendEmailVerifyCode(sessionId, userClient);
-				if ("0000".equals(resultCode)) {
-					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "邮箱验证码发送成功", null);
-					ResponseHeader header = new ResponseHeader();
-					header.setIsSuccess(true);
-					header.setResultCode(ResultCodeConstants.SUCCESS_CODE);
-					responseData.setResponseHeader(header);
-					return responseData;				
-				} else if ("0002".equals(resultCode)) {
-					String maxTimeStr = ConfigCenterFactory.getConfigCenterClient().get(EmailVerifyConstants.SEND_VERIFY_MAX_TIME_KEY);
-					String errorMsg = Integer.valueOf(maxTimeStr)/60+"分钟内不可重复发送";
-					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, errorMsg, null);
-					ResponseHeader header = new ResponseHeader();
-					header.setIsSuccess(false);
-					header.setResultCode(ResultCodeConstants.REGISTER_VERIFY_ERROR);
-					header.setResultMessage(errorMsg);
-					responseData.setResponseHeader(header);
-					return responseData;
-				} else {
-					responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "邮箱验证码发送失败", null);
-					ResponseHeader header = new ResponseHeader();
-					header.setIsSuccess(false);
-					header.setResultCode(ResultCodeConstants.ERROR_CODE);
-					responseData.setResponseHeader(header);
-					return responseData;
-				}
-			} else {
-				responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "验证码发送失败", null);
-				ResponseHeader responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.ERROR_CODE, "验证码发送失败");
-				responseData.setResponseHeader(responseHeader);
-				return responseData;
-			}
-		} else {
-			responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "认证信息失效", "/retakePassword/userinfo");
-			ResponseHeader responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.USER_INFO_NULL, "认证信息失效");
-			responseData.setResponseHeader(responseHeader);
-			return responseData;
+		IConfigClient defaultConfigClient = CCSClientFactory.getDefaultConfigClient();
+		try{
+		    if (userClient != null) {
+	            if (RetakePassword.CHECK_TYPE_PHONE.equals(confirmType)) {
+	                // 检查ip发送次数
+	                ResponseData<String> checkIpSendPhone = VerifyUtil.checkIPSendPhoneCount(RetakePassword.CACHE_NAMESPACE, IPUtil.getIp(request)+RetakePassword.CACHE_KEY_IP_SEND_PHONE_NUM);
+	                if(!checkIpSendPhone.getResponseHeader().isSuccess()){
+	                    return checkIpSendPhone;
+	                }
+	                // 发送手机验证码
+	                String isSuccess = sendPhoneVerifyCode(sessionId, userClient);
+	                if ("0000".equals(isSuccess)) {
+	                    responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "短信验证码发送成功", null);
+	                    ResponseHeader header = new ResponseHeader();
+	                    header.setIsSuccess(true);
+	                    header.setResultCode(ResultCodeConstants.SUCCESS_CODE);
+	                    responseData.setResponseHeader(header);
+	                    return responseData;
+	                } else if ("0002".equals(isSuccess)) {
+	                    String maxTimeStr = defaultConfigClient.get(PhoneVerifyConstants.SEND_VERIFY_MAX_TIME_KEY);
+	                    String errorMsg = Integer.valueOf(maxTimeStr)+"分钟内不可重复发送";
+	                    responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, errorMsg, null);
+	                    ResponseHeader header = new ResponseHeader();
+	                    header.setIsSuccess(false);
+	                    header.setResultCode(ResultCodeConstants.REGISTER_VERIFY_ERROR);
+	                    header.setResultMessage(errorMsg);
+	                    responseData.setResponseHeader(header);
+	                    return responseData;
+	                } else {
+	                    responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "短信验证码发送失败", null);
+	                    ResponseHeader header = new ResponseHeader();
+	                    header.setIsSuccess(false);
+	                    header.setResultCode(ResultCodeConstants.ERROR_CODE);
+	                    responseData.setResponseHeader(header);
+	                    return responseData;
+	                }
+	            } else if (RetakePassword.CHECK_TYPE_EMAIL.equals(confirmType)) {
+	                // 检查ip发送次数
+	                ResponseData<String> checkIpSendEmail = VerifyUtil.checkIPSendEmailCount(RetakePassword.CACHE_NAMESPACE, IPUtil.getIp(request)+RetakePassword.CACHE_KEY_IP_SEND_EMAIL_NUM);
+	                if(!checkIpSendEmail.getResponseHeader().isSuccess()){
+	                    return checkIpSendEmail;
+	                }
+	                // 发送邮件验证码
+	                String resultCode = sendEmailVerifyCode(sessionId, userClient);
+	                if ("0000".equals(resultCode)) {
+	                    responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "邮箱验证码发送成功", null);
+	                    ResponseHeader header = new ResponseHeader();
+	                    header.setIsSuccess(true);
+	                    header.setResultCode(ResultCodeConstants.SUCCESS_CODE);
+	                    responseData.setResponseHeader(header);
+	                    return responseData;                
+	                } else if ("0002".equals(resultCode)) {
+	                    String maxTimeStr = defaultConfigClient.get(EmailVerifyConstants.SEND_VERIFY_MAX_TIME_KEY);
+	                    String errorMsg = Integer.valueOf(maxTimeStr)/60+"分钟内不可重复发送";
+	                    responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, errorMsg, null);
+	                    ResponseHeader header = new ResponseHeader();
+	                    header.setIsSuccess(false);
+	                    header.setResultCode(ResultCodeConstants.REGISTER_VERIFY_ERROR);
+	                    header.setResultMessage(errorMsg);
+	                    responseData.setResponseHeader(header);
+	                    return responseData;
+	                } else {
+	                    responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "邮箱验证码发送失败", null);
+	                    ResponseHeader header = new ResponseHeader();
+	                    header.setIsSuccess(false);
+	                    header.setResultCode(ResultCodeConstants.ERROR_CODE);
+	                    responseData.setResponseHeader(header);
+	                    return responseData;
+	                }
+	            } else {
+	                responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_FAILURE, "验证码发送失败", null);
+	                ResponseHeader responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.ERROR_CODE, "验证码发送失败");
+	                responseData.setResponseHeader(responseHeader);
+	                return responseData;
+	            }
+	        } else {
+	            responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "认证信息失效", "/retakePassword/userinfo");
+	            ResponseHeader responseHeader = new ResponseHeader(false, VerifyConstants.ResultCodeConstants.USER_INFO_NULL, "认证信息失效");
+	            responseData.setResponseHeader(responseHeader);
+	            return responseData;
+	        } 
+		}catch(Exception e){
+		    LOGGER.error("验证码错误：" + e);
 		}
+		return responseData;
 	}
 
 	/**
@@ -277,43 +285,49 @@ public class RetakePasswordController {
 		// 查询是否发送过短信
 		String smstimes = "1";
 		String smskey = RetakePassword.CACHE_KEY_SEND_PHONE_NUM+ userClient.getPhone();
-		ICacheClient cacheClient = CacheClientFactory.getCacheClient(RetakePassword.CACHE_NAMESPACE);
+		ICacheClient cacheClient = MCSClientFactory.getCacheClient(RetakePassword.CACHE_NAMESPACE);
+		IConfigClient defaultConfigClient = CCSClientFactory.getDefaultConfigClient();
 		String times = cacheClient.get(smskey);
-		if (StringUtil.isBlank(times)) {
-			// 将验证码放入缓存
-			String phoneVerifyCode = RandomUtil.randomNum(PhoneVerifyConstants.VERIFY_SIZE);
-			String cacheKey = RetakePassword.CACHE_KEY_VERIFY_PHONE + sessionId;
-			String overTimeStr = ConfigCenterFactory.getConfigCenterClient().get(PhoneVerifyConstants.VERIFY_OVERTIME_KEY);
-			cacheClient.setex(cacheKey, Integer.valueOf(overTimeStr), phoneVerifyCode);
-			// 将发送次数放入缓存
-			String maxTimeStr = ConfigCenterFactory.getConfigCenterClient().get(PhoneVerifyConstants.SEND_VERIFY_MAX_TIME_KEY);
-			cacheClient.setex(smskey, Integer.valueOf(maxTimeStr), smstimes);
-			// 设置短息信息
-			List<SMData> dataList = new LinkedList<SMData>();
-			SMData smData = new SMData();
-			smData.setGsmContent("${VERIFY}:" + phoneVerifyCode + "^${VALIDMINS}:" + Integer.valueOf(overTimeStr) / 60);
-			smData.setPhone(userClient.getPhone());
-			smData.setTemplateId(PhoneVerifyConstants.TEMPLATE_RETAKE_PASSWORD_ID);
-			smData.setServiceType(PhoneVerifyConstants.SERVICE_TYPE);
-			dataList.add(smData);
-			SMDataInfoNotify smDataInfoNotify = new SMDataInfoNotify();
-			smDataInfoNotify.setDataList(dataList);
-			smDataInfoNotify.setMsgSeq(VerifyUtil.createPhoneMsgSeq());
-			smDataInfoNotify.setTenantId(userClient.getTenantId());
-			smDataInfoNotify.setSystemId(Constants.SYSTEM_ID);
-			boolean flag = VerifyUtil.sendPhoneInfo(smDataInfoNotify);
-			if (flag) {
-				// 成功
-				return "0000";
-			} else {
-				// 失败
-				return "0001";
-			}
-		} else {
-			// 已经发送
-			return "0002";
-		}
+		try{
+		    if (StringUtil.isBlank(times)) {
+	            // 将验证码放入缓存
+	            String phoneVerifyCode = RandomUtil.randomNum(PhoneVerifyConstants.VERIFY_SIZE);
+	            String cacheKey = RetakePassword.CACHE_KEY_VERIFY_PHONE + sessionId;
+	            String overTimeStr = defaultConfigClient.get(PhoneVerifyConstants.VERIFY_OVERTIME_KEY);
+	            cacheClient.setex(cacheKey, Integer.valueOf(overTimeStr), phoneVerifyCode);
+	            // 将发送次数放入缓存
+	            String maxTimeStr = defaultConfigClient.get(PhoneVerifyConstants.SEND_VERIFY_MAX_TIME_KEY);
+	            cacheClient.setex(smskey, Integer.valueOf(maxTimeStr), smstimes);
+	            // 设置短息信息
+	            List<SMData> dataList = new LinkedList<SMData>();
+	            SMData smData = new SMData();
+	            smData.setGsmContent("${VERIFY}:" + phoneVerifyCode + "^${VALIDMINS}:" + Integer.valueOf(overTimeStr) / 60);
+	            smData.setPhone(userClient.getPhone());
+	            smData.setTemplateId(PhoneVerifyConstants.TEMPLATE_RETAKE_PASSWORD_ID);
+	            smData.setServiceType(PhoneVerifyConstants.SERVICE_TYPE);
+	            dataList.add(smData);
+	            SMDataInfoNotify smDataInfoNotify = new SMDataInfoNotify();
+	            smDataInfoNotify.setDataList(dataList);
+	            smDataInfoNotify.setMsgSeq(VerifyUtil.createPhoneMsgSeq());
+	            smDataInfoNotify.setTenantId(userClient.getTenantId());
+	            smDataInfoNotify.setSystemId(Constants.SYSTEM_ID);
+	            boolean flag = VerifyUtil.sendPhoneInfo(smDataInfoNotify);
+	            if (flag) {
+	                // 成功
+	                return "0000";
+	            } else {
+	                // 失败
+	                return "0001";
+	            }
+	        } else {
+	            // 已经发送
+	            return "0002";
+	        }
 
+		}catch(Exception e){
+		    LOGGER.error("验证码错误：" + e);
+		}
+		return null;
 	}
 
 	/**
@@ -325,40 +339,46 @@ public class RetakePasswordController {
 		// 查询是否发送过短信
 		String smstimes = "1";
 		String smskey = RetakePassword.CACHE_KEY_SEND_EMAIL_NUM + userClient.getPhone();
-		ICacheClient cacheClient = CacheClientFactory.getCacheClient(RetakePassword.CACHE_NAMESPACE);
+		ICacheClient cacheClient = MCSClientFactory.getCacheClient(RetakePassword.CACHE_NAMESPACE);
+		IConfigClient defaultConfigClient = CCSClientFactory.getDefaultConfigClient();
 		String times = cacheClient.get(smskey);
-		if (StringUtil.isBlank(times)) {
-			// 邮箱验证
-			String email = userClient.getEmail();
-			String nickName = userClient.getNickName();
-			SendEmailRequest emailRequest = new SendEmailRequest();
-			emailRequest.setTomails(new String[] { email });
-			emailRequest.setTemplateRUL(RetakePassword.TEMPLATE_EMAIL_URL);
-			emailRequest.setSubject(RetakePassword.EMAIL_SUBJECT);
-			// 验证码
-			String verifyCode = RandomUtil.randomNum(EmailVerifyConstants.VERIFY_SIZE);
-			// 将验证码放入缓存
-			String cacheKey = RetakePassword.CACHE_KEY_VERIFY_EMAIL + sessionId;
-			String overTimeStr = ConfigCenterFactory.getConfigCenterClient().get(EmailVerifyConstants.VERIFY_OVERTIME_KEY);
-			cacheClient.setex(cacheKey, Integer.valueOf(overTimeStr), verifyCode);
-			// 将发送次数放入缓存
-			String maxTimeStr = ConfigCenterFactory.getConfigCenterClient().get(EmailVerifyConstants.SEND_VERIFY_MAX_TIME_KEY);
-			cacheClient.setex(smskey, Integer.valueOf(maxTimeStr), smstimes);
-			// 超时时间
-			String overTime = ObjectUtils.toString(Integer.valueOf(overTimeStr) / 60);
-			emailRequest.setData(new String[] { nickName, verifyCode, overTime });
-			boolean flag = VerifyUtil.sendEmail(emailRequest);
-			if (flag) {
-				// 成功
-				return "0000";
-			} else {
-				// 失败
-				return "0001";
-			}
-		} else {
-			// 已发送
-			return "0002";
+		try{
+		    if (StringUtil.isBlank(times)) {
+	            // 邮箱验证
+	            String email = userClient.getEmail();
+	            String nickName = userClient.getNickName();
+	            SendEmailRequest emailRequest = new SendEmailRequest();
+	            emailRequest.setTomails(new String[] { email });
+	            emailRequest.setTemplateRUL(RetakePassword.TEMPLATE_EMAIL_URL);
+	            emailRequest.setSubject(RetakePassword.EMAIL_SUBJECT);
+	            // 验证码
+	            String verifyCode = RandomUtil.randomNum(EmailVerifyConstants.VERIFY_SIZE);
+	            // 将验证码放入缓存
+	            String cacheKey = RetakePassword.CACHE_KEY_VERIFY_EMAIL + sessionId;
+	            String overTimeStr = defaultConfigClient.get(EmailVerifyConstants.VERIFY_OVERTIME_KEY);
+	            cacheClient.setex(cacheKey, Integer.valueOf(overTimeStr), verifyCode);
+	            // 将发送次数放入缓存
+	            String maxTimeStr = defaultConfigClient.get(EmailVerifyConstants.SEND_VERIFY_MAX_TIME_KEY);
+	            cacheClient.setex(smskey, Integer.valueOf(maxTimeStr), smstimes);
+	            // 超时时间
+	            String overTime = ObjectUtils.toString(Integer.valueOf(overTimeStr) / 60);
+	            emailRequest.setData(new String[] { nickName, verifyCode, overTime });
+	            boolean flag = VerifyUtil.sendEmail(emailRequest);
+	            if (flag) {
+	                // 成功
+	                return "0000";
+	            } else {
+	                // 失败
+	                return "0001";
+	            }
+	        } else {
+	            // 已发送
+	            return "0002";
+	        }
+		}catch(Exception e){
+		    LOGGER.error("验证码错误：" + e);
 		}
+		return null;
 	}
 
 	/**
@@ -376,7 +396,7 @@ public class RetakePasswordController {
 		// 检查图片验证码
 		String pictureCacheKey = RetakePassword.CACHE_KEY_VERIFY_PICTURE + sessionId;
 		String pictureVerifyCode = safetyConfirmData.getPictureVerifyCode();
-		ICacheClient cacheClient = CacheClientFactory.getCacheClient(RetakePassword.CACHE_NAMESPACE);
+		ICacheClient cacheClient = MCSClientFactory.getCacheClient(RetakePassword.CACHE_NAMESPACE);
 		String pictureVerifyCodeCache = cacheClient.get(pictureCacheKey);
 		ResponseData<String> pictureCheck = VerifyUtil.checkPictureVerifyCode(pictureVerifyCode, pictureVerifyCodeCache);
 		String resultCode = pictureCheck.getResponseHeader().getResultCode();
@@ -496,36 +516,43 @@ public class RetakePasswordController {
 	public ResponseData<String> autoLogin(HttpServletRequest request, HttpServletResponse response) {
 		String uuid = request.getParameter(Constants.UUID.KEY_NAME);
 		SSOClientUser userClient = (SSOClientUser) CacheUtil.getValue(uuid, Constants.RetakePassword.CACHE_NAMESPACE, SSOClientUser.class);
-		// 删除缓存
-		if (userClient == null) {
-			// 跳转到登录页面
-			String casServerLoginUrlRuntime = SSOClientUtil.getCasServerLoginUrlRuntime(request);
-			ResponseData<String> responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "认证失效", casServerLoginUrlRuntime);
-			ResponseHeader responseHeader = new ResponseHeader(false, Constants.RetakePassword.FAIL_CODE, null);
-			responseData.setResponseHeader(responseHeader);
-			return responseData;
+		IConfigClient defaultConfigClient = CCSClientFactory.getDefaultConfigClient();
+		 ResponseData<String> responseData = null;
+		try{
+		 // 删除缓存
+	        if (userClient == null) {
+	            // 跳转到登录页面
+	            String casServerLoginUrlRuntime = SSOClientUtil.getCasServerLoginUrlRuntime(request);
+	             responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "认证失效", casServerLoginUrlRuntime);
+	            ResponseHeader responseHeader = new ResponseHeader(false, Constants.RetakePassword.FAIL_CODE, null);
+	            responseData.setResponseHeader(responseHeader);
+	            return responseData;
+	        }
+	        CacheUtil.deletCache(uuid, Constants.RetakePassword.CACHE_NAMESPACE);
+	        ILoginSV iloginSV = DubboConsumerFactory.getService("iLoginSV");
+	        UserLoginResponse account = iloginSV.queryAccountByUserName(userClient.getPhone());
+	        String phone = account.getPhone();
+	        String accountPassword = account.getAccountPassword();
+	        LoginUser loginUser = new LoginUser(phone, accountPassword);
+	        String newuuid = UUIDUtil.genId32();
+	        CacheUtil.setValue(newuuid, Constants.UUID.OVERTIME, loginUser, Constants.LoginConstant.CACHE_NAMESPACE);
+	        // localhost:8080/uac/registerLogin?k=UUID&service=URL
+	        String service_url = "";
+	        if (StringUtil.isBlank(uuid)) {
+	            // 跳转到登录页面
+	            service_url = SSOClientUtil.getCasServerLoginUrlRuntime(request);
+	        } else {
+	            // 从配置中心读取跳转地址
+	            service_url = defaultConfigClient.get(Constants.URLConstant.INDEX_URL_KEY);
+	        }
+	        String url = "/registerLogin?" + Constants.UUID.KEY_NAME + "=" + newuuid + "&service=" + service_url;
+	        responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "成功，跳转", url);
+	        ResponseHeader responseHeader = new ResponseHeader(true, Constants.RetakePassword.SUCCESS_CODE, null);
+	        responseData.setResponseHeader(responseHeader);
+	        return responseData;
+		}catch(Exception e){
+		    LOGGER.error("跳转登录错误：" + e);
 		}
-		CacheUtil.deletCache(uuid, Constants.RetakePassword.CACHE_NAMESPACE);
-		ILoginSV iloginSV = DubboConsumerFactory.getService("iLoginSV");
-		UserLoginResponse account = iloginSV.queryAccountByUserName(userClient.getPhone());
-		String phone = account.getPhone();
-		String accountPassword = account.getAccountPassword();
-		LoginUser loginUser = new LoginUser(phone, accountPassword);
-		String newuuid = UUIDUtil.genId32();
-		CacheUtil.setValue(newuuid, Constants.UUID.OVERTIME, loginUser, Constants.LoginConstant.CACHE_NAMESPACE);
-		// localhost:8080/uac/registerLogin?k=UUID&service=URL
-		String service_url = "";
-		if (StringUtil.isBlank(uuid)) {
-			// 跳转到登录页面
-			service_url = SSOClientUtil.getCasServerLoginUrlRuntime(request);
-		} else {
-			// 从配置中心读取跳转地址
-			service_url = ConfigCenterFactory.getConfigCenterClient().get(Constants.URLConstant.INDEX_URL_KEY);
-		}
-		String url = "/registerLogin?" + Constants.UUID.KEY_NAME + "=" + newuuid + "&service=" + service_url;
-		ResponseData<String> responseData = new ResponseData<String>(ResponseData.AJAX_STATUS_SUCCESS, "成功，跳转", url);
-		ResponseHeader responseHeader = new ResponseHeader(true, Constants.RetakePassword.SUCCESS_CODE, null);
-		responseData.setResponseHeader(responseHeader);
-		return responseData;
+		 return responseData;
 	}
 }

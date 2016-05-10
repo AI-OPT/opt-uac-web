@@ -6,22 +6,23 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import com.ai.opt.sdk.configcenter.client.IConfigCenterClient;
-import com.ai.opt.sdk.configcenter.factory.ConfigCenterFactory;
+import com.ai.opt.sdk.components.ccs.CCSClientFactory;
 import com.ai.opt.sdk.constants.SDKConstants;
 import com.ai.opt.uac.web.constants.Constants;
 import com.ai.opt.uac.web.constants.VerifyConstants;
 import com.ai.opt.uac.web.constants.VerifyConstants.EmailVerifyConstants;
 import com.ai.opt.uac.web.constants.VerifyConstants.PhoneVerifyConstants;
 import com.ai.opt.uac.web.constants.VerifyConstants.PictureVerifyConstants;
+import com.ai.paas.ipaas.ccs.IConfigClient;
+import com.ai.paas.ipaas.ccs.constants.ConfigException;
 
 public class IConfigCenterClientTest {
 
-    private IConfigCenterClient client;
+    private IConfigClient client;
 
     @Before
     public void initData() {
-        this.client = ConfigCenterFactory.getConfigCenterClient();
+        this.client = CCSClientFactory.getDefaultConfigClient();
     }
 
     @Ignore
@@ -31,12 +32,26 @@ public class IConfigCenterClientTest {
         assertEquals("test", client.get("/test"));
         System.out.println("aaaaaa");
     }
+    @Test
+    public void addServiceIdPwdMap() throws ConfigException {
+        String cachesnsConfig = "{\"MCS005\":\"" + "123456"     
+                + "\"}";
+        
+        // paas serviceid password 映射配置
+        if (!client.exists(SDKConstants.PAAS_SERVICE_PWD_MAPPED_PATH))
+            client.add(SDKConstants.PAAS_SERVICE_PWD_MAPPED_PATH,
+                    cachesnsConfig);
+        else {
+            client.modify(SDKConstants.PAAS_SERVICE_PWD_MAPPED_PATH,
+                    cachesnsConfig);
+        }
+    }
 
     //@Ignore
     @Test
-    public void addMcsConfig() {
+    public void addMcsConfig() throws ConfigException {
         // 缓存服务主机
-        String uacRedisHost = "uacRedisHost";
+        String uacRedisHost = "MCS005";
         // 缓存空间
         String cachesnsConfig = "{\"com.ai.opt.uac.sso.unicache\":\"" + uacRedisHost
                 + "\",\"com.ai.opt.uac.register.cache\":\"" + uacRedisHost
@@ -48,7 +63,7 @@ public class IConfigCenterClientTest {
                 + "\",\""+Constants.BandEmail.CACHE_NAMESPACE+"\":\"" + uacRedisHost
                 + "\",\"com.ai.opt.uni.session.sessionclient.uacweb\":\"" + uacRedisHost + "\"}";
         
-        StringBuilder bu=new StringBuilder();
+      /*  StringBuilder bu=new StringBuilder();
         bu.append("{								");
         bu.append("  \"uacRedisHost\":                     ");
         bu.append("  {                                      ");
@@ -60,11 +75,11 @@ public class IConfigCenterClientTest {
         bu.append("		  \"mcsTestOnBorrow\":\"true\",       ");
         bu.append("		  \"mcsPassword\":\"\"          ");
         bu.append("  }                                     ");
-        bu.append("}                                        ");
+        bu.append("}                                        ");*/
         
         
         
-        // 缓存服务主机和密码设置
+       /* // 缓存服务主机和密码设置
         if (!client.exists(
                 SDKConstants.PAAS_CACHE_REDIS_CLUSTER_MAPPED_PATH)) {
             client.add(
@@ -75,7 +90,7 @@ public class IConfigCenterClientTest {
                     SDKConstants.PAAS_CACHE_REDIS_CLUSTER_MAPPED_PATH,
                     bu.toString());
         }
-
+*/
         // 缓存空间配置
         if (!client.exists(SDKConstants.PAAS_CACHENS_MCS_MAPPED_PATH))
             client.add(SDKConstants.PAAS_CACHENS_MCS_MAPPED_PATH,
@@ -85,7 +100,7 @@ public class IConfigCenterClientTest {
                     cachesnsConfig);
         }
     }
-    //@Ignore
+   /* //@Ignore
     @Test
     public void readMcsConfig() {
     	
@@ -95,11 +110,11 @@ public class IConfigCenterClientTest {
     	System.out.println("cachesns:"+cachesns);
     	System.out.println("redisconf:"+redisconf);
     	
-    }
+    }*/
 
     
      @Test
-     public void addUrlConfig(){
+     public void addUrlConfig() throws ConfigException{
     	 System.out.println("url config ... start");
     	 String indexUrl = "http://10.1.235.245:14101/baas-pt";
     	 if (!client.exists(Constants.URLConstant.INDEX_URL_KEY)) {
@@ -112,7 +127,7 @@ public class IConfigCenterClientTest {
      }
      
      @Test
-     public void addSendVerifyTimesConfig(){
+     public void addSendVerifyTimesConfig() throws ConfigException{
     	 System.out.println("addSendVerifyTimesConfig ... start");
     	 String PHONE_VERIFY_OVERTIME = "300";
     	 String PHONE_SEND_VERIFY_MAX_TIME = "60";
