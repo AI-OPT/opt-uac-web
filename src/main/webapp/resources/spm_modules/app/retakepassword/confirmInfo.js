@@ -80,6 +80,10 @@ define('app/retakepassword/confirmInfo', function (require, exports, module) {
 				$("#checkTypeValue").html(email);
 				$("#verifyName").html("邮箱验证码");
 			}
+			//获取新的图片验证码
+			this._getImageRandomCode();
+			//清空验证码
+			$("#verifyCode").val("");
 		},
 		_getImageRandomCode:function(){
 			//隐藏错误提示

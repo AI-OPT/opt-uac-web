@@ -94,6 +94,10 @@ define('app/center/phone/confirmInfo', function (require, exports, module) {
 				$("#email").attr("style","display:none");
 				$("#phone").removeAttr("style");
 			}
+			//获取新的图片验证码
+			this._getImageRandomCode();
+			//清空验证码
+			$("#verifyCode").val("");
 		},
 		_getImageRandomCode:function(){
 			//隐藏错误提示
