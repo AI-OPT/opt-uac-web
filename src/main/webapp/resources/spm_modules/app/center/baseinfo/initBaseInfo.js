@@ -82,6 +82,7 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 			$("#setnick").attr("style","display:none");	
 			$("#initNickName").attr("style","display:");
 			//展示数据
+			$("#showNickNameMsg").attr("style","display:none");
 			var nik = $("#nickName").val();
 			$("#showNick").text(nik);
 			
@@ -93,13 +94,13 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 			var bk = $("#setnick").is(":visible");
 			var isindus = $("#allInfo").is(":visible");
 			$("#showNickNameMsg").attr("style","display:none");
-			if(nickNmae==""&&bk){
+			if(nickNmae==""){
 				$('#showNickNameMsg').text("请输入昵称");
     			$("#showNickNameMsg").attr("style","display:");
 				$("#flag").val("0");
 				return false;
 			}
-			if(nickNmae!=""&&(bk)){
+			if(nickNmae!=""){
 				if(/^\S*$/.test(nickNmae)){
 					var aa = nickNmae.replace(/[^\x00-\xff]/g,"aaa").length
 					if(aa>=4 && aa<=20){

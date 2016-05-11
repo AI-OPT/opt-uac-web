@@ -58,8 +58,8 @@ function jsmethod(){
           </p>
           <p class="ctn-b" style=" display:none;" id="setnick" >
           	<input type="text" id="nickName" value="${accountInfo.nickName}" class="int-medium"  onmouseout="jsmethod()">
-          	<span id="showNickNameMsg" class="regsiter-note" style="display:none"></span>
           </p>
+          <span id="showNickNameMsg" class="regsiter-note" style="display:none"></span>
           <%-- <span  id="errorNickNameMsg">
 		     <i class="icon-caret-left"></i>
 		     <img src="${_base}/theme/baas/images/error.png"><span id="showNickNameMsg"></span>

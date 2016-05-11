@@ -146,10 +146,11 @@ return;
 		         	 <span class="yzm">
 		         	 	<input class="button"id="PHONE_IDENTIFY"  type="button" value="获取验证码" >
 		         	 </span>
-		         		
+		         	<p class="regsiter-po">	
 		         	<span class="regsiter-note" id="errorSmsMsg" style="display: none;">
 		         		<span id="showSmsMsg"></span>
 		         	</span>
+		         	</p>
 		         </li>
 		         <li>
 		         	<input type="button" class="regsiter-btn" value="注 册"  id="BTN_REGISTER">
