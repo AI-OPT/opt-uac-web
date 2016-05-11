@@ -35,6 +35,7 @@ define('app/center/phone/confirmInfo', function (require, exports, module) {
         	_initShowView();
         	_getImageRandomCode();
         	_hideErroText();
+        	var _res;
         },
     	//重写父类
     	setup: function () {
@@ -98,6 +99,13 @@ define('app/center/phone/confirmInfo', function (require, exports, module) {
 			this._getImageRandomCode();
 			//清空验证码
 			$("#verifyCode").val("");
+			//移除发送验证码倒计时
+			$("#sendVerify").removeAttr("disabled"); //移除disabled属性
+            $('#sendVerify').val('获取验证码');
+			clearInterval(_this._res);
+			//清空错误提示
+			this._controlMsgText("verifyCodeMsg","");
+			this._controlMsgAttr("verifyCodeMsg",1);
 		},
 		_getImageRandomCode:function(){
 			//隐藏错误提示
@@ -126,16 +134,16 @@ define('app/center/phone/confirmInfo', function (require, exports, module) {
 					}else{
 						if(resultCode == "000000"){
 							var step = 59;
-				            $('#sendVerify').val('重新发送60');
+				            $('#sendVerify').val('60s后重新发送');
 				            $("#sendVerify").attr("disabled", true);
-				            var _res = setInterval(function(){
+				            _this._res = setInterval(function(){
 				                $("#sendVerify").attr("disabled", true);//设置disabled属性
 				                $('#sendVerify').val(step+'s后重新发送');
 				                step-=1;
 				                if(step <= 0){
 				                $("#sendVerify").removeAttr("disabled"); //移除disabled属性
 				                $('#sendVerify').val('获取验证码');
-				                clearInterval(_res);//清除setInterval
+				                clearInterval(_this._res);//清除setInterval
 				                }
 				            },1000);
 						}else{
