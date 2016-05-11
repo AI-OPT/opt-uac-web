@@ -90,8 +90,8 @@ define('app/retakepassword/confirmInfo', function (require, exports, module) {
             $('#sendVerify').val('获取验证码');
 			clearInterval(_this._res);
 			//清空错误提示
-			this._controlMsgText("verifyCodeMsg","");
-			this._controlMsgAttr("verifyCodeMsg",1);
+			this._controlMsgText("ssmVerifyCodeMsg","");
+			this._controlMsgAttr("ssmVerifyCodeMsg",1);
 		},
 		_getImageRandomCode:function(){
 			//隐藏错误提示
