@@ -27,7 +27,7 @@ define('app/register/register-email', function (require, exports, module) {
          },
     	_bindHandle: function(){
     		$("#email").on("blur",this._validServiceEmail);
-    		//$("#getIdentify").on("click",this._validServiceEmail);
+    		$("#getIdentify").on("click",this._validServiceEmail);
     		$("#getIdentify").on("click",this._getIdentify);
     		$("#BTN_PASS").on("click",this._passEmail);
     		$("#BTN_SUBMIT").on("click",this._validServiceEmail);
