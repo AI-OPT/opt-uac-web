@@ -125,6 +125,17 @@ public class IConfigCenterClientTest {
 
     	 System.out.println("url config ... end");
      }
+     @Test
+     public void readUrlConfig() throws ConfigException{
+    	 System.out.println("url config ... read start");
+    	 String indexUrl = "";
+    	 if (client.exists(Constants.URLConstant.INDEX_URL_KEY)) {
+    		 indexUrl=client.get(Constants.URLConstant.INDEX_URL_KEY);
+         } 
+
+    	 System.out.println("indexUrl="+indexUrl);
+    	 System.out.println("url config ... read end");
+     }
      
      @Test
      public void addSendVerifyTimesConfig() throws ConfigException{

@@ -1,3 +1,4 @@
+<%@page import="com.ai.opt.sdk.components.ccs.CCSClientFactory"%>
 <%@page import="com.ai.opt.uac.web.constants.Constants"%>
 <%@page import="com.ai.opt.sdk.components.mcs.MCSClientFactory"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
@@ -14,8 +15,9 @@
     request.setAttribute("_baasBase", _baasBase);
 %>
 <%
-String baas_pt_index_url = MCSClientFactory.getCacheClient(Constants.LoginConstant.CACHE_NAMESPACE).get(Constants.URLConstant.INDEX_URL_KEY);
+String baas_pt_index_url = CCSClientFactory.getDefaultConfigClient().get(Constants.URLConstant.INDEX_URL_KEY);
 request.setAttribute("baas_pt_index_url",baas_pt_index_url );
+//System.out.println("[baas_pt_index_url]="+baas_pt_index_url);
 %>
 <script>
     var _base = "${_base}";
