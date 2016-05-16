@@ -15,7 +15,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width; initial-scale=0.8;  user-scalable=0;" />
-    <title>登录亚信云计费</title>
+    <title>登录</title>
 	<script type="text/javascript" src="${_baasBase }/js/md5.js" ></script>
 	<script type="text/javascript" src="${_baasBase }/js/datacheck.js" ></script>
 	

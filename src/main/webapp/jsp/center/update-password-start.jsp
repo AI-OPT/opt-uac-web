@@ -30,7 +30,7 @@
       <div class="round"><i class="icon-pencil"></i></div>
       <div class="bar"></div>
     </div>
-    <label>2.重置密码</label>
+    <label>2.设置新密码</label>
   </div>
   <div class="todo"><!--圆圈灰色 todo-->
     <div class="wrap">
