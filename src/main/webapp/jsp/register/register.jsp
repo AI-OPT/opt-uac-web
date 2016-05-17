@@ -159,7 +159,7 @@ return;
 		         	<input type="hidden" id="errorPassFlag">
 		         	<input type="hidden" id="errorSMSFlag">
 		         </li>
-		         <li class="zuns">* 注册表示您同意遵守<A href="${_base }/reg/protocol" target="_blank">《亚信云计费服务条款》</A></li>
+		         <li class="zuns">* 注册表示您同意遵守<A href="${_base }/reg/protocol" target="_blank">《运营家·Billing服务条款》</A></li>
 	
 	         </ul>
 	         </div>
