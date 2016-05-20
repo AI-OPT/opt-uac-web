@@ -122,6 +122,14 @@ public class IConfigCenterClientTest {
          } else {
              client.modify(Constants.URLConstant.INDEX_URL_KEY, indexUrl);
          }
+    	 
+    	 
+    	 String baas_op_indexUrl = "http://10.1.235.245:14105/baas-op";
+    	 if (!client.exists(Constants.URLConstant.BAAS_OP_INDEX_URL_KEY)) {
+             client.add(Constants.URLConstant.BAAS_OP_INDEX_URL_KEY, baas_op_indexUrl);
+         } else {
+             client.modify(Constants.URLConstant.BAAS_OP_INDEX_URL_KEY, baas_op_indexUrl);
+         }
 
     	 System.out.println("url config ... end");
      }

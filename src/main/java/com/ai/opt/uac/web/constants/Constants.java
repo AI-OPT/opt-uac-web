@@ -38,6 +38,8 @@ public final class Constants {
 		
 		/**首页*/
 		public static final String INDEX_URL_KEY = "/opt_uac_web_index_url";
+		/**运营管理首页*/
+		public static final String BAAS_OP_INDEX_URL_KEY = "/baas_op_index_url";
 	}
 	
 	public static final class RetakePassword{
