@@ -19,12 +19,12 @@
 .breadcrumb ul{ width:100%; float:left; height:24px; line-height:24px; border-left:1px solid #333; padding-left:10px;}
 .breadcrumb ul li{ float:left; color:#333; font-size:18px;}
 .breadcrumb ul li i{ font-size:18px; color:#333; margin:0 10px;}
-.user{ width:240px; float:right;}
+.user{ width:465px; float:right;}
 .msg{ width:60px; float:left; text-align:center; position:relative; padding-top:24px;}
 .msg i{ font-size:24px; color:#666;}
 .msg span{ color:#fff; background:#fcb322; position:absolute; left:27px; top:15px; font-size:12px;} 
-.user-cnt{ width:240px; float:left; position:relative;}
-.user-cnt p{ width:100%; float:left; height:80px; padding:12px 0 0 15px; cursor:pointer; margin-bottom:0;}
+.user-cnt{ width:465px; float:left; position:relative;}
+.user-cnt p{ width:240px; float:left; height:80px; padding:14px 0 0 15px; cursor:pointer; margin-bottom:0;}
 .user-cnt p.pbg{ background:#f1f1f1;}
 .user-cnt p img{ width:45px; height:45px; border-radius:50%;}
 .user-cnt p span{ color:#043a86; font-size:18px; margin:0 10px; line-height:45px;}
@@ -121,7 +121,7 @@
 
 .nav-bg{ width:100%; float:left; background:#fff;}
 
-@media screen and (min-width: 1599px) and (max-width : 10000px){
+@media screen and (min-width: 1600px) and (max-width : 10000px){
 .one-cnt{ width:100%; float:left; height:100%; background:url(../images/onebg.png); background-size:100% 100%;}
 .one-cntr{ width:100%; float:left;}
 .one-cntr p{ width:100%; float:left; text-align:center; margin-top:220px; margin-bottom:0;}
@@ -198,7 +198,7 @@
 	
 }
 
-@media screen and (min-width: 1279px) and (max-width : 1600px){
+@media screen and (min-width: 1279px) and (max-width : 1599px){
 .one-cnt{ width:100%; float:left; height:100%; background:url(../images/onebg.png); background-size:100% 100%;}
 .one-cntr{ width:100%; float:left;}
 .one-cntr p{ width:100%; float:left; text-align:center; margin-top:180px; margin-bottom:0;}
@@ -279,3 +279,21 @@
 .one-cnt .subnav-index{ top:60px;}
 	
 }
+
+.user-cnt ul{ float:left; margin-top:15px; margin-right:15px;}
+.user-cnt ul li{ float:left; font-size:18px;line-height:48px; margin-left:15px;}
+.user-cnt ul li a{ color:#333;}
+.user-cnt ul li a:hover{ color:#26adff;}
+.user-cnt ul li.guanli a{  width: 140px;
+    height: 50px;
+    float: left;
+    border: 1px solid #26adff;
+    text-align: center;
+    border-radius: 5px;
+    color: #26adff;
+    margin-right: 0px;}
+.user-cnt ul li.guanli a:hover{ background:#26adff; color:#fff;}
+.pass-right{ float:right; margin-top:28px;}
+.pass-right span{ margin-right:20px; }
+.pass-right a{ color:#002c63;font-size:18px; margin:0 10px;}
+.pass-right a:hover{ color:#068eeb;}

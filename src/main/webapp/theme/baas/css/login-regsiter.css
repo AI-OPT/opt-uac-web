@@ -125,6 +125,19 @@ box-shadow:0 0 14px rgba(218,218, 218, .7);  }
 .regsiter-success-cnt .clts{ color:#0697ef}
 .regsiter-success-cnt p img{ width:380px; margin-left:-100px;}
 
+.pop-fuwu{ width:100%; float:left; height:100%; position:fixed; left:0; top:0; z-index:10;}
+.fuwu-bg{ width:100%; float:left; height:100%; background:#000; opacity:0.6; z-index:11;}
+.fuwu-cnt{ width:680px; height:512px; left:50%; top:50%; margin-left:-340px; margin-top:-256px; background:#fff; position:fixed;}
+.fwcnt-title{ width:100%; float:left; height:66px; border-bottom:1px solid #d7d7d7; text-align:center;}
+.fwcnt-title p{ color:#333; font-size:18px; margin-bottom:0; margin-top:10px;}
+.fwcnt-title span{ color:#999; font-size:12px;}
+.tkcnt{ width:100%; float:left; padding:0 20px; height:375px; overflow:scroll; overflow-x: hidden;}
+.tkcnt h3{ font-size:18px; color:#000;}
+.tkcnt p{ width:100%; float:left; font-size:13px; line-height:24px; color:#555; text-indent:2em; margin-bottom:10px;}
+.fuwu-btn{ width:100%; float:left; text-align:center; margin-top:22px;}
+.fuwu-btn a{ padding:8px 50px; background:#0697ef; color:#fff; font-size:18px;}
+.fuwu-btn a:hover{ background:#007ecb;}
+.fuwu-close{ position:absolute; right:10px; top:10px; cursor:pointer;}
 
 
 .footer-index{ width:100%; float:left; height:80px; background:#c4c4c4; min-width:1200px; text-align:center; line-height:80px; color:#333;}
