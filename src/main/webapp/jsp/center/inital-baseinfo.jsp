@@ -45,6 +45,10 @@ function jsmethod(){
           <p>
           	${accountInfo.phone}
           	<input type="hidden" id="accountId" value="${accountInfo.accountId}">
+          	<input type="hidden" id="tenantId" value="${accountInfo.tenantId}">
+          	<input type="hidden" id="state" value="${accountInfo.state}">
+          	<input type="hidden" id="industryCode" value="${accountInfo.industryCode}">
+          	<input type="hidden" id="industryCodeValue" value="${accountInfo.industryCodeValue}">
           	<input type="hidden" id="flag">
           </p>
           </li>
@@ -108,7 +112,7 @@ function jsmethod(){
 		          <li class="user">
 		          <p class="word">企业名称</p>
 		          <p>
-		          	<input type="text" class="int-medium" placeholder="" id="tenantName">
+		          	<input type="text" class="int-medium" placeholder="" id="tenantName" value="${accountInfo.tenantName}">
 		          	<span id="showTenMsg" class="regsiter-note" style="display:none"></span>
 		          </p>
 		          <%-- <span  id="errorTenMsg">

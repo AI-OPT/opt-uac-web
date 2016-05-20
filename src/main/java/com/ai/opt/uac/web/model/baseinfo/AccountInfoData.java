@@ -23,6 +23,12 @@ public class AccountInfoData implements Serializable{
      */
     private String industryCode;
     /**
+     * 公司类型
+     */
+    private String industryCodeValue;
+   
+
+    /**
      * 账号ID
      */
     private Long accountId;
@@ -46,8 +52,21 @@ public class AccountInfoData implements Serializable{
      * 邮箱
      */
     private String email;
+    /**
+     * 租戶狀態
+     */
+    private String state;
+    
 	
 	
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
     public String getTenantName() {
         return tenantName;
     }
@@ -91,7 +110,13 @@ public class AccountInfoData implements Serializable{
     public String getPhone() {
 		return phone;
 	}
-	
+    public String getIndustryCodeValue() {
+        return industryCodeValue;
+    }
+
+    public void setIndustryCodeValue(String industryCodeValue) {
+        this.industryCodeValue = industryCodeValue;
+    }
 	public void setPhone(String phone) {
 		String sslphone = phone;
 		if(!StringUtil.isBlank(phone)){

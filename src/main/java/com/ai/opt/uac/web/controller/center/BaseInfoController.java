@@ -75,6 +75,8 @@ public class BaseInfoController {
         accountInfo.setNickName(acc.getNickName());
         accountInfo.setPhone(acc.getPhone());
         accountInfo.setTenantName(ten.getTenantName());
+        accountInfo.setState(ten.getState());
+        accountInfo.setIndustryCodeValue(ten.getIndustryCode());
         //翻译企业类型
         if(!StringUtil.isBlank(ten.getIndustryCode())){
             IndustryQueryResponse response= iIndustryManageSV.queryByIndustryCode(ten.getIndustryCode());
@@ -132,15 +134,14 @@ public class BaseInfoController {
             
             if((!StringUtil.isBlank(data.getTenantName())) && (!data.getIndustryCode().equals("00"))){
                 TenantInfoRequest tenant = new TenantInfoRequest();
-                tenant.setAccountId(data.getAccountId());
                 tenant.setIndustryCode(data.getIndustryCode());
                 tenant.setTenantName(data.getTenantName());
                 tenant.setUpdateAccountId(userClient.getAccountId());
-                TenantInsertResponse re = iTenantManageSV.insertTenantInfo(tenant);
+                tenant.setTenantId(data.getTenantId());
+                BaseResponse re = iTenantManageSV.updateTenant(tenant);
                 if(re.getResponseHeader().getResultCode().equals(ResultCode.SUCCESS_CODE)){
                   //修改客户端存储的tenantName、tenantID
                     userClient.setTenantName(data.getTenantName());
-                    userClient.setTenantId(re.getTenantId());
                     request.getSession().setAttribute(SSOClientConstants.USER_SESSION_KEY, userClient); 
                 }
             }

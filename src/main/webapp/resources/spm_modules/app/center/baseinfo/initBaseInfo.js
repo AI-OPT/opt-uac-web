@@ -47,8 +47,9 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
     	_renderIndustryInfo: function(){
 			var _this = this;
 			//初始化展示业务类型
-			_this._changPage();
 			_this._getIndustry();
+			//_this._changPage();
+			
 			
 		},
 		_hideInfo: function(){
@@ -67,16 +68,22 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 		_changPage:function(){
 			var email = $("#email").val();
 			var tenantName = $("#tenant").val();
+			var state = $("#state").val();
+			var industryCode = $("#industryCodeValue").val();
 			if(email==""){
 				$("#haveEmail").attr("style","display:none");
 			}else{
 				$("#bandEmail").attr("style","display:none");
 			}
-			if(tenantName==""){
+			if(state=="0"){
 				$("#oneInfo").attr("style","display:none");
+				if(industryCode!=""){
+					$("#indutry").val(industryCode);
+				}
 			}else{
 				$("#allInfo").attr("style","display:none");
 			}
+			
 		},
 		_cancelNickName: function(){
 			$("#setnick").attr("style","display:none");	
@@ -169,12 +176,15 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 				success : function(data) {
 					var indutrys = $("#indutry");
 					indutrys.empty();
+					
 					var option1 = $("<option id='indusvoid'>").text("请选择").val("00");
 					indutrys.append(option1);
 					for(var i=0;i<data.length;i++) {
 						var option = $("<option>").text(data[i].industryName).val(data[i].industryCode);
 						indutrys.append(option);
+						
 					}
+					_this._changPage();
 				}
 				
 			});
@@ -200,7 +210,8 @@ define('app/center/baseinfo/initBaseInfo', function (require, exports, module) {
 						nickName:	$("#nickName").val(),  
 						tenantName: $("#tenantName").val(),		   
 						industryCode:$("#indutry").val(),
-						accountId:$("#accountId").val()
+						accountId:$("#accountId").val(),
+						tenantId:$("#tenantId").val()
 					   };
 				ajaxController.ajax({
 					type : "POST",
