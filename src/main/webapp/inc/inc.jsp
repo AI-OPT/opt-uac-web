@@ -18,6 +18,8 @@
 String baas_pt_index_url = CCSClientFactory.getDefaultConfigClient().get(Constants.URLConstant.INDEX_URL_KEY);
 request.setAttribute("baas_pt_index_url",baas_pt_index_url );
 //System.out.println("[baas_pt_index_url]="+baas_pt_index_url);
+String baas_op_index_url = CCSClientFactory.getDefaultConfigClient().get(Constants.URLConstant.BAAS_OP_INDEX_URL_KEY);
+request.setAttribute("baas_op_index_url",baas_op_index_url );
 %>
 <script>
     var _base = "${_base}";

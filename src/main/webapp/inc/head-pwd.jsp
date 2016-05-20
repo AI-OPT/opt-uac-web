@@ -9,5 +9,6 @@
 			<li><span id="set_title_id">找回密码</span></li>
 		</ul>
 	</div>
+	  <div class="pass-right"><a href="${baas_pt_index_url }">返回首页</a><a href="/uac/reg/toRegister">注册</a> | <a href="/uac/login">登录</a></div>
   </div>
  </div>
