@@ -8,6 +8,8 @@
 .login-header-cnt-logo{ width:225px; height:46px; margin-top:14px; float:left;}
 .login-header-cnt-right{ float:right; line-height:72px; font-size:16px; color:#0697ef;}
 .login-header-cnt-right a{ color:#0697ef}
+.login-header-cnt-right span{ color: #333;}
+.login-header-cnt-right span a{ color: #333;}
 .login-header-cnt-right a:hover{ color:#10a2fb;}
 .login-header-cnt-mail{ border-left:1px solid #333; float:left; font-size:18px; color:#333; padding-left:18px; margin-top:24px;}
 
@@ -15,7 +17,7 @@
 .regsiter-wrapper-bg{ width:100%;  background:#f0f0f0; background-image:none; height:730px; margin:0 auto; min-width:1190px; }
 .login-wrapper{ width:100%; background:url(../images/logo-bj.png) no-repeat center; height:653px; margin:0 auto; }
 .login-wrapper-cnt{ width:1190px; margin:0  auto;}
-.login-wrapper-cnt-section{ width:394px; float:right; background:#fff; border:2px solid #a4d6f5; height:390px; margin:122px 86px 0 0; }
+.login-wrapper-cnt-section{ width:394px; float:right; background:#fff; -webkit-box-shadow:0 0 14px rgba(218, 218, 218, .7);  -moz-box-shadow:0 0 14px rgba(218, 218, 218, .7); box-shadow:0 0 14px rgba(218,218, 218, .7); height:390px; margin:122px 86px 0 0; }
 .login-wrapper-cnt-section ul{ width:340px; margin:0 auto; position:relative;}
 .login-wrapper-cnt-section ul .login-note{ position:absolute; top:60px; left:0px; font-size:12px; background:none; color:#d32222; max-width:400px;}
 .login-wrapper-cnt-section ul li{ float:left; margin-top:25px;}
@@ -74,7 +76,7 @@
 
 
 .regsiter-wrapper-cnt ul .identifying span{ margin-right:2px;}
-.regsiter-wrapper-cnt ul .identifying a{ color:##1c9aec; line-height:40px;}
+.regsiter-wrapper-cnt ul .identifying a{ color:#1c9aec; line-height:40px;}
 .regsiter-wrapper-cnt ul .identifying a:hover{ color:#043a86;}
 .int-xlarge-identifying{width:226px; float:left; height:46px; border: none; line-height:48px; font-size:14px; background:#fff; padding-left:6px; color:#666;border:1px solid #e4e4e4;}
 .int-xlarge-identifying:hover{ border:1px solid #0697ef;}
@@ -84,16 +86,16 @@
 .int-xxlarge-user{ width:360px; float:left; height:46px; border: none; line-height:48px; font-size:14px; background:#fff; padding-left:6px; color:#666;}
 /**注册按钮**/
 .regsiter-wrapper-cnt ul .regsiter-btn{ width:380px; float:left; height:56px; background:#0697ef; font-size:20px; color:#fff; margin-top:10px;}
-.regsiter-wrapper-cnt ul .regsiter-btn:hover{ background:#10a2fb;} 
+.regsiter-wrapper-cnt ul .regsiter-btn:hover{ background:#10a2fb;}
 .regsiter-wrapper-cnt ul .zuns a{ color:#10a2fb}
 
 
 
 /**注册邮箱绑定**/
 .regsiter-email-cnt{ width:550px; position:absolute; top:150px; padding-bottom:25px; right:30px; background:#fff;
--webkit-box-shadow:0 0 14px rgba(218, 218, 218, .7);  
--moz-box-shadow:0 0 14px rgba(218, 218, 218, .7);  
-box-shadow:0 0 14px rgba(218,218, 218, .7);  }
+    -webkit-box-shadow:0 0 14px rgba(218, 218, 218, .7);
+    -moz-box-shadow:0 0 14px rgba(218, 218, 218, .7);
+    box-shadow:0 0 14px rgba(218,218, 218, .7);  }
 .regsiter-email-cnt ul{ width:470px; margin:0 auto;}
 .regsiter-email-cnt ul li{ float:left; margin-top:24px; position:relative;}
 .regsiter-email-cnt ul .user{ width:100%; float:left; height:40px;}
