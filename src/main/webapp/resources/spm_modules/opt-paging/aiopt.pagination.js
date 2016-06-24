@@ -75,7 +75,9 @@ define("opt-paging/aiopt.pagination", [], function(require, exports, module){
  	                opt.callback && opt.callback.call(_this,d);
  	                //var pager = d.pager?d.pager:{};
  	                //var totalPages=d.pageCount?d.pageCount:1;
- 	                _this.setupTwbsPagination(d.pageCount);
+ 	                if(d.pageCount>0){
+ 	                	_this.setupTwbsPagination(d.pageCount);
+ 	                }
  	            }
         	});
         	
