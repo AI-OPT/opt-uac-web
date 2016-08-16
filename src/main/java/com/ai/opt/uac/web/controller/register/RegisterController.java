@@ -57,7 +57,6 @@ import com.ai.opt.uac.web.util.IPUtil;
 import com.ai.opt.uac.web.util.VerifyUtil;
 import com.ai.paas.ipaas.ccs.IConfigClient;
 import com.ai.paas.ipaas.mcs.interfaces.ICacheClient;
-import com.ai.runner.base.exception.CallerException;
 import com.ai.runner.center.mmp.api.manager.interfaces.SMSServices;
 import com.ai.runner.center.mmp.api.manager.param.SMData;
 import com.ai.runner.center.mmp.api.manager.param.SMDataInfoNotify;
@@ -457,12 +456,10 @@ public class RegisterController {
 	 * 
 	 * @param request
 	 * @return
-	 * @throws Exception
-	 * @throws CallerException
 	 */
 	@RequestMapping("/toSendPhone")
 	@ResponseBody
-	public ResponseData<String> sendPhone(GetSMDataReq sMDataReq, HttpServletRequest request) throws CallerException, Exception {
+	public ResponseData<String> sendPhone(GetSMDataReq sMDataReq, HttpServletRequest request) {
 		ResponseData<String> responseData = null;
 		try {
 			// 检查ip发送次数
